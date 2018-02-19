@@ -1,0 +1,38 @@
+buildscript {
+    ext.kotlin_version = '1.2.21'
+    ext.springboot_version = '1.5.10.RELEASE'
+    ext.jackson_module_version = '2.9.0'
+    ext.apache_poi_version = '3.14'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springboot_version"
+    }
+}
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: "kotlin-spring"
+    apply plugin: 'kotlin'
+    apply plugin: 'maven'
+    apply plugin: 'eclipse'
+    apply plugin: 'org.springframework.boot'
+
+    group = "kz.kcell.handbook "
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib"
+    }
+}
