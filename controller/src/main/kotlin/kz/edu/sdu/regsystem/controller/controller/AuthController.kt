@@ -16,4 +16,8 @@ class AuthController(val authRegister: AuthRegister) {
     @PostMapping("/signup", consumes = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     fun signUp(@RequestBody signUpRequest: AuthRequest) = authRegister.signUp(signUpRequest)
+
+    @GetMapping("/token/{token}")
+    @ResponseStatus(HttpStatus.OK)
+    fun verifyUser(@PathVariable token: String) = authRegister.verifyUser(token)
 }

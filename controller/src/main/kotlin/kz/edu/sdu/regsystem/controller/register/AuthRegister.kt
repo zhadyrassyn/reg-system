@@ -7,4 +7,6 @@ interface AuthRegister {
     fun signIn(signInRequest: AuthRequest): AuthResponse
 
     fun signUp(signUpRequest: AuthRequest)
+
+    fun verifyUser(token: String): AuthResponse
 }

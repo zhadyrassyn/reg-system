@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong
 class Db {
     val users = HashMap<Long, User>()
     val longCounter = AtomicLong()
+    val verificationTokens = HashMap<Long, String>()
 
     init {
         val u1 = User(
@@ -24,5 +25,6 @@ class Db {
 
         users.put(u1.id, u1)
         users.put(u2.id, u2)
+
     }
 }
