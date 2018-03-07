@@ -17,7 +17,7 @@ class AuthController(val authRegister: AuthRegister) {
     @ResponseStatus(HttpStatus.OK)
     fun signUp(@RequestBody signUpRequest: AuthRequest) = authRegister.signUp(signUpRequest)
 
-    @GetMapping("/token/{token}")
+    @PostMapping("/token/{token}")
     @ResponseStatus(HttpStatus.OK)
     fun verifyUser(@PathVariable token: String) = authRegister.verifyUser(token)
 }
