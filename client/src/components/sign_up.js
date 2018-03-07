@@ -1,6 +1,8 @@
-import React, {Component} from 'react'
-import {Field, reduxForm} from "redux-form";
+import React, {Component} from "react"
+import {Field, reduxForm} from "redux-form"
 import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
+import {singUp} from "../actions/index"
 
 //validations
 const required = value => (value ? undefined : 'Required')
@@ -39,7 +41,8 @@ class SignUp extends Component {
   }
 
   onSubmit(values) {
-    console.log(values)
+    const {signUp} = this.props
+    signUp(values)
   }
 
   render() {
@@ -95,7 +98,15 @@ const validate = (values) => {
   return errors;
 }
 
+
 export default reduxForm({
   form: "SignUpForm",
   validate
-})(connect(null, null)(SignUp))
+})(connect(
+  state => ({
+    error: state.error
+  }),
+  dispatch => ({
+    signUp: bindActionCreators(singUp, dispatch)
+  })
+)(SignUp))

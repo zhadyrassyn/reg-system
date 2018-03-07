@@ -2,6 +2,7 @@
 const HtmlPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require("path")
+const webpack = require('webpack')
 
 const htmlPlugin = new HtmlPlugin({
   title: 'Online registration system',
@@ -62,7 +63,10 @@ module.exports = {
   },
   plugins: [
     htmlPlugin,
-    extractTextPlugin
+    extractTextPlugin,
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
   ],
   devServer: {
     historyApiFallback: true,

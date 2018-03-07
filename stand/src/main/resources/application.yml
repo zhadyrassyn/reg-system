@@ -14,3 +14,6 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: dandibobo537@gmail.com
+
+server:
+  port: 8081
