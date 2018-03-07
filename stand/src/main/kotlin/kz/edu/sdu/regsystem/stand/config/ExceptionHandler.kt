@@ -1,4 +1,4 @@
-package kz.edu.sdu.regsystem.stand.configs
+package kz.edu.sdu.regsystem.stand.config
 
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.ErrorResponse

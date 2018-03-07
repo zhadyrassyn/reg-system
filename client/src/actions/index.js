@@ -7,7 +7,7 @@ import axios from "axios"
 import config from "../config"
 
 export const singUp = ({email, password}) => (dispatch) => {
-  const request = `${config.url}/api/auth/signup`
+  const request = `${config.url}/auth/signup`
 
   axios.post(request, {email, password})
     .then(response => {

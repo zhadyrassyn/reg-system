@@ -46,7 +46,7 @@ class AuthRegisterStandImpl(val db: Db, val emailSender: EmailSender) : AuthRegi
 
         //sending message
         val token = UUID.randomUUID().toString()
-        val link = "http://localhost:8080/auth/token/$token"
+        val link = "http://localhost:8080/verifyEmail/$token"
         val message = SimpleMailMessage()
         message.setTo(signUpRequest.email)
         message.subject = "Регистрация"
