@@ -3,7 +3,6 @@ import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {verifyEmail} from "../actions/index"
 
-
 class VerificationEmail extends Component {
 
   componentDidMount() {
@@ -19,7 +18,7 @@ class VerificationEmail extends Component {
 
 export default connect(
   (state, ownProps) => ({
-    token: ownProps.match.params.token
+    token: ownProps.params.token
   }),
   dispatch => ({
     verifyEmail: bindActionCreators(verifyEmail, dispatch)

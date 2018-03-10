@@ -31,7 +31,6 @@ export const verifyEmail = (token) => (dispatch) => {
 
   axios.post(request)
     .then(response => {
-      console.log('SUCCESS')
       browserHistory.push('/')
       dispatch({
         type: VERIFY_EMAIL_SUCCESS

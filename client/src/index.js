@@ -8,20 +8,16 @@ import "../style/styles.less"
 import App from './components/app'
 import VerificationEmail from './components/verification_email'
 import reducers from './reducers';
-import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { Router, Route, IndexRoute, browserHistory, Switch } from "react-router"
 
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers)
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <div>
-        <Switch>
-          <Route exact path="/" component={App}/>
-          <Route path="/account_verification/email/:token" component={VerificationEmail}/>
-        </Switch>
-      </div>
-    </BrowserRouter>
+    <Router history={browserHistory}>
+      <Route path="/account_verification/email/:token" component={VerificationEmail}/>
+      <Route path="/" component={App}/>
+    </Router>
   </Provider>
   , document.querySelector('.root'));

@@ -18,7 +18,7 @@ class SignUp extends Component {
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
     const className = `form-group ${touched && error ? "has-danger" : ""}`;
-    // const errorHelpName = `form-text ${touched && error ? "text-dager" : "text-muted"}`
+
     return (
       <div className={className}>
         <label htmlFor={field.id}>{field.label}</label>
