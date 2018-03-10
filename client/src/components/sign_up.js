@@ -3,6 +3,7 @@ import {Field, reduxForm} from "redux-form"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {singUp} from "../actions/index"
+import ConfirmEmail from "./confirm_email"
 
 //validations
 const required = value => (value ? undefined : 'Required')
@@ -20,7 +21,9 @@ class SignUp extends Component {
     super(props)
 
     this.state = {
-      isLoading: false
+      isLoading: false,
+      signedUp: false,
+      userEmail: 'test@test.com'
     }
 
   }
@@ -50,24 +53,39 @@ class SignUp extends Component {
   }
 
   onSubmit(values) {
-    this.setState({isLoading: true})
+    this.setState({
+      isLoading: true
+    })
 
     const {signUp} = this.props
+
     signUp(
       values,
       () => {
-        this.setState({isLoading: false})
+        this.setState({
+          isLoading: false,
+          signedUp: true,
+          userEmail: values.email
+        })
       },
       (message) => {
         console.log(message)
       })
   }
 
+  onResendInvite = (e) => {
+    e.preventDefault()
+    console.log(this.state.userEmail)
+  }
+
   render() {
-    const { handleSubmit, submitting } = this.props;
-    console.log('Submittinh ', submitting)
-    const { isLoading } = this.state
-    console.log(isLoading)
+    const { handleSubmit, submitting} = this.props;
+    const { isLoading, signedUp, userEmail } = this.state
+
+    if(signedUp) {
+      return <ConfirmEmail email={userEmail} onResendInvite={this.onResendInvite}/>
+    }
+
     return (
       <div className="container">
         <form className="mx-auto mt-5 px-4 pt-4 pb-2" id="sign_up_form" onSubmit={handleSubmit(this.onSubmit.bind(this))}>

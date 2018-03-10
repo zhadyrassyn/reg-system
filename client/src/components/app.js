@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import Header from './header'
 import SignUp from './sign_up'
+import {connect} from 'react-redux'
 
-export default class App extends Component {
+class App extends Component {
+
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     return (
       <div>
@@ -12,3 +18,10 @@ export default class App extends Component {
     )
   }
 }
+
+export default (connect(
+  state => ({
+  }),
+  dispatch => ({
+  })
+)(App))
