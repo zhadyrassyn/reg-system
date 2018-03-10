@@ -15,6 +15,15 @@ const email = value =>
     : undefined
 
 class SignUp extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isLoading: false
+    }
+
+  }
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
     const className = `form-group ${touched && error ? "has-danger" : ""}`;
@@ -41,16 +50,27 @@ class SignUp extends Component {
   }
 
   onSubmit(values) {
+    this.setState({isLoading: true})
+
     const {signUp} = this.props
-    signUp(values)
+    signUp(
+      values,
+      () => {
+        this.setState({isLoading: false})
+      },
+      (message) => {
+        console.log(message)
+      })
   }
 
   render() {
     const { handleSubmit, submitting } = this.props;
-
+    console.log('Submittinh ', submitting)
+    const { isLoading } = this.state
+    console.log(isLoading)
     return (
       <div className="container">
-        <form className="mx-auto mt-5 p-4" id="sign_up_form" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        <form className="mx-auto mt-5 px-4 pt-4 pb-2" id="sign_up_form" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <Field
             label="Email address"
             name="email"
@@ -83,7 +103,11 @@ class SignUp extends Component {
             component={this.renderField}
           />
 
-          <button type="submit" className="btn btn-primary" id="sign_up_btn" disabled={submitting}>Submit</button>
+          <button type="submit" className={"btn btn-primary " + (isLoading ? "disabled" : "")} id="sign_up_btn" disabled={submitting}>Submit</button>
+          <div className="text-center mt-3">
+            {isLoading && <span className="spinner"><i className="fa fa-spinner fa-spin fa-2x" /></span>}
+          </div>
+
         </form>
       </div>
     )
