@@ -2,8 +2,9 @@ import React, {Component} from "react"
 import {Field, reduxForm} from "redux-form"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import {singUp} from "../actions/index"
+import {singUp, resendVerificationEmail} from "../actions/index"
 import ConfirmEmail from "./confirm_email"
+import { withAlert } from 'react-alert'
 
 //validations
 const required = value => (value ? undefined : 'Required')
@@ -23,10 +24,11 @@ class SignUp extends Component {
     this.state = {
       isLoading: false,
       signedUp: false,
-      userEmail: 'test@test.com'
+      userEmail: 'test@test.com',
+      emailConfirmationLoader: false
     }
-
   }
+
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
     const className = `form-group ${touched && error ? "has-danger" : ""}`;
@@ -75,19 +77,40 @@ class SignUp extends Component {
 
   onResendInvite = (e) => {
     e.preventDefault()
-    console.log(this.state.userEmail)
+
+    this.setState({emailConfirmationLoader: true}, () => {
+      const {resendVerificationEmail} = this.props
+      const {userEmail} = this.state
+
+      resendVerificationEmail(
+        userEmail,
+        () => {
+          this.props.alert.show('We have resent activation email. Check it out!', {
+            type: 'success'
+          })
+          this.setState({emailConfirmationLoader: false})
+        },
+        () => {
+          this.props.alert.show('Something went wrong :( Please, try later.', {
+            type: 'error'
+          })
+          this.setState({emailConfirmationLoader: false})
+        }
+      )
+    })
   }
 
   render() {
     const { handleSubmit, submitting} = this.props;
-    const { isLoading, signedUp, userEmail } = this.state
+    const { isLoading, signedUp, userEmail, emailConfirmationLoader } = this.state
 
     if(signedUp) {
-      return <ConfirmEmail email={userEmail} onResendInvite={this.onResendInvite}/>
+      return <ConfirmEmail email={userEmail} onResendInvite={this.onResendInvite} isLoading={emailConfirmationLoader}/>
     }
 
     return (
       <div className="container">
+
         <form className="mx-auto mt-5 px-4 pt-4 pb-2" id="sign_up_form" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <Field
             label="Email address"
@@ -149,6 +172,7 @@ export default reduxForm({
     error: state.error
   }),
   dispatch => ({
-    signUp: bindActionCreators(singUp, dispatch)
+    signUp: bindActionCreators(singUp, dispatch),
+    resendVerificationEmail: bindActionCreators(resendVerificationEmail, dispatch)
   })
-)(SignUp))
+)(withAlert(SignUp)))

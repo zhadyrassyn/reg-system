@@ -20,4 +20,8 @@ class AuthController(val authRegister: AuthRegister) {
     @PostMapping("/token/{token}")
     @ResponseStatus(HttpStatus.OK)
     fun verifyUser(@PathVariable token: String) = authRegister.verifyUser(token)
+
+    @PostMapping("/resend")
+    @ResponseStatus(HttpStatus.OK)
+    fun resendEmail(@RequestParam("email") email: String) = authRegister.resendActivationEmail(email)
 }

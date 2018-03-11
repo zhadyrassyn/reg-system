@@ -9,4 +9,6 @@ interface AuthRegister {
     fun signUp(signUpRequest: AuthRequest)
 
     fun verifyUser(token: String): AuthResponse
+
+    fun resendActivationEmail(email: String)
 }

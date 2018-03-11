@@ -26,5 +26,7 @@ class Db {
         users.put(u1.id, u1)
         users.put(u2.id, u2)
 
+        verificationTokens.put(u1.id, "123")
+        verificationTokens.put(u2.id, "678")
     }
 }

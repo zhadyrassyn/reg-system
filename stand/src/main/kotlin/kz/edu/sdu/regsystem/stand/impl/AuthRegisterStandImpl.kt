@@ -46,12 +46,7 @@ class AuthRegisterStandImpl(val db: Db, val emailSender: EmailSender) : AuthRegi
 
         //sending message
         val token = UUID.randomUUID().toString()
-        val link = "http://localhost:8080/account_verification/email/$token"
-        val message = SimpleMailMessage()
-        message.setTo(signUpRequest.email)
-        message.subject = "Регистрация"
-        message.text = "Здравствуйте. Для подтверждения регистрации нажите на ссылку ниже\n\n" + link
-        emailSender.sendMessage(message)
+        sendEmail(token, signUpRequest.email)
 
         db.verificationTokens.put(newUser.id, token)
     }
@@ -70,4 +65,24 @@ class AuthRegisterStandImpl(val db: Db, val emailSender: EmailSender) : AuthRegi
         return AuthResponse(token)
     }
 
+    override fun resendActivationEmail(email: String) {
+        val user = db.users.values.firstOrNull { it.email == email }
+            ?: throw UserDoesNotExistsException("User with email $email not found!")
+
+        val activationToken = db.verificationTokens[user.id]
+            ?: throw Exception("Activation token not been assigned to $email")
+
+        sendEmail(activationToken, email)
+    }
+
+    private fun sendEmail(activationToken: String, email: String) {
+        val link = "http://localhost:8080/account_verification/email/$activationToken"
+        val message = SimpleMailMessage()
+
+        message.setTo(email)
+        message.subject = "Регистрация"
+        message.text = "Здравствуйте. Для подтверждения регистрации нажите на ссылку ниже\n\n" + link
+
+        emailSender.sendMessage(message)
+    }
 }

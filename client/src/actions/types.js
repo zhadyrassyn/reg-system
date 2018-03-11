@@ -3,3 +3,6 @@ export const SIGN_UP_FAILURE = 'sign_up_failure'
 
 export const VERIFY_EMAIL_SUCCESS = 'verify_email_success'
 export const VERIFY_EMAIL_FAILURE = 'verify_email_failure'
+
+export const RESEND_VERIFICATION_EMAIL_SUCCESS = 'resend_verification_email_success'
+export const RESEND_VERIFICATION_EMAIL_FAILURE = 'resend_verification_email_failure'
