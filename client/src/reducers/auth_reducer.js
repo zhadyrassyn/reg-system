@@ -9,6 +9,9 @@ import {
   SIGN_IN_SUCCESS
 } from "../actions/types"
 
+const initialState = {
+  authenticated: false
+}
 export default (state = {}, action) => {
   switch (action.type) {
     case SIGN_UP_SUCCESS:

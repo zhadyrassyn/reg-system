@@ -24,7 +24,7 @@ class App extends Component {
       <div>
         <AlertProvider template={AlertTemplate} {...alertOptions}>
         <Header/>
-        <SignUp/>
+          {this.props.children}
         </AlertProvider>
       </div>
     )

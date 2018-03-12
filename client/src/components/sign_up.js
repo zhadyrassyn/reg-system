@@ -175,4 +175,4 @@ export default reduxForm({
     signUp: bindActionCreators(singUp, dispatch),
     resendVerificationEmail: bindActionCreators(resendVerificationEmail, dispatch)
   })
-)(withAlert(SignUp)))
+)(SignUp))
