@@ -4,7 +4,9 @@ import {
   VERIFY_EMAIL_FAILURE,
   VERIFY_EMAIL_SUCCESS,
   RESEND_VERIFICATION_EMAIL_FAILURE,
-  RESEND_VERIFICATION_EMAIL_SUCCESS
+  RESEND_VERIFICATION_EMAIL_SUCCESS,
+  SIGN_IN_FAILURE,
+  SIGN_IN_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -62,6 +64,25 @@ export const resendVerificationEmail = (email, onSuccess, onError) => (dispatch)
       onError()
       dispatch({
         type: RESEND_VERIFICATION_EMAIL_FAILURE,
+        message: error.response && error.response.message
+      })
+    })
+}
+
+export const signIn = ({email, password}, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/auth/signin`
+
+  axios.post(request)
+    .then(response => {
+      //onSuccess()
+      dispatch({
+        type: SIGN_IN_SUCCESS
+      })
+    })
+    .catch(error => {
+      //onError()
+      dispatch({
+        type: SIGN_IN_FAILURE,
         message: error.response && error.response.message
       })
     })

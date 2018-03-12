@@ -4,7 +4,9 @@ import {
   VERIFY_EMAIL_FAILURE,
   VERIFY_EMAIL_SUCCESS,
   RESEND_VERIFICATION_EMAIL_FAILURE,
-  RESEND_VERIFICATION_EMAIL_SUCCESS
+  RESEND_VERIFICATION_EMAIL_SUCCESS,
+  SIGN_IN_FAILURE,
+  SIGN_IN_SUCCESS
 } from "../actions/types"
 
 export default (state = {}, action) => {
@@ -40,6 +42,16 @@ export default (state = {}, action) => {
     case RESEND_VERIFICATION_EMAIL_SUCCESS:
       return {
         ...state
+      }
+    case SIGN_IN_FAILURE:
+      return {
+        ...state,
+        error: action.message()
+      }
+    case SIGN_IN_SUCCESS:
+      return {
+        ...state,
+        authenticated: true
       }
     default:
       return state
