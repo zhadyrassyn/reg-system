@@ -9,9 +9,12 @@ import {signIn} from "../actions";
 class Header extends Component {
   renderField(field) {
     const { meta: { touched, error, warning } } = field
+    const className = `form-control mr-sm-2 ${touched && error ? "has-danger" : ""}`
     return (
-      <input className="form-control mr-sm-2" type={field.type} placeholder={field.placeholder} name={field.name} aria-label={field.name}
-             {...field.input} />
+      <div>
+        <input className={className} type={field.type} placeholder={field.placeholder} name={field.name} aria-label={field.name}
+               {...field.input} />
+      </div>
     )
   }
 
@@ -48,8 +51,23 @@ class Header extends Component {
   }
 }
 
+const validate = (values) => {
+  const errors = {}
+  if(!values.email) {
+    errors.email = "Email required"
+  }
+  if(values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = "Invalid email address"
+  }
+  if(!values.password) {
+    errors.password = "Password required"
+  }
+  return errors
+}
+
 export default reduxForm({
   form: 'SignInForm',
+  validate
 })(connect(
   state => ({
     error: state.error
