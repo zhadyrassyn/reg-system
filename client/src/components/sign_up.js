@@ -31,12 +31,12 @@ class SignUp extends Component {
 
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
-    const className = `form-group ${touched && error ? "has-danger" : ""}`;
+    const className = `form-control ${touched && error ? "has-danger" : ""}`
 
     return (
-      <div className={className}>
+      <div className="form-group">
         <label htmlFor={field.id}>{field.label}</label>
-        <input type={field.type} name={field.name} className="form-control" id={field.id} placeholder={field.placeholder} {...field.input}/>
+        <input type={field.type} name={field.name} className={className} id={field.id} placeholder={field.placeholder} {...field.input}/>
         {field.hint && !touched &&
           <small id={field.id} className="text-muted">
             {field.hintText}
@@ -116,7 +116,7 @@ class SignUp extends Component {
             label="Email address"
             name="email"
             id="email"
-            type="email"
+            type="text"
             placeholder="Enter email"
             validate={[required, email]}
             component={this.renderField}

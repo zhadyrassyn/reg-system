@@ -40,7 +40,7 @@ class Header extends Component {
           <a className="navbar-brand">Online registration system</a>
           <form className="form-inline" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
             <Field
-              type="email"
+              type="text"
               name="email"
               placeholder="Email"
               component={this.renderField}

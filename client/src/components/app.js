@@ -7,10 +7,10 @@ import AlertTemplate from 'react-alert-template-basic'
 
 
 const alertOptions = {
-  position: 'bottom center',
-  timeout: 5000,
-  offset: '30px',
-  transition: 'scale'
+  position: 'top right',
+  timeout: 3000,
+  offset: '40px',
+  transition: 'scale',
 }
 
 class App extends Component {
