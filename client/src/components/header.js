@@ -19,7 +19,16 @@ class Header extends Component {
   }
 
   onSubmit(values) {
-    console.log('Values', values)
+    const {signIn} = this.props
+    signIn(
+      values,
+      () => {
+        console.log('success')
+      },
+      () => {
+        console.log('error')
+      }
+    )
   }
 
   render() {

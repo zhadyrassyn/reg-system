@@ -46,7 +46,7 @@ export default (state = {}, action) => {
     case SIGN_IN_FAILURE:
       return {
         ...state,
-        error: action.message()
+        error: action.message
       }
     case SIGN_IN_SUCCESS:
       return {

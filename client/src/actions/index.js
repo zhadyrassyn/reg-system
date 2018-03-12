@@ -69,10 +69,10 @@ export const resendVerificationEmail = (email, onSuccess, onError) => (dispatch)
     })
 }
 
-export const signIn = ({email, password}, onSuccess, onError) => (dispatch) => {
+export const signIn = (values, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/auth/signin`
 
-  axios.post(request)
+  axios.post(request, values)
     .then(response => {
       //onSuccess()
       dispatch({
@@ -80,10 +80,11 @@ export const signIn = ({email, password}, onSuccess, onError) => (dispatch) => {
       })
     })
     .catch(error => {
-      //onError()
+      onError()
+      browserHistory.push('/signin')
       dispatch({
         type: SIGN_IN_FAILURE,
-        message: error.response && error.response.message
+        message: error.response && error.response.data && error.response.data.message
       })
     })
 }
