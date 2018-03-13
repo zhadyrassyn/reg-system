@@ -63,6 +63,7 @@ export default (state = {initialState}, action) => {
       return {
         ...state,
         authenticated: false,
+        signInFailed: true
       }
     default:
       return state

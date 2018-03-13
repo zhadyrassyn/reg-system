@@ -19,10 +19,10 @@ export const singUp = ({email, password}, onSuccess, onError) => (dispatch) => {
 
   axios.post(request, {email, password})
     .then(response => {
-      onSuccess()
       dispatch({
         type: SIGN_UP_SUCCESS
       })
+      onSuccess()
     })
     .catch(error => {
       onError(error.response)
@@ -38,10 +38,11 @@ export const verifyEmail = (token) => (dispatch) => {
 
   axios.post(request)
     .then(response => {
-      browserHistory.push('/')
       dispatch({
         type: VERIFY_EMAIL_SUCCESS
       })
+      localStorage.setItem('token', token)
+      browserHistory.push('/')
     })
     .catch(error => {
       dispatch({

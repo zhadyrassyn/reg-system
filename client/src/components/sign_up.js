@@ -85,15 +85,15 @@ class SignUp extends Component {
       resendVerificationEmail(
         userEmail,
         () => {
-          this.props.alert.show('We have resent activation email. Check it out!', {
-            type: 'success'
-          })
+          // this.props.alert.show('We have resent activation email. Check it out!', {
+          //   type: 'success'
+          // })
           this.setState({emailConfirmationLoader: false})
         },
         () => {
-          this.props.alert.show('Something went wrong :( Please, try later.', {
-            type: 'error'
-          })
+          // this.props.alert.show('Something went wrong :( Please, try later.', {
+          //   type: 'error'
+          // })
           this.setState({emailConfirmationLoader: false})
         }
       )
