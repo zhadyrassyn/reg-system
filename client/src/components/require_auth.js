@@ -9,6 +9,7 @@ export default function(ComposedComponent) {
     }
 
     componentWillMount() {
+      console.log('Authenticated ', this.props.authenticated)
       if (!this.props.authenticated) {
         this.context.router.push('/registration');
       }

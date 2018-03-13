@@ -27,17 +27,19 @@ class SignIn extends Component {
 
 
   onSubmit(values) {
-    console.log('values', values)
-    // const {signIn} = this.props
-    // signIn(
-    //   values,
-    //   () => {
-    //     console.log('success')
-    //   },
-    //   () => {
-    //     console.log('error')
-    //   }
-    // )
+    this.setState(
+      {isLoading:true},
+      () => {
+        const {signIn} = this.props
+        signIn(
+          values,
+          () => {
+            this.setState({isLoading: false})
+          }),
+          (message) => {
+            console.log('Error ', message)
+          }
+      })
   }
 
   render() {
@@ -90,6 +92,6 @@ export default reduxForm({
     error: state.error
   }),
   dispatch => ({
-
+    signIn: bindActionCreators(signIn, dispatch)
   })
 )(SignIn))

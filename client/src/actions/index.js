@@ -6,7 +6,8 @@ import {
   RESEND_VERIFICATION_EMAIL_FAILURE,
   RESEND_VERIFICATION_EMAIL_SUCCESS,
   SIGN_IN_FAILURE,
-  SIGN_IN_SUCCESS
+  SIGN_IN_SUCCESS,
+  SIGN_OUT
 } from "./types"
 
 import axios from "axios"
@@ -74,17 +75,27 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
 
   axios.post(request, values)
     .then(response => {
-      //onSuccess()
       dispatch({
         type: SIGN_IN_SUCCESS
       })
+      onSuccess()
+      localStorage.setItem('token', response.data.token)
+      browserHistory.push('/')
     })
     .catch(error => {
-      onError()
+      const message = error.response && error.response.data && error.response.data.message
+      onError(message)
       browserHistory.push('/signin')
       dispatch({
         type: SIGN_IN_FAILURE,
-        message: error.response && error.response.data && error.response.data.message
+        message
       })
     })
+}
+
+export const signOut = () => {
+  localStorage.removeItem('token')
+  return {
+    type: SIGN_OUT
+  }
 }

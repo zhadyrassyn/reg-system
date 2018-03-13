@@ -9,3 +9,5 @@ export const RESEND_VERIFICATION_EMAIL_FAILURE = 'resend_verification_email_fail
 
 export const SIGN_IN_SUCCESS = 'sign_in_success'
 export const SIGN_IN_FAILURE = 'sign_in_failure'
+
+export const SIGN_OUT = 'sign_out'

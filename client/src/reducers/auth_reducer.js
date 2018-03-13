@@ -6,7 +6,8 @@ import {
   RESEND_VERIFICATION_EMAIL_FAILURE,
   RESEND_VERIFICATION_EMAIL_SUCCESS,
   SIGN_IN_FAILURE,
-  SIGN_IN_SUCCESS
+  SIGN_IN_SUCCESS,
+  SIGN_OUT
 } from "../actions/types"
 
 const initialState = {
@@ -57,6 +58,11 @@ export default (state = {initialState}, action) => {
       return {
         ...state,
         authenticated: true
+      }
+    case SIGN_OUT:
+      return {
+        ...state,
+        authenticated: false,
       }
     default:
       return state

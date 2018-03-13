@@ -11,10 +11,12 @@ import App from './components/app'
 import VerificationEmail from './components/verification_email'
 import SignIn from "./components/sign_in"
 import SignUp from "./components/sign_up"
+import SignOut from "./components/sign_out"
 import Auth from "./components/require_auth"
 import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 
+import {SIGN_IN_SUCCESS} from "./actions/types"
 
 import reducers from './reducers';
 import { Router, Route, IndexRedirect, browserHistory} from "react-router"
@@ -26,6 +28,11 @@ if(process.env.NODE_ENV !== 'production') {
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 const store = createStoreWithMiddleware(reducers)
+
+const token = localStorage.getItem('token')
+if(token) {
+  store.dispatch({ type: SIGN_IN_SUCCESS })
+}
 
 const alertOptions = {
   position: 'top right',
@@ -41,6 +48,7 @@ ReactDOM.render(
       {/*<AlertProvider template={AlertTemplate} {...alertOptions}>*/}
         <Route path="/" component={Auth(App)}>
           <Route path="/signin" component={SignIn}/>
+          <Route path="/signout" component={SignOut}/>
           <Route path="/registration" component={SignUp}/>
         </Route>
       {/*</AlertProvider>*/}
