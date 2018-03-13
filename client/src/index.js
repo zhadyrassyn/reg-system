@@ -21,7 +21,7 @@ import { Router, Route, IndexRedirect, browserHistory} from "react-router"
 
 const middlewares = [ reduxThunk ];
 if(process.env.NODE_ENV !== 'production') {
-  // middlewares.push(createLogger());
+  middlewares.push(createLogger());
 }
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);

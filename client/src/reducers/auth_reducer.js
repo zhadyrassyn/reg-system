@@ -10,9 +10,10 @@ import {
 } from "../actions/types"
 
 const initialState = {
-  authenticated: false
+  authenticated: false,
+  signInFailed: false
 }
-export default (state = {}, action) => {
+export default (state = {initialState}, action) => {
   switch (action.type) {
     case SIGN_UP_SUCCESS:
       return {
@@ -49,6 +50,7 @@ export default (state = {}, action) => {
     case SIGN_IN_FAILURE:
       return {
         ...state,
+        signInFailed: true,
         error: action.message
       }
     case SIGN_IN_SUCCESS:

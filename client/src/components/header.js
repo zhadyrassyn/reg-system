@@ -32,12 +32,15 @@ class Header extends Component {
   }
 
   render() {
-    const { handleSubmit, submitting} = this.props;
+    let { handleSubmit, submitting, signInFailed } = this.props;
+    console.log('signInFailed ', signInFailed)
 
     return (
       <nav className="navbar navbar-light bg-light justify-content-between">
         <div className="container">
           <a className="navbar-brand">Online registration system</a>
+
+          {!signInFailed &&
           <form className="form-inline" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
             <Field
               type="text"
@@ -51,9 +54,16 @@ class Header extends Component {
               placeholder="Password"
               component={this.renderField}
             />
-            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Sign in</button>
+            <button className="btn btn-outline-success my-2 my-sm-0" type="submit" disabled={submitting}>Sign in</button>
             <small className="mx-3 form-text text-muted">Forget password?</small>
           </form>
+          }
+          {signInFailed &&
+          <form className="form-inline">
+              <Link to="/signin" className="nav-link btn btn-outline-success my-2 my-sm-0 mr-2">Sign in</Link>
+              <Link to="/registration" className="nav-link btn btn-outline-primary my-2 my-sm-0">Sign up</Link>
+          </form>
+          }
         </div>
       </nav>
     )
@@ -79,7 +89,8 @@ export default reduxForm({
   validate
 })(connect(
   state => ({
-    error: state.error
+    error: state.error,
+    signInFailed: state.auth.signInFailed
   }),
   dispatch => ({
     signIn: bindActionCreators(signIn, dispatch)
