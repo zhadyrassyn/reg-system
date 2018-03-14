@@ -73,26 +73,24 @@ export const resendVerificationEmail = (email, onSuccess, onError) => (dispatch)
 
 export const signIn = (values, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/auth/signin`
-
   axios.post(request, values)
     .then(response => {
       dispatch({
         type: SIGN_IN_SUCCESS
       })
-      onSuccess()
-      console.log('token ', token)
       localStorage.setItem('token', response.data.token)
       browserHistory.push('/')
+      onSuccess()
     })
     .catch(error => {
-      console.log('Why error ?')
       const message = error.response && error.response.data && error.response.data.message
-      onError(message)
-      browserHistory.push('/signin')
       dispatch({
         type: SIGN_IN_FAILURE,
         message
       })
+      onError(message)
+      browserHistory.push('/signin')
+
     })
 }
 
