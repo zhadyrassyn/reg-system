@@ -20,6 +20,7 @@ class Header extends Component {
 
   onSubmit(values) {
     const {signIn} = this.props
+    console.log('Sign in in header')
     signIn(
       values,
       () => {

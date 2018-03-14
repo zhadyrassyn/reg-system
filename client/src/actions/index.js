@@ -80,10 +80,12 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
         type: SIGN_IN_SUCCESS
       })
       onSuccess()
+      console.log('token ', token)
       localStorage.setItem('token', response.data.token)
       browserHistory.push('/')
     })
     .catch(error => {
+      console.log('Why error ?')
       const message = error.response && error.response.data && error.response.data.message
       onError(message)
       browserHistory.push('/signin')
