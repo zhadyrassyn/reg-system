@@ -11,6 +11,7 @@ import {
 } from "./types"
 
 import axios from "axios"
+import jwtDecode from "jwt-decode"
 import config from "../config"
 import { browserHistory } from "react-router"
 
@@ -79,6 +80,13 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
         type: SIGN_IN_SUCCESS
       })
       localStorage.setItem('token', response.data.token)
+
+      //check role
+      const token = response.data.token
+      const decoded = jwt_decode(token)
+      console.log('Decoded ', decoded.sub)
+
+
       browserHistory.push('/')
       onSuccess()
     })

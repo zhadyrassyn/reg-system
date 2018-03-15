@@ -39,6 +39,7 @@
     "axios": "^0.18.0",
     "babel-preset-stage-1": "^6.24.1",
     "bootstrap": "^4.0.0",
+    "jwt-decode": "^2.2.0",
     "lodash": "^3.10.1",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",

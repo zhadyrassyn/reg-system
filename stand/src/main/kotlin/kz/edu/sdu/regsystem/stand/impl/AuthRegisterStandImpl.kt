@@ -13,6 +13,7 @@ import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserNotActiveException
 import org.springframework.stereotype.Component
 import kz.edu.sdu.regsystem.stand.impl.email.EmailSender
+import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import org.springframework.core.env.Environment
 import org.springframework.mail.SimpleMailMessage
@@ -51,6 +52,7 @@ class AuthRegisterStandImpl(
         )
 
         db.users[newUser.id] = newUser
+        db.userRoles[newUser.id] = RoleType.USER
 
         //sending message
         val token = UUID.randomUUID().toString()
@@ -75,13 +77,18 @@ class AuthRegisterStandImpl(
     }
 
     private fun generateJwtToken(user: User): String {
+        val roleType = db.userRoles[user.id] ?: throw Exception("Role is undefined")
+        val scope : String =
+            if(roleType == RoleType.USER) RoleType.USER.toString()
+            else RoleType.MODERATOR.toString()
+
         val key = env.getProperty("jwtKey") ?: throw RuntimeException("Jwt key does not exists in environment variables!")
         return Jwts.builder()
             .setSubject(user.email)
             .signWith(SignatureAlgorithm.HS512, key)
             .setExpiration(getNextDay())
             .setIssuedAt(Date())
-            .claim("scope", "user")
+            .claim("scope", scope)
             .compact()
     }
 
@@ -110,6 +117,7 @@ class AuthRegisterStandImpl(
         message.subject = "Регистрация"
         message.text = "Здравствуйте. Для подтверждения регистрации нажите на ссылку ниже\n\n$link"
 
+        println(message.text)
         //todo
         //email text are cached
         emailSender.sendMessage(message)

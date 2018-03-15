@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl.db
 
 import kz.edu.sdu.regsystem.stand.model.User
+import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
@@ -10,6 +11,7 @@ class Db {
     val users = HashMap<Long, User>()
     val longCounter = AtomicLong()
     val verificationTokens = HashMap<Long, String>()
+    val userRoles = HashMap<Long, RoleType>()
 
     init {
         val u1 = User(
@@ -23,10 +25,20 @@ class Db {
                 password = "qwerty",
                 userStatus = UserStatus.NONACTIVE)
 
+        val u3 = User(
+            email = "moderator@test.com",
+            password = "qwerty",
+            userStatus = UserStatus.ACTIVE
+        )
+
         users.put(u1.id, u1)
         users.put(u2.id, u2)
 
         verificationTokens.put(u1.id, "123")
         verificationTokens.put(u2.id, "678")
+
+        userRoles.put(u1.id, RoleType.USER)
+        userRoles.put(u2.id, RoleType.USER)
+        userRoles.put(u3.id, RoleType.MODERATOR)
     }
 }
