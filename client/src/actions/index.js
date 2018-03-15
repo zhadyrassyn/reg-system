@@ -10,6 +10,11 @@ import {
   SIGN_OUT
 } from "./types"
 
+import {
+  ROLE_MODERATOR,
+  ROLE_USER
+} from "../constants"
+
 import axios from "axios"
 import jwtDecode from "jwt-decode"
 import config from "../config"
@@ -83,11 +88,15 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
 
       //check role
       const token = response.data.token
-      const decoded = jwt_decode(token)
-      console.log('Decoded ', decoded.sub)
 
-
-      browserHistory.push('/')
+      console.log('Token ', token)
+      const decoded = jwtDecode(token)
+      console.log('scope ', decoded.scope)
+      if(decoded.scope.toUpperCase() === ROLE_USER) {
+        browserHistory.push('/')
+      } else {
+        browserHistory.push('/moderator')
+      }
       onSuccess()
     })
     .catch(error => {

@@ -21,11 +21,13 @@ class Db {
                 userStatus = UserStatus.ACTIVE)
 
         val u2 = User(
+            id = longCounter.incrementAndGet(),
                 email = "notActive@gmail.com",
                 password = "qwerty",
                 userStatus = UserStatus.NONACTIVE)
 
         val u3 = User(
+            id = longCounter.incrementAndGet(),
             email = "moderator@test.com",
             password = "qwerty",
             userStatus = UserStatus.ACTIVE
@@ -33,6 +35,7 @@ class Db {
 
         users.put(u1.id, u1)
         users.put(u2.id, u2)
+        users.put(u3.id, u3)
 
         verificationTokens.put(u1.id, "123")
         verificationTokens.put(u2.id, "678")
