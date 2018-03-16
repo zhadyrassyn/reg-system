@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 
-
 const alertOptions = {
   position: 'top right',
   timeout: 3000,

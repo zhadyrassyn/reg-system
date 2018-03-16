@@ -14,6 +14,10 @@ import SignUp from "./components/sign_up"
 import SignOut from "./components/sign_out"
 import Auth from "./components/require_auth"
 
+//student
+import StudentApp from "./components/student/app"
+import OverviewMenu from "./components/student/overview_menu"
+
 //moderator
 import ModeratorApp from "./components/moderator/app"
 
@@ -74,6 +78,7 @@ ReactDOM.render(
           <Route path="/signin" component={SignIn}/>
           <Route path="/signout" component={SignOut}/>
           <Route path="/registration" component={SignUp}/>
+          <Route path="/main" component={StudentApp}/>
           <Route path="/moderator" component={ModeratorApp} onEnter={requireModeratorRole}/>
         </Route>
       {/*</AlertProvider>*/}
