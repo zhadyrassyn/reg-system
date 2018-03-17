@@ -4,6 +4,7 @@ import OverviewMenu from "./overview_menu"
 import Select from "react-select"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
+import {Field, reduxForm} from "redux-form"
 
 import {
   fetchCities,
@@ -13,12 +14,6 @@ import {
 class StudentApp extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      city: '',
-      school: '',
-      schoolSelectDisabled: true
-    }
   }
 
   componentDidMount() {
@@ -26,95 +21,142 @@ class StudentApp extends Component {
     fetchCities()
   }
 
-  handleCityChange = (city) => {
-    this.setState({ city }, () => {
-      const {fetchSchools} = this.props
-      const {city} = this.state
-
-      if(city) {
-        fetchSchools(this.state.city.value,
-          () => {
-            this.setState({
-              school: '',
-              schoolSelectDisabled: false
-            })
-          },
-          () => {
-            console.log('error on fetching schools')
-          })
-      } else {
-        this.setState({schoolSelectDisabled: true})
-      }
-
-    })
-    console.log(`Selected: ${city.label}`);
+  renderField(field) {
+    console.log(field.input)
+    return (
+      <div className="col">
+        <label htmlFor={field.id}>{field.label}</label>
+        <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder} id={field.id} {...field.input}/>
+      </div>
+    )
   }
+
+  renderSelect(field) {
+    // const {form} = this.props
+    // console.log(form)
+    return (
+      <div className="col">
+        <label htmlFor={field.id}>{field.label}</label>
+        <Select
+          value="Qyzylorda"
+          // disabled={schoolSelectDisabled}
+          name={field.name}
+          onChange={field.onChange}
+          options={field.options}
+          {...field.input}
+        />
+      </div>
+    )
+  }
+
+  handleCityChange = (city) => {
+      const {fetchSchools} = this.props
+      fetchSchools(city.value,
+        () => {
+        },
+        () => {
+          console.log('error on fetching schools')
+        })
+
+    }
 
   handleSchoolChange = (school) => {
     this.setState({ school })
   }
 
-  render() {
-    const { city, school, schoolSelectDisabled } = this.state
-    const { cities } = this.props
-    const { schools } = this.props
+  onSubmit(values) {
+    console.log('Values ', values)
+  }
 
-    const cityValue = city && city.value
-    const schoolValue = school && school.value
+  render() {
+
+    const { cities, schools } = this.props
+    const { handleSubmit, submitting} = this.props;
 
     return (
       <div className="container">
         <OverviewMenu/>
-        <form>
+        <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <div className="form-row">
-            <div className="col">
-              <label htmlFor="firstName">First name</label>
-              <input type="text" className="form-control" placeholder="First name" id="firstName"/>
-            </div>
-            <div className="col">
-              <label htmlFor="middleName">Middle name</label>
-              <input type="text" className="form-control" placeholder="Middle name" id="middleName"/>
-            </div>
-            <div className="col">
-              <label htmlFor="lastName">Last name</label>
-              <input type="text" className="form-control" placeholder="Last name" id="lastName"/>
-            </div>
+            <Field
+              label="First name"
+              name="firstName"
+              id="firstName"
+              type="text"
+              placeholder="First name"
+              component={this.renderField}
+            />
+            <Field
+              label="Middle name"
+              name="middleName"
+              id="middleName"
+              type="text"
+              placeholder="Middle name"
+              component={this.renderField}
+            />
+            <Field
+              label="Last name"
+              name="lastName"
+              id="lastName"
+              type="text"
+              placeholder="Last name"
+              component={this.renderField}
+            />
           </div>
           <div className="form-row mt-3">
-            <div className="col">
-              <label htmlFor="birthDate">Date of birth</label>
-              <input type="date" className="form-control" id="birthDate"/>
-            </div>
+            <Field
+              label="Date of birth"
+              name="birthDate"
+              id="birthDate"
+              type="date"
+              component={this.renderField}
+            />
           </div>
           <div className="form-row mt-3">
-            <div className="col">
-              <label htmlFor="city">City</label>
-              <Select
-                name="city"
-                value={cityValue}
-                onChange={this.handleCityChange}
-                options={cities}
-              />
-            </div>
+            <Field
+              label="City"
+              name="city"
+              id="city"
+              options={cities}
+              component={this.renderSelect}
+              onChange={this.handleCityChange}
+              onBlur={e => { e.preventDefault() }}
+            />
+
+            {/*<div className="col">*/}
+              {/*<label htmlFor="city">City</label>*/}
+              {/*<Select*/}
+                {/*name="city"*/}
+                {/*value={cityValue}*/}
+                {/*onChange={this.handleCityChange}*/}
+                {/*options={cities}*/}
+              {/*/>*/}
+            {/*</div>*/}
           </div>
           <div className="form-row mt-3">
-            <div className="col">
-              <label htmlFor="school">School</label>
-              <Select
-                value={schoolValue}
-                disabled={schoolSelectDisabled}
-                name="school"
-                onChange={this.handleSchoolChange}
-                options={schools}
-              />
-            </div>
+            <Field
+              label="School"
+              name="school"
+              id="school"
+              options={schools}
+              component={this.renderSelect}
+              onBlur={e => { e.preventDefault() }}
+            />
+              {/*<label htmlFor="school">School</label>*/}
+              {/*<Select*/}
+                {/*value={schoolValue}*/}
+                {/*disabled={schoolSelectDisabled}*/}
+                {/*name="school"*/}
+                {/*onChange={this.handleSchoolChange}*/}
+                {/*options={schools}*/}
+              {/*/>*/}
             <div className="col">
               <label htmlFor="anotherSchool">Not finding your school? Write down</label>
-              <input type="text" className="form-control" disabled={schoolSelectDisabled}/>
+              <input type="text" className="form-control"/>
             </div>
           </div>
           <div className="col text-right">
-            <button className="btn btn-success mt-3" type="submit">Save</button>
+            <button className="btn btn-success mt-3" type="submit" disabled={submitting}>Save</button>
           </div>
         </form>
       </div>
@@ -122,13 +164,17 @@ class StudentApp extends Component {
   }
 }
 
-export default connect(
+
+export default reduxForm({
+  form: 'GeneralInfo save'
+})(connect(
   state => ({
     cities: state.info.cities,
-    schools: state.info.schools
+    schools: state.info.schools,
+    form: state.form
   }),
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch)
   })
-)(StudentApp)
+)(StudentApp))
