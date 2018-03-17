@@ -108,6 +108,13 @@ class StudentApp extends Component {
                 options={schools}
               />
             </div>
+            <div className="col">
+              <label htmlFor="anotherSchool">Not finding your school? Write down</label>
+              <input type="text" className="form-control" disabled={schoolSelectDisabled}/>
+            </div>
+          </div>
+          <div className="col text-right">
+            <button className="btn btn-success mt-3" type="submit">Save</button>
           </div>
         </form>
       </div>

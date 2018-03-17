@@ -49,8 +49,6 @@ class Db {
         userRoles.put(u2.id, RoleType.USER)
         userRoles.put(u3.id, RoleType.MODERATOR)
 
-        //fill schools
-
         //fill cities
         val c1 = City(longCounter.incrementAndGet(), "Almaty")
         val c2 = City(longCounter.incrementAndGet(), "Astana")
@@ -68,6 +66,7 @@ class Db {
         cities[c6.id] = c6
         cities[c7.id] = c7
 
+        //fill schools
         cities.values.forEach {
             for (i in 0..10) {
                 it.schools.add(School(longCounter.incrementAndGet(), "${it.name} school $i"))

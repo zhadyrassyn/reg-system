@@ -13,10 +13,10 @@ class OverviewMenu extends Component {
           </div>
           <ul className="nav nav-pills">
             <li className="nav-item">
-              <a className="nav-link" href="#">General information</a>
+              <a className="nav-link active" href="#">General info</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link active" href="#">Documents</a>
+              <a className="nav-link" href="#">Documents</a>
             </li>
           </ul>
         </div>
