@@ -11,3 +11,6 @@ export const SIGN_IN_SUCCESS = 'sign_in_success'
 export const SIGN_IN_FAILURE = 'sign_in_failure'
 
 export const SIGN_OUT = 'sign_out'
+
+export const FETCH_CITIES_SUCCESS = 'fetch_cities_success'
+export const FETCH_CITIES_FAILURE = 'fetch_cities_failure'

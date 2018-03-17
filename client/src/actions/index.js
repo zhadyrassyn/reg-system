@@ -7,7 +7,9 @@ import {
   RESEND_VERIFICATION_EMAIL_SUCCESS,
   SIGN_IN_FAILURE,
   SIGN_IN_SUCCESS,
-  SIGN_OUT
+  SIGN_OUT,
+  FETCH_CITIES_FAILURE,
+  FETCH_CITIES_SUCCESS
 } from "./types"
 
 import {
@@ -116,4 +118,22 @@ export const signOut = () => {
   return {
     type: SIGN_OUT
   }
+}
+
+export const fetchCities = () => (dispatch) => {
+  const request = `${config.url}/cities`
+
+  axios.get(request)
+    .then(({data}) => {
+      dispatch({
+        type: FETCH_CITIES_SUCCESS,
+        data
+      })
+  })
+    .catch(error => {
+      dispatch({
+        type: FETCH_CITIES_FAILURE,
+        message: error.response && error.response.message
+      })
+    })
 }

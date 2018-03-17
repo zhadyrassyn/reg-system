@@ -1,8 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 import "./overview_menu"
 import OverviewMenu from "./overview_menu"
 import Select from "react-select"
-// import
+import {connect} from "react-redux"
+import {bindActionCreators} from "redux"
+
+import {fetchCities} from "../../actions"
 
 class StudentApp extends Component {
   constructor(props) {
@@ -10,12 +13,19 @@ class StudentApp extends Component {
 
     this.state = {
       city: '',
-      school: ''
+      school: '',
+      schoolSelectDisabled: true
     }
+  }
+
+  componentDidMount() {
+    const { fetchCities } = this.props
+    fetchCities()
   }
 
   handleCityChange = (city) => {
     this.setState({ city });
+    
     console.log(`Selected: ${city.label}`);
   }
 
@@ -25,10 +35,10 @@ class StudentApp extends Component {
   }
 
   render() {
-    const { city, school } = this.state
+    const { city, school, schoolSelectDisabled } = this.state
+    const { cities } = this.props
 
     const cityValue = city && city.value
-    const schoolValue = school && school.value
 
     return (
       <div className="container">
@@ -61,10 +71,7 @@ class StudentApp extends Component {
                 name="city"
                 value={cityValue}
                 onChange={this.handleCityChange}
-                options={[
-                  { value: "1", label: "Almaty"},
-                  { value: "2", label: "Astana"}
-                ]}
+                options={cities}
               />
             </div>
           </div>
@@ -72,20 +79,27 @@ class StudentApp extends Component {
             <div className="col">
               <label htmlFor="school">School</label>
               <Select
+                disabled={schoolSelectDisabled}
                 name="school"
                 value={schoolValue}
                 onChange={this.handleSchoolChange}
-                options={[
-                  { value: "1", label: "3 school" },
-                  { value: "2", label: "2 school" }
-                ]}
+                options={[]}
               />
             </div>
           </div>
         </form>
       </div>
     )
+
+    const schoolValue = school && school.value
   }
 }
 
-export default StudentApp
+export default connect(
+  state => ({
+    cities: state.info.cities
+  }),
+  dispatch => ({
+    fetchCities: bindActionCreators(fetchCities, dispatch)
+  })
+)(StudentApp)
