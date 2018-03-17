@@ -78,7 +78,7 @@ ReactDOM.render(
           <Route path="/signin" component={SignIn}/>
           <Route path="/signout" component={SignOut}/>
           <Route path="/registration" component={SignUp}/>
-          <Route path="/main" component={StudentApp}/>
+          <Route path="/home" component={StudentApp}/>
           <Route path="/moderator" component={ModeratorApp} onEnter={requireModeratorRole}/>
         </Route>
       {/*</AlertProvider>*/}

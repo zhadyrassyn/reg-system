@@ -5,9 +5,9 @@ import OverviewMenu from "./overview_menu";
 class StudentApp extends Component {
   render() {
     return (
-      <div>
-        Hello, student app
+      <div className="container">
         <OverviewMenu/>
+        Hello, student app
       </div>
     )
   }
