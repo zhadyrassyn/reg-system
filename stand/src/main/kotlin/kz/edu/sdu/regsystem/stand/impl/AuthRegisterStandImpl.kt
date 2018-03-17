@@ -17,10 +17,10 @@ import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import org.springframework.core.env.Environment
 import org.springframework.mail.SimpleMailMessage
+import org.springframework.stereotype.Service
 import java.util.*
 
-
-@Component
+@Service
 class AuthRegisterStandImpl(
     val db: Db,
     val emailSender: EmailSender,
