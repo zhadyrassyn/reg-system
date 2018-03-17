@@ -14,3 +14,6 @@ export const SIGN_OUT = 'sign_out'
 
 export const FETCH_CITIES_SUCCESS = 'fetch_cities_success'
 export const FETCH_CITIES_FAILURE = 'fetch_cities_failure'
+
+export const FETCH_SCHOOLS_SUCCESS = 'fetch_schools_success'
+export const FETCH_SCHOOLS_FAILURE = 'fetch_schools_failure'

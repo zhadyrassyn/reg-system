@@ -5,7 +5,10 @@ import Select from "react-select"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 
-import {fetchCities} from "../../actions"
+import {
+  fetchCities,
+  fetchSchools
+} from "../../actions"
 
 class StudentApp extends Component {
   constructor(props) {
@@ -24,21 +27,40 @@ class StudentApp extends Component {
   }
 
   handleCityChange = (city) => {
-    this.setState({ city });
-    
+    this.setState({ city }, () => {
+      const {fetchSchools} = this.props
+      const {city} = this.state
+
+      if(city) {
+        fetchSchools(this.state.city.value,
+          () => {
+            this.setState({
+              school: '',
+              schoolSelectDisabled: false
+            })
+          },
+          () => {
+            console.log('error on fetching schools')
+          })
+      } else {
+        this.setState({schoolSelectDisabled: true})
+      }
+
+    })
     console.log(`Selected: ${city.label}`);
   }
 
   handleSchoolChange = (school) => {
     this.setState({ school })
-    console.log(`Selected school: ${school.label}`)
   }
 
   render() {
     const { city, school, schoolSelectDisabled } = this.state
     const { cities } = this.props
+    const { schools } = this.props
 
     const cityValue = city && city.value
+    const schoolValue = school && school.value
 
     return (
       <div className="container">
@@ -79,27 +101,27 @@ class StudentApp extends Component {
             <div className="col">
               <label htmlFor="school">School</label>
               <Select
+                value={schoolValue}
                 disabled={schoolSelectDisabled}
                 name="school"
-                value={schoolValue}
                 onChange={this.handleSchoolChange}
-                options={[]}
+                options={schools}
               />
             </div>
           </div>
         </form>
       </div>
     )
-
-    const schoolValue = school && school.value
   }
 }
 
 export default connect(
   state => ({
-    cities: state.info.cities
+    cities: state.info.cities,
+    schools: state.info.schools
   }),
   dispatch => ({
-    fetchCities: bindActionCreators(fetchCities, dispatch)
+    fetchCities: bindActionCreators(fetchCities, dispatch),
+    fetchSchools: bindActionCreators(fetchSchools, dispatch)
   })
 )(StudentApp)

@@ -9,7 +9,9 @@ import {
   SIGN_IN_SUCCESS,
   SIGN_OUT,
   FETCH_CITIES_FAILURE,
-  FETCH_CITIES_SUCCESS
+  FETCH_CITIES_SUCCESS,
+  FETCH_SCHOOLS_FAILURE,
+  FETCH_SCHOOLS_SUCCESS
 } from "./types"
 
 import {
@@ -134,6 +136,25 @@ export const fetchCities = () => (dispatch) => {
       dispatch({
         type: FETCH_CITIES_FAILURE,
         message: error.response && error.response.message
+      })
+    })
+}
+
+export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/cities/${id}/schools`
+
+  axios.get(request)
+    .then(({data}) => {
+      dispatch({
+        type: FETCH_SCHOOLS_SUCCESS,
+        data
+      })
+      onSuccess()
+    })
+    .catch(error => {
+      dispatch({
+        type: FETCH_SCHOOLS_FAILURE,
+        error: error.response && error.response.message
       })
     })
 }
