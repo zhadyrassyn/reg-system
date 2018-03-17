@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl.db
 
 import kz.edu.sdu.regsystem.stand.model.City
+import kz.edu.sdu.regsystem.stand.model.School
 import kz.edu.sdu.regsystem.stand.model.User
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
@@ -14,6 +15,8 @@ class Db {
     val verificationTokens = HashMap<Long, String>()
     val userRoles = HashMap<Long, RoleType>()
     val cities = HashMap<Long, City>()
+    val schools = HashMap<Long, School>()
+
 
     init {
         val u1 = User(
@@ -46,6 +49,8 @@ class Db {
         userRoles.put(u2.id, RoleType.USER)
         userRoles.put(u3.id, RoleType.MODERATOR)
 
+        //fill schools
+
         //fill cities
         val c1 = City(longCounter.incrementAndGet(), "Almaty")
         val c2 = City(longCounter.incrementAndGet(), "Astana")
@@ -62,5 +67,12 @@ class Db {
         cities[c5.id] = c5
         cities[c6.id] = c6
         cities[c7.id] = c7
+
+        cities.values.forEach {
+            for (i in 0..10) {
+                it.schools.add(School(longCounter.incrementAndGet(), "${it.name} school $i"))
+            }
+        }
+
     }
 }
