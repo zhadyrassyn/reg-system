@@ -137,8 +137,8 @@ class StudentApp extends Component {
             />
             <Field
               label="Not finding your school? Write down"
-              id="anotherSchool"
-              name="anotherSchool"
+              id="customSchool"
+              name="customSchool"
               type="text"
               component={this.renderField}
               placeholder="..."
@@ -156,7 +156,7 @@ class StudentApp extends Component {
 const validate = (values) => {
   const errors = {}
 
-  if(!values.school && !values.anotherSchool) {
+  if(!values.school && !values.customSchool) {
     errors.school = "Required"
   }
   return errors

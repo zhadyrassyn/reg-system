@@ -4,6 +4,7 @@ import kz.edu.sdu.regsystem.stand.model.City
 import kz.edu.sdu.regsystem.stand.model.School
 import kz.edu.sdu.regsystem.stand.model.User
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
+import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
@@ -50,13 +51,13 @@ class Db {
         userRoles.put(u3.id, RoleType.MODERATOR)
 
         //fill cities
-        val c1 = City(longCounter.incrementAndGet(), "Almaty")
-        val c2 = City(longCounter.incrementAndGet(), "Astana")
-        val c3 = City(longCounter.incrementAndGet(), "Qyzylorda")
-        val c4 = City(longCounter.incrementAndGet(), "Shymkent")
-        val c5 = City(longCounter.incrementAndGet(), "Aktobe")
-        val c6 = City(longCounter.incrementAndGet(), "Taldykorgan")
-        val c7 = City(longCounter.incrementAndGet(), "Pavlodar")
+        val c1 = City(id = longCounter.incrementAndGet(), name = "Almaty")
+        val c2 = City(id = longCounter.incrementAndGet(), name = "Astana")
+        val c3 = City(id = longCounter.incrementAndGet(), name ="Qyzylorda")
+        val c4 = City(id = longCounter.incrementAndGet(), name ="Shymkent")
+        val c5 = City(id = longCounter.incrementAndGet(), name ="Aktobe")
+        val c6 = City(id = longCounter.incrementAndGet(), name ="Taldykorgan")
+        val c7 = City(id = longCounter.incrementAndGet(), name ="Pavlodar")
 
         cities[c1.id] = c1
         cities[c2.id] = c2
@@ -69,7 +70,11 @@ class Db {
         //fill schools
         cities.values.forEach {
             for (i in 0..10) {
-                it.schools.add(School(longCounter.incrementAndGet(), "${it.name} school $i"))
+                it.schools.add(
+                    School(
+                        id = longCounter.incrementAndGet(),
+                        name = "${it.name} school $i",
+                        schoolStatus = SchoolStatus.ACTIVE))
             }
         }
 
