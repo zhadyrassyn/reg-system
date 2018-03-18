@@ -4,12 +4,16 @@ import OverviewMenu from "./overview_menu"
 import Select from "react-select"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import {Field, reduxForm} from "redux-form"
+import {Field, reduxForm, actionCreators, getFormNames, getFormValues} from "redux-form"
+import MySelectComponent from "../my_select_component"
 
 import {
   fetchCities,
   fetchSchools
 } from "../../actions"
+
+//validations
+const required = value => (value ? undefined : 'Required')
 
 class StudentApp extends Component {
   constructor(props) {
@@ -22,29 +26,25 @@ class StudentApp extends Component {
   }
 
   renderField(field) {
-    console.log(field.input)
+    const { meta: { touched, error, warning } } = field;
+
     return (
       <div className="col">
         <label htmlFor={field.id}>{field.label}</label>
         <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder} id={field.id} {...field.input}/>
+        {touched && error && <span>{error}</span>}
       </div>
     )
   }
 
   renderSelect(field) {
-    // const {form} = this.props
-    // console.log(form)
+    const { meta: { touched, error, warning } } = field;
+
     return (
       <div className="col">
         <label htmlFor={field.id}>{field.label}</label>
-        <Select
-          value="Qyzylorda"
-          // disabled={schoolSelectDisabled}
-          name={field.name}
-          onChange={field.onChange}
-          options={field.options}
-          {...field.input}
-        />
+        <MySelectComponent {...field.input} options={field.options} placeholder={field.placeholder}/>
+        {touched && error && <span>{error}</span>}
       </div>
     )
   }
@@ -53,6 +53,8 @@ class StudentApp extends Component {
       const {fetchSchools} = this.props
       fetchSchools(city.value,
         () => {
+        this.props.values['school'] = {}
+        actionCreators.change('school')
         },
         () => {
           console.log('error on fetching schools')
@@ -60,18 +62,15 @@ class StudentApp extends Component {
 
     }
 
-  handleSchoolChange = (school) => {
-    this.setState({ school })
-  }
-
   onSubmit(values) {
     console.log('Values ', values)
   }
 
+
   render() {
 
     const { cities, schools } = this.props
-    const { handleSubmit, submitting} = this.props;
+    const { handleSubmit, submitting } = this.props
 
     return (
       <div className="container">
@@ -85,6 +84,7 @@ class StudentApp extends Component {
               type="text"
               placeholder="First name"
               component={this.renderField}
+              validate={required}
             />
             <Field
               label="Middle name"
@@ -101,6 +101,7 @@ class StudentApp extends Component {
               type="text"
               placeholder="Last name"
               component={this.renderField}
+              validate={required}
             />
           </div>
           <div className="form-row mt-3">
@@ -110,6 +111,7 @@ class StudentApp extends Component {
               id="birthDate"
               type="date"
               component={this.renderField}
+              validate={required}
             />
           </div>
           <div className="form-row mt-3">
@@ -120,18 +122,9 @@ class StudentApp extends Component {
               options={cities}
               component={this.renderSelect}
               onChange={this.handleCityChange}
-              onBlur={e => { e.preventDefault() }}
+              validate={required}
+              placeholder="Choose your city"
             />
-
-            {/*<div className="col">*/}
-              {/*<label htmlFor="city">City</label>*/}
-              {/*<Select*/}
-                {/*name="city"*/}
-                {/*value={cityValue}*/}
-                {/*onChange={this.handleCityChange}*/}
-                {/*options={cities}*/}
-              {/*/>*/}
-            {/*</div>*/}
           </div>
           <div className="form-row mt-3">
             <Field
@@ -140,20 +133,16 @@ class StudentApp extends Component {
               id="school"
               options={schools}
               component={this.renderSelect}
-              onBlur={e => { e.preventDefault() }}
+              placeholder="Choose your school"
             />
-              {/*<label htmlFor="school">School</label>*/}
-              {/*<Select*/}
-                {/*value={schoolValue}*/}
-                {/*disabled={schoolSelectDisabled}*/}
-                {/*name="school"*/}
-                {/*onChange={this.handleSchoolChange}*/}
-                {/*options={schools}*/}
-              {/*/>*/}
-            <div className="col">
-              <label htmlFor="anotherSchool">Not finding your school? Write down</label>
-              <input type="text" className="form-control"/>
-            </div>
+            <Field
+              label="Not finding your school? Write down"
+              id="anotherSchool"
+              name="anotherSchool"
+              type="text"
+              component={this.renderField}
+              placeholder="..."
+            />
           </div>
           <div className="col text-right">
             <button className="btn btn-success mt-3" type="submit" disabled={submitting}>Save</button>
@@ -164,17 +153,28 @@ class StudentApp extends Component {
   }
 }
 
+const validate = (values) => {
+  const errors = {}
 
-export default reduxForm({
-  form: 'GeneralInfo save'
-})(connect(
+  if(!values.school && !values.anotherSchool) {
+    errors.school = "Required"
+  }
+  return errors
+}
+
+StudentApp = connect(
   state => ({
     cities: state.info.cities,
     schools: state.info.schools,
-    form: state.form
+    values: getFormValues('GeneralInfo')(state)
   }),
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),
-    fetchSchools: bindActionCreators(fetchSchools, dispatch)
+    fetchSchools: bindActionCreators(fetchSchools, dispatch),
   })
-)(StudentApp))
+)(StudentApp)
+
+export default reduxForm({
+  form: 'GeneralInfo',
+  validate
+})(StudentApp)
