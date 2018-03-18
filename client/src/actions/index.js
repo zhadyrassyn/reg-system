@@ -11,7 +11,9 @@ import {
   FETCH_CITIES_FAILURE,
   FETCH_CITIES_SUCCESS,
   FETCH_SCHOOLS_FAILURE,
-  FETCH_SCHOOLS_SUCCESS
+  FETCH_SCHOOLS_SUCCESS,
+  SAVE_STUDENT_GENERAL_INFO_FAILURE,
+  SAVE_STUDENT_GENERAL_INFO_SUCCESS
 } from "./types"
 
 import {
@@ -135,7 +137,7 @@ export const fetchCities = () => (dispatch) => {
     .catch(error => {
       dispatch({
         type: FETCH_CITIES_FAILURE,
-        message: error.response && error.response.message
+        error: error.response && error.response.message
       })
     })
 }
@@ -157,4 +159,35 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
         error: error.response && error.response.message
       })
     })
+}
+
+export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/student/general`
+
+  const data = {
+    firstName: values.firstName,
+    middleName: values.middleName,
+    lastName: values.lastName,
+    birthDate: values.birthDate,
+    cityId: values.city.value,
+    schoolId: values.school.value || -1,
+    customSchool: values.customSchool
+  }
+
+  const token = localStorage.getItem('token')
+  axios.post(request, data, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  }).then(response => {
+    dispatch({
+      type: SAVE_STUDENT_GENERAL_INFO_SUCCES,
+      data
+    })
+  }).catch(error => {
+    dispatch({
+      type: SAVE_STUDENT_GENERAL_INFO_SUCCESS,
+      error: error.response && error.response.message
+    })
+  })
 }

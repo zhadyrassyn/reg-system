@@ -3,11 +3,9 @@ package kz.edu.sdu.regsystem.stand.impl
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureException
 import kz.edu.sdu.regsystem.controller.model.GeneralInfoData
-import kz.edu.sdu.regsystem.controller.model.SchoolData
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.School
-import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -31,7 +29,7 @@ class StudentRegisterStandImpl(
         user.firstName = generalInfoData.firstName
         user.middleName = generalInfoData.middleName
         user.lastName = generalInfoData.lastName
-        user.birthDate = generalInfoData.birthdate
+        user.birthDate = generalInfoData.birthDate
         user.cityId = generalInfoData.cityId
 
         if(generalInfoData.schoolId == (-1).toLong()) {
@@ -42,6 +40,7 @@ class StudentRegisterStandImpl(
             user.schoolId = generalInfoData.schoolId
         }
 
+        println(user)
     }
 
 }

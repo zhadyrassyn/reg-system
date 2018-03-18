@@ -2,7 +2,9 @@ import {
   FETCH_CITIES_SUCCESS,
   FETCH_CITIES_FAILURE,
   FETCH_SCHOOLS_FAILURE,
-  FETCH_SCHOOLS_SUCCESS
+  FETCH_SCHOOLS_SUCCESS,
+  SAVE_STUDENT_GENERAL_INFO_SUCCESS,
+  SAVE_STUDENT_GENERAL_INFO_FAILURE
 } from "../actions/types"
 
 const initialState = {
@@ -28,6 +30,16 @@ export default (state = {}, action) => {
         schools: action.data
       }
     case FETCH_SCHOOLS_FAILURE:
+      return {
+        ...state,
+        error: action.message
+      }
+    case SAVE_STUDENT_GENERAL_INFO_SUCCESS:
+      return {
+        ...state,
+        generalInfo: action.data
+      }
+    case SAVE_STUDENT_GENERAL_INFO_FAILURE:
       return {
         ...state,
         error: action.message

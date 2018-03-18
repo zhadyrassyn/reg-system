@@ -1,15 +1,15 @@
 import React, { Component } from "react"
 import "./overview_menu"
 import OverviewMenu from "./overview_menu"
-import Select from "react-select"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import {Field, reduxForm, actionCreators, getFormNames, getFormValues} from "redux-form"
+import {Field, reduxForm, actionCreators, getFormValues} from "redux-form"
 import MySelectComponent from "../my_select_component"
 
 import {
   fetchCities,
-  fetchSchools
+  fetchSchools,
+  saveStudentGeneralInfo
 } from "../../actions"
 
 //validations
@@ -65,7 +65,16 @@ class StudentApp extends Component {
     }
 
   onSubmit(values) {
-    console.log('Values ', values)
+    const {saveStudentGeneralInfo} = this.props
+    saveStudentGeneralInfo(
+      values,
+      () => {
+        console.log('success')
+      },
+      () => {
+        console.log('error')
+      }
+    )
   }
 
 
@@ -173,6 +182,7 @@ StudentApp = connect(
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
+    saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch)
   })
 )(StudentApp)
 
