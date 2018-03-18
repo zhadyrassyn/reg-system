@@ -13,6 +13,7 @@ class StudentControlle(
 ) {
     @PostMapping("/general")
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveGeneralInfo(@RequestBody generalInfoData: GeneralInfoData) =
-        studentRegister.saveGeneralInfo(generalInfoData)
+    fun saveGeneralInfo(@RequestBody generalInfoData: GeneralInfoData,
+                        @RequestHeader("Authorization") authToken: String) =
+        studentRegister.saveGeneralInfo(authToken, generalInfoData)
 }

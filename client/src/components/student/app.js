@@ -18,6 +18,8 @@ const required = value => (value ? undefined : 'Required')
 class StudentApp extends Component {
   constructor(props) {
     super(props)
+
+    console.log(localStorage.getItem('token'))
   }
 
   componentDidMount() {
