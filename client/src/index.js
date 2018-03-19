@@ -16,6 +16,7 @@ import Auth from "./components/require_auth"
 
 //student
 import StudentApp from "./components/student/app"
+import DocumentsForm from "./components/student/documents_form"
 import OverviewMenu from "./components/student/overview_menu"
 
 //moderator
@@ -78,7 +79,10 @@ ReactDOM.render(
           <Route path="/signin" component={SignIn}/>
           <Route path="/signout" component={SignOut}/>
           <Route path="/registration" component={SignUp}/>
-          <Route path="/home" component={StudentApp}/>
+          <Route path="/home" component={OverviewMenu}>
+            <Route path="/home/general" component={StudentApp}/>
+            <Route path="/home/documents" components={DocumentsForm}/>
+          </Route>
           <Route path="/moderator" component={ModeratorApp} onEnter={requireModeratorRole}/>
         </Route>
       {/*</AlertProvider>*/}

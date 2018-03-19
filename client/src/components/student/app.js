@@ -85,7 +85,6 @@ class StudentApp extends Component {
 
     return (
       <div className="container">
-        <OverviewMenu/>
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <div className="form-row">
             <Field
