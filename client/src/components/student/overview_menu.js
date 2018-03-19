@@ -1,8 +1,17 @@
 import React, { Component } from "react"
 import {Link} from "react-router"
+import { connect } from "react-redux"
 
 class OverviewMenu extends Component {
   render() {
+    const location = this.props.location.pathname
+
+    let currentBreadcrum = ''
+    if (location === '/home/general') {
+      currentBreadcrum = 'General info'
+    } else if(location == '/home/documents') {
+      currentBreadcrum = 'Documents'
+    }
     return (
       <div className="container">
         <div className="mt-4">
@@ -10,7 +19,7 @@ class OverviewMenu extends Component {
             <div aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item"><a href="#">Home</a></li>
-                <li className="breadcrumb-item active" aria-current="page">General info</li>
+                <li className="breadcrumb-item active" aria-current="page">{currentBreadcrum}</li>
               </ol>
             </div>
             <ul className="nav nav-pills">
