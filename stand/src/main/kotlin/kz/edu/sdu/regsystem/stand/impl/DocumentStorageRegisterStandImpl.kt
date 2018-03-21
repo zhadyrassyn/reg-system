@@ -1,10 +1,15 @@
 package kz.edu.sdu.regsystem.stand.impl
 
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureException
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.DocumentStorageRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
-import kz.edu.sdu.regsystem.stand.impl.storage.StorageProperties
+import kz.edu.sdu.regsystem.stand.model.Document
+import kz.edu.sdu.regsystem.stand.model.User
+import kz.edu.sdu.regsystem.stand.props.StorageProperties
 import kz.edu.sdu.regsystem.stand.model.exceptions.StorageException
+import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
@@ -36,15 +41,16 @@ class DocumentStorageRegisterStandImpl(
     }
 
     override fun store(file: MultipartFile, documentType: DocumentType, authToken: String) {
-//        val token = authToken.substring(7)
-//        val jwtKey = env.getProperty("jwtKey")
-//
-//        val email = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.subject
-//            ?: throw SignatureException("Cannot parse jwt.")
-//
-//
-//        val user = db.users.values.firstOrNull { it -> it.email == email } ?:
-//        throw UserDoesNotExistsException("User does not exist")
+        val token = authToken.substring(7)
+        val jwtKey = env.getProperty("jwtKey")
+
+        var id = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.get("id", Integer::class.java)
+            ?: throw SignatureException("Cannot parse jwt.")
+
+
+        val user = db.users.values.firstOrNull { id.toLong() == it.id } ?:
+        throw UserDoesNotExistsException("User does not exist")
+
 
         var filename = StringUtils.cleanPath(file.originalFilename)
 
@@ -60,7 +66,7 @@ class DocumentStorageRegisterStandImpl(
 
             try {
                 val fileExtension = getFileExtension(filename)
-                filename = "1_$documentType.$fileExtension"
+                filename = "${user.id}_$documentType.$fileExtension"
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -68,6 +74,14 @@ class DocumentStorageRegisterStandImpl(
 
             Files.copy(file.inputStream, rootLocation.resolve(filename),
                 StandardCopyOption.REPLACE_EXISTING)
+
+            val userDocument = Document(
+                id = db.longCounter.incrementAndGet(),
+                documentType = documentType,
+                path = rootLocation.resolve(filename)
+            )
+
+            user.documents.put(documentType, userDocument)
         } catch (e: IOException) {
             throw StorageException("Failed to store file " + filename, e)
         }

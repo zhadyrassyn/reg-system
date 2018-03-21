@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl.db
 
 import kz.edu.sdu.regsystem.stand.model.City
+import kz.edu.sdu.regsystem.stand.model.Document
 import kz.edu.sdu.regsystem.stand.model.School
 import kz.edu.sdu.regsystem.stand.model.User
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
@@ -17,7 +18,6 @@ class Db {
     val userRoles = HashMap<Long, RoleType>()
     val cities = HashMap<Long, City>()
     val schools = HashMap<Long, School>()
-
 
     init {
         val u1 = User(

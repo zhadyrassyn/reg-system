@@ -1,6 +1,6 @@
 package kz.edu.sdu.regsystem.stand
 
-import kz.edu.sdu.regsystem.stand.impl.storage.StorageProperties
+import kz.edu.sdu.regsystem.stand.props.StorageProperties
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties

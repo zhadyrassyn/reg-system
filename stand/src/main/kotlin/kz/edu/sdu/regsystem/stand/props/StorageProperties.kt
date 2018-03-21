@@ -1,4 +1,4 @@
-package kz.edu.sdu.regsystem.stand.impl.storage
+package kz.edu.sdu.regsystem.stand.props
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
