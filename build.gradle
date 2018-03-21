@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.21'
+    ext.kotlin_version = '1.2.30'
     ext.springboot_version = '1.5.10.RELEASE'
     ext.jackson_module_version = '2.9.0'
     ext.apache_poi_version = '3.14'
