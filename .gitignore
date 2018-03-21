@@ -8,3 +8,5 @@ controller/out
 stand/out
 client/node_modules
 client/package-lock.json
+
+upload-dir

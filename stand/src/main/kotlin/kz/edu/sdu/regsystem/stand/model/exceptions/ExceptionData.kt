@@ -1,5 +1,7 @@
 package kz.edu.sdu.regsystem.stand.model.exceptions
 
+import java.lang.RuntimeException
+
 /* BAD REQUEST EXCEPTIONS */
 open class BadRequestException (override var message: String): Exception(message)
 
@@ -13,3 +15,11 @@ open class ForbiddenException (override var message: String): Exception(message)
 
 open class UserNotActiveException (override var message: String): ForbiddenException(message)
 /* END FORBIDDEN EXCEPTIONS */
+
+
+/* RUNTIME EXCEPTIONS */
+class StorageException : RuntimeException {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, cause: Throwable) : super(message, cause)
+}

@@ -89,6 +89,7 @@ class AuthRegisterStandImpl(
             .setExpiration(getNextDay())
             .setIssuedAt(Date())
             .claim("scope", scope)
+            .claim("id", user.id)
             .compact()
     }
 
