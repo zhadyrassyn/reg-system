@@ -16,6 +16,7 @@ import {
 import {
   saveDocument
 } from "../../actions"
+import {WAITING_FOR_RESPONSE} from "../../constants/index";
 
 const documents = [
   {
@@ -91,13 +92,14 @@ class DocumentsForm extends Component {
       let status = documentsStatus[document.type]
       let statusText = status ? `Status: ${status}` : `Status: Not send`
 
+      const className = `ml-3 ${status === WAITING_FOR_RESPONSE ? 'text-warning' : 'text-secondary'}`
       return (
         <li key={document.type}>
           <p>
             <a href="#" onClick={this.exportFile} name={document.type}>
               {document.text}
             </a>
-            / {statusText}
+            <span className={className}>{statusText}</span>
           </p>
         </li>
       )

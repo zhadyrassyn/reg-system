@@ -7,4 +7,4 @@ import java.nio.file.Path
 data class Document(val id: Long,
                     val documentType: DocumentType,
                     val path: Path,
-                    val documentStatus: DocumentStatus = DocumentStatus.WAITING)
+                    val documentStatus: DocumentStatus = DocumentStatus.NOT_SEND)

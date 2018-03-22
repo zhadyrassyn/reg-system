@@ -2,10 +2,12 @@ package kz.edu.sdu.regsystem.stand.impl
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureException
+import kz.edu.sdu.regsystem.controller.model.DocumentData
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
-import kz.edu.sdu.regsystem.controller.register.DocumentStorageRegister
+import kz.edu.sdu.regsystem.controller.register.DocumentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.Document
+import kz.edu.sdu.regsystem.stand.model.enums.DocumentStatus
 import kz.edu.sdu.regsystem.stand.props.StorageProperties
 import kz.edu.sdu.regsystem.stand.model.exceptions.StorageException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
@@ -18,12 +20,14 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Service
-class DocumentStorageRegisterStandImpl(
+class DocumentRegisterStandImpl(
     properties: StorageProperties,
     val db: Db,
-    val env: Environment) : DocumentStorageRegister {
+    val env: Environment) : DocumentRegister {
 
     private lateinit var rootLocation: Path
 
@@ -77,7 +81,8 @@ class DocumentStorageRegisterStandImpl(
             val userDocument = Document(
                 id = db.longCounter.incrementAndGet(),
                 documentType = documentType,
-                path = rootLocation.resolve(filename)
+                path = rootLocation.resolve(filename),
+                documentStatus = DocumentStatus.WAITING_FOR_RESPONSE
             )
 
             user.documents.put(documentType, userDocument)
@@ -85,6 +90,25 @@ class DocumentStorageRegisterStandImpl(
             throw StorageException("Failed to store file " + filename, e)
         }
 
+    }
+
+    override fun fetchDocumentsStatus(authToken: String): List<DocumentData> {
+        val token = authToken.substring(7)
+        val jwtKey = env.getProperty("jwtKey")
+
+        val id = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.get("id", Integer::class.java)
+            ?: throw SignatureException("Cannot parse jwt.")
+
+
+        val user = db.users.values.firstOrNull { id.toLong() == it.id } ?:
+        throw UserDoesNotExistsException("User does not exist")
+
+        return user.documents.values.map {
+            DocumentData(
+                type = it.documentType.toString(),
+                status = it.documentStatus.toString()
+            )
+        }
     }
 
     private fun getFileExtension(filename: String): String {

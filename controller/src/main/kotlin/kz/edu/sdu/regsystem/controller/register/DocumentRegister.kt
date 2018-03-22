@@ -1,10 +1,13 @@
 package kz.edu.sdu.regsystem.controller.register
 
+import kz.edu.sdu.regsystem.controller.model.DocumentData
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import org.springframework.web.multipart.MultipartFile
 
-interface DocumentStorageRegister {
+interface DocumentRegister {
     fun init();
 
     fun store(file: MultipartFile, documentType: DocumentType, authToken: String)
+
+    fun fetchDocumentsStatus(authToken: String) : List<DocumentData>
 }
