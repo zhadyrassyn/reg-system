@@ -202,8 +202,6 @@ export const saveDocument = (file, documentType) => (dispatch) => {
   formData.append('file', file)
   formData.append('type', documentType)
 
-  console.log(documentType)
-  console.log('form Data ', formData)
   axios.post(request, formData, {
     headers: {
       'Authorization': `Bearer ${token}`,

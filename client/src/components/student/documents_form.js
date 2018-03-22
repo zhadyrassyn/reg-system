@@ -64,20 +64,23 @@ class DocumentsForm extends Component {
 
   exportFile = (e) => {
     e.preventDefault()
+    const fileInputId = e.target.name
 
     this.setState({documentType: e.target.name}, () => {
       //script for opening 'choose file' dialog
-      const elem = document.getElementById("exportFile")
+      const elem = document.getElementById(fileInputId)
       if(elem && document.createEvent) {
         const evt = document.createEvent("MouseEvents");
         evt.initEvent("click", true, false);
         elem.dispatchEvent(evt);
       }
+
     })
 
   }
 
   onFileChange = (e) => {
+    console.log('true')
     const file = e.target.files[0]
     const documentType = this.state.documentType
 
@@ -97,6 +100,7 @@ class DocumentsForm extends Component {
               {document.text}
             </a>
             / {statusText}
+            <input style={{display:'none'}} type="file" id={document.type} onChange={this.onFileChange} onClick={e => {e.target.value = null}}/>
           </p>
         </li>
       )
@@ -111,8 +115,6 @@ class DocumentsForm extends Component {
         <ol>
           {this.renderList(documentsStatus)}
         </ol>
-
-        <input style={{display:'none'}} type="file" className="form-control-file" id="exportFile" onChange={this.onFileChange}/>
         <div className="form-group">
           <label htmlFor="comment">Review Comment</label>
           <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
