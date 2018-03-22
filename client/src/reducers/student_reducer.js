@@ -4,7 +4,7 @@ import {
 } from "../actions/types"
 
 import {
-  IN_WAITING,
+  WAITING_FOR_RESPONSE,
   ACCEPTED,
   REJECTED
 } from "../constants/index"
@@ -19,8 +19,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         documentsStatus: {
-          ...state,
-          [action.documentType]: IN_WAITING
+          ...state.documentsStatus,
+          [action.documentType]: WAITING_FOR_RESPONSE
         }
       }
     case SAVE_STUDENT_DOCUMENT_FAILURE:

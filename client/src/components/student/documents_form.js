@@ -17,6 +17,41 @@ import {
   saveDocument
 } from "../../actions"
 
+const documents = [
+  {
+    type: DIPLOMA_CERTIFICATE,
+    text: 'Certificate of secondary education completion or the original diploma of technical and vocational (primary or secondary vocational, post-secondary) education'
+  },
+  {
+    type: UNT_CT_CERTIFICATE,
+    text: 'Certificate of UNT / CT'
+  },
+  {
+    type: PHOTO_3x4,
+    text: 'Photo 3x4',
+  },
+  {
+    type: HEALTH_086,
+    text: 'Health certificate 086-U'
+  },
+  {
+    type: HEALTH_063,
+    text: 'Health certificate 0-63'
+  },
+  {
+    type: FLUOROGRAPHY,
+    text: 'fluorography'
+  },
+  {
+    type: IDENTITY_CARD_FRONT,
+    text: 'A copy of the identity card (front side)'
+  },
+  {
+    type: IDENTITY_CARD_BACK,
+    text: 'A copy of the identity card (back side)'
+  }
+]
+
 class DocumentsForm extends Component {
 
   constructor(props) {
@@ -50,34 +85,31 @@ class DocumentsForm extends Component {
     saveDocument(file, documentType)
   }
 
+  renderList = (documentsStatus) => {
+    return documents.map(document => {
+      let status = documentsStatus[document.type]
+      let statusText = status ? `Status: ${status}` : `Status: Not send`
+
+      return (
+        <li key={document.type}>
+          <p>
+            <a href="#" onClick={this.exportFile} name={document.type}>
+              {document.text}
+            </a>
+            / {statusText}
+          </p>
+        </li>
+      )
+    })
+  }
   render() {
+
+    const { documentsStatus } = this.props
+
     return (
       <div className="container">
         <ol>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={DIPLOMA_CERTIFICATE}>Certificate of secondary education completion or the original diploma of technical and vocational (primary or secondary vocational, post-secondary) education</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={UNT_CT_CERTIFICATE}>Certificate of UNT / CT</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={PHOTO_3x4}>Photo 3x4</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={HEALTH_086}>Health certificate 086-U</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={HEALTH_063}>Health certificate 0-63</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={FLUOROGRAPHY}>fluorography</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={IDENTITY_CARD_FRONT}>A copy of the identity card (front side)</a></p>
-          </li>
-          <li>
-            <p><a href="#" onClick={this.exportFile} name={IDENTITY_CARD_BACK}>A copy of the identity card (back side)</a></p>
-          </li>
+          {this.renderList(documentsStatus)}
         </ol>
 
         <input style={{display:'none'}} type="file" className="form-control-file" id="exportFile" onChange={this.onFileChange}/>
@@ -92,7 +124,7 @@ class DocumentsForm extends Component {
 
 export default connect(
   state => ({
-
+    documentsStatus: state.student.documentsStatus
   }),
   dispatch => ({
     saveDocument: bindActionCreators(saveDocument, dispatch)

@@ -11,6 +11,6 @@ export const IDENTITY_CARD_FRONT='IDENTITY_CARD_FRONT'
 export const IDENTITY_CARD_BACK='IDENTITY_CARD_BACK'
 
 //document statuses
-export const IN_WAITING = 'IN_WAITING'
+export const WAITING_FOR_RESPONSE = 'WAITING_FOR_RESPONSE'
 export const ACCEPTED = 'ACCEPTED'
 export const REJECTED = 'REJECTED'
