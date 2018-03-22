@@ -1,4 +1,6 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import { bindActionCreators } from "redux"
 
 import {
   DIPLOMA_CERTIFICATE,
@@ -11,28 +13,41 @@ import {
   IDENTITY_CARD_BACK
 } from "../../constants"
 
+import {
+  saveDocument
+} from "../../actions"
+
 class DocumentsForm extends Component {
 
   constructor(props) {
     super(props)
 
+    this.state = ({
+      documentType: ''
+    })
   }
 
   exportFile = (e) => {
     e.preventDefault()
 
-    //script for opening 'choose file' dialog
-    const elem = document.getElementById("exportFile")
-    if(elem && document.createEvent) {
-      const evt = document.createEvent("MouseEvents");
-      evt.initEvent("click", true, false);
-      elem.dispatchEvent(evt);
-    }
+    this.setState({documentType: e.target.name}, () => {
+      //script for opening 'choose file' dialog
+      const elem = document.getElementById("exportFile")
+      if(elem && document.createEvent) {
+        const evt = document.createEvent("MouseEvents");
+        evt.initEvent("click", true, false);
+        elem.dispatchEvent(evt);
+      }
+    })
+
   }
 
   onFileChange = (e) => {
     const file = e.target.files[0]
-    console.log(file)
+    const documentType = this.state.documentType
+
+    const { saveDocument } = this.props
+    saveDocument(file, documentType)
   }
 
   render() {
@@ -75,4 +90,11 @@ class DocumentsForm extends Component {
   }
 }
 
-export default DocumentsForm
+export default connect(
+  state => ({
+
+  }),
+  dispatch => ({
+    saveDocument: bindActionCreators(saveDocument, dispatch)
+  })
+)(DocumentsForm)

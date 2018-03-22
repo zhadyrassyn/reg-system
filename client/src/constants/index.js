@@ -9,3 +9,8 @@ export const HEALTH_063='HEALTH_063'
 export const FLUOROGRAPHY='FLUOROGRAPHY'
 export const IDENTITY_CARD_FRONT='IDENTITY_CARD_FRONT'
 export const IDENTITY_CARD_BACK='IDENTITY_CARD_BACK'
+
+//document statuses
+export const IN_WAITING = 'IN_WAITING'
+export const ACCEPTED = 'ACCEPTED'
+export const REJECTED = 'REJECTED'

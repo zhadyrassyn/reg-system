@@ -13,7 +13,9 @@ import {
   FETCH_SCHOOLS_FAILURE,
   FETCH_SCHOOLS_SUCCESS,
   SAVE_STUDENT_GENERAL_INFO_FAILURE,
-  SAVE_STUDENT_GENERAL_INFO_SUCCESS
+  SAVE_STUDENT_GENERAL_INFO_SUCCESS,
+  SAVE_STUDENT_DOCUMENT_FAILURE,
+  SAVE_STUDENT_DOCUMENT_SUCCESS
 } from "./types"
 
 import {
@@ -181,13 +183,42 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
     }
   }).then(response => {
     dispatch({
-      type: SAVE_STUDENT_GENERAL_INFO_SUCCES,
+      type: SAVE_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
   }).catch(error => {
     dispatch({
-      type: SAVE_STUDENT_GENERAL_INFO_SUCCESS,
+      type: SAVE_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
   })
+}
+
+export const saveDocument = (file, documentType) => (dispatch) => {
+  const request = `${config.url}/student/document`
+  const token = localStorage.getItem('token')
+  const formData = new FormData()
+
+  formData.append('file', file)
+  formData.append('type', documentType)
+
+  console.log(documentType)
+  console.log('form Data ', formData)
+  axios.post(request, formData, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-type': 'multipart/form-data',
+    }
+  }).then(response => {
+    dispatch({
+      type: SAVE_STUDENT_DOCUMENT_SUCCESS,
+      documentType
+    })
+  })
+    .catch(error =>
+      dispatch({
+        type: SAVE_STUDENT_DOCUMENT_FAILURE,
+        message: error.response && error.response.message || Message.systemError[lang]
+      })
+    )
 }

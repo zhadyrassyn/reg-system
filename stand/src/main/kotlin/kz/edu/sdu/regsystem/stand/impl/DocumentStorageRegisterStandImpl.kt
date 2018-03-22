@@ -6,7 +6,6 @@ import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.DocumentStorageRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.Document
-import kz.edu.sdu.regsystem.stand.model.User
 import kz.edu.sdu.regsystem.stand.props.StorageProperties
 import kz.edu.sdu.regsystem.stand.model.exceptions.StorageException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
@@ -22,7 +21,7 @@ import java.nio.file.StandardCopyOption
 
 @Service
 class DocumentStorageRegisterStandImpl(
-    val properties: StorageProperties,
+    properties: StorageProperties,
     val db: Db,
     val env: Environment) : DocumentStorageRegister {
 
@@ -44,7 +43,7 @@ class DocumentStorageRegisterStandImpl(
         val token = authToken.substring(7)
         val jwtKey = env.getProperty("jwtKey")
 
-        var id = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.get("id", Integer::class.java)
+        val id = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.get("id", Integer::class.java)
             ?: throw SignatureException("Cannot parse jwt.")
 
 

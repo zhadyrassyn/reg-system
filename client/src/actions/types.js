@@ -20,3 +20,6 @@ export const FETCH_SCHOOLS_FAILURE = 'fetch_schools_failure'
 
 export const SAVE_STUDENT_GENERAL_INFO_SUCCESS = 'save_student_general_info_success'
 export const SAVE_STUDENT_GENERAL_INFO_FAILURE = 'save_student_general_info_failure'
+
+export const SAVE_STUDENT_DOCUMENT_SUCCESS = 'save_student_document_success'
+export const SAVE_STUDENT_DOCUMENT_FAILURE = 'save_student_document_failure'
