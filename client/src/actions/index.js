@@ -15,7 +15,9 @@ import {
   SAVE_STUDENT_GENERAL_INFO_FAILURE,
   SAVE_STUDENT_GENERAL_INFO_SUCCESS,
   SAVE_STUDENT_DOCUMENT_FAILURE,
-  SAVE_STUDENT_DOCUMENT_SUCCESS
+  SAVE_STUDENT_DOCUMENT_SUCCESS,
+  FETCH_STUDENT_DOCUMENTS_STATUS_FAILURE,
+  FETCH_STUDENT_DOCUMENTS_STATUS_SUCCESS
 } from "./types"
 
 import {
@@ -216,7 +218,28 @@ export const saveDocument = (file, documentType) => (dispatch) => {
     .catch(error =>
       dispatch({
         type: SAVE_STUDENT_DOCUMENT_FAILURE,
-        message: error.response && error.response.message || Message.systemError[lang]
+        message: error.response && error.response.message
       })
     )
+}
+
+export const fetchDocumentsStatus = () => (dispatch) => {
+  const request = `${config.url}/student/document`
+
+  const token = localStorage.getItem('token')
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(response => {
+    dispatch({
+      type: FETCH_STUDENT_DOCUMENTS_STATUS_SUCCESS,
+      data: response.data
+    })
+  }).catch(error => {
+    dispatch({
+      type: FETCH_STUDENT_DOCUMENTS_STATUS_FAILURE,
+      message: error.response && error.response.message
+    })
+  })
 }

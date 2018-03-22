@@ -14,9 +14,13 @@ import {
 } from "../../constants"
 
 import {
-  saveDocument
+  saveDocument,
+  fetchDocumentsStatus
 } from "../../actions"
-import {WAITING_FOR_RESPONSE} from "../../constants/index";
+
+import {
+  WAITING_FOR_RESPONSE
+} from "../../constants/index";
 
 const documents = [
   {
@@ -61,6 +65,11 @@ class DocumentsForm extends Component {
     this.state = ({
       documentType: ''
     })
+  }
+
+  componentDidMount() {
+    const { fetchDocumentsStatus } = this.props
+    fetchDocumentsStatus()
   }
 
   exportFile = (e) => {
@@ -129,6 +138,7 @@ export default connect(
     documentsStatus: state.student.documentsStatus
   }),
   dispatch => ({
-    saveDocument: bindActionCreators(saveDocument, dispatch)
+    saveDocument: bindActionCreators(saveDocument, dispatch),
+    fetchDocumentsStatus: bindActionCreators(fetchDocumentsStatus, dispatch)
   })
 )(DocumentsForm)

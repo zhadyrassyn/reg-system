@@ -1,6 +1,8 @@
 import {
   SAVE_STUDENT_DOCUMENT_FAILURE,
-  SAVE_STUDENT_DOCUMENT_SUCCESS
+  SAVE_STUDENT_DOCUMENT_SUCCESS,
+  FETCH_STUDENT_DOCUMENTS_STATUS_FAILURE,
+  FETCH_STUDENT_DOCUMENTS_STATUS_SUCCESS
 } from "../actions/types"
 
 import {
@@ -28,6 +30,17 @@ export default (state = initialState, action) => {
         ...state,
         error: action.error
       }
+    case FETCH_STUDENT_DOCUMENTS_STATUS_SUCCESS:
+      const copy =  {
+        ...state,
+        documentsStatus: {
+          ...state.documentsStatus,
+        },
+      }
+
+      action.data.forEach(document => copy.documentsStatus[document.type] = document.status)
+
+      return copy
     default:
       return state
   }
