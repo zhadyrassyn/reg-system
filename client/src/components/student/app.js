@@ -50,15 +50,10 @@ class StudentApp extends Component {
 
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
-    let disabled = field.input.value !== undefined && field.input.value !== ''  || field.id === 'customSchool'
+    let disabled = field.accessType === ACCESS_TYPE_EDIT
 
     if(field.type === 'date' && disabled) {
       field.input.value = moment(field.input.value).format("YYYY-MM-DD")
-    }
-
-    if(field.id === 'customSchool' && field.school) {
-      disabled = true
-      console.log('true)')
     }
 
     return (
@@ -75,7 +70,7 @@ class StudentApp extends Component {
   renderSelect(field) {
     const { meta: { touched, error, warning } } = field;
 
-    const disabled = field.input.value !== undefined && field.input.value !== -1
+    const disabled = field.accessType === ACCESS_TYPE_EDIT
 
     return (
       <div className="col">
@@ -118,10 +113,9 @@ class StudentApp extends Component {
     const { cities, schools, studentInfo, initialValues } = this.props
     const { handleSubmit, submitting, pristine} = this.props
 
-    const disabled = initialValues.accessType === ACCESS_TYPE_EDIT
+    const edit = initialValues.accessType === ACCESS_TYPE_EDIT
 
-    const actionBtnText = initialValues.accessType === ACCESS_TYPE_SAVE ? 'Save' : 'Edit'
-    const actionBtnClassName = `btn mt-3 ${initialValues.accessType === ACCESS_TYPE_SAVE ? 'btn-success' : 'btn-warning'}`
+    console.log('initialValues', initialValues)
     return (
       <div className="container">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -134,7 +128,7 @@ class StudentApp extends Component {
               placeholder="First name"
               component={this.renderField}
               validate={required}
-              disabled={disabled}
+              accessType={initialValues.accessType}
             />
             <Field
               label="Middle name"
@@ -143,7 +137,7 @@ class StudentApp extends Component {
               type="text"
               placeholder="Middle name"
               component={this.renderField}
-              disabled={disabled}
+              accessType={initialValues.accessType}
             />
             <Field
               label="Last name"
@@ -153,7 +147,7 @@ class StudentApp extends Component {
               placeholder="Last name"
               component={this.renderField}
               validate={required}
-              disabled={disabled}
+              accessType={initialValues.accessType}
             />
           </div>
           <div className="form-row mt-3">
@@ -164,7 +158,7 @@ class StudentApp extends Component {
               type="date"
               component={this.renderField}
               validate={required}
-              disabled={disabled}
+              accessType={initialValues.accessType}
             />
           </div>
           <div className="form-row mt-3">
@@ -177,6 +171,7 @@ class StudentApp extends Component {
               onChange={this.handleCityChange}
               validate={required}
               placeholder="Choose your city"
+              accessType={initialValues.accessType}
             />
           </div>
           <div className="form-row mt-3">
@@ -187,6 +182,7 @@ class StudentApp extends Component {
               options={schools}
               component={this.renderSelect}
               placeholder="Choose your school"
+              accessType={initialValues.accessType}
             />
             <Field
               label="Not finding your school? Write down"
@@ -195,10 +191,12 @@ class StudentApp extends Component {
               type="text"
               component={this.renderField}
               placeholder="..."
+              accessType={initialValues.accessType}
             />
           </div>
           <div className="col text-right">
-            <button className={actionBtnClassName} type="submit" disabled={submitting}>{actionBtnText}</button>
+            {!edit && <button className="btn mt-3 btn-success" type="submit" disabled={submitting}>Save</button>}
+            {edit && <button className="btn mt-3 btn-warning">Edit</button>}
           </div>
         </form>
       </div>
