@@ -14,3 +14,7 @@ export const IDENTITY_CARD_BACK='IDENTITY_CARD_BACK'
 export const WAITING_FOR_RESPONSE = 'WAITING_FOR_RESPONSE'
 export const ACCEPTED = 'ACCEPTED'
 export const REJECTED = 'REJECTED'
+
+//operaion statuses
+export const ACCESS_TYPE_SAVE = 'SAVE'
+export const ACCESS_TYPE_EDIT = 'EDIT'

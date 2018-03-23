@@ -5,6 +5,7 @@ import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {Field, reduxForm, actionCreators, getFormValues} from "redux-form"
 import MySelectComponent from "../my_select_component"
+import moment from "moment"
 
 import {
   fetchCities,
@@ -12,6 +13,11 @@ import {
   saveStudentGeneralInfo,
   fetchStudentGeneralInfo
 } from "../../actions"
+
+import {
+  ACCESS_TYPE_SAVE,
+  ACCESS_TYPE_EDIT
+} from "../../constants"
 
 //validations
 const required = value => (value ? undefined : 'Required')
@@ -25,17 +31,37 @@ class StudentApp extends Component {
 
   componentDidMount() {
     const { fetchCities, fetchStudentGeneralInfo } = this.props
-    fetchStudentGeneralInfo()
-    fetchCities()
+    fetchStudentGeneralInfo(
+      (data) => {
+        if (data.accessType === ACCESS_TYPE_SAVE) {
+          fetchCities()
+        } else if(data.accessType === ACCESS_TYPE_EDIT) {
+          // const initialValues = {
+          //   "firstName" : "Daniyar",
+          //   "lastName": "Zhadyrassyn"
+          // }
+          // this.props.initialize(initialValues)
+        }
+      },
+      () => {
+        console.log('fetchStudentGeneralInfo error')
+      }
+    )
   }
 
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
-
+    console.log('Field ', field)
+    const disabled = field.input.value !== undefined && field.input.value !== ''
+    if(field.type === 'date' && disabled) {
+      field.input.value = moment(field.input.value).format("YYYY-MM-DD")
+    }
     return (
       <div className="col">
         <label htmlFor={field.id}>{field.label}</label>
-        <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder} id={field.id} {...field.input}/>
+        <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder} id={field.id}
+               disabled={disabled} {...field.input}
+        />
         {touched && error && <span>{error}</span>}
       </div>
     )
@@ -82,11 +108,14 @@ class StudentApp extends Component {
 
   render() {
 
-    const { cities, schools, studentInfo } = this.props
-    const { handleSubmit, submitting } = this.props
+    const { cities, schools, studentInfo, initialValues } = this.props
+    const { handleSubmit, submitting, pristine} = this.props
 
-    console.log('Student info', studentInfo)
-    console.log('values ', this.props.values)
+    console.log('pristine ', pristine)
+
+    const disabled = initialValues.accessType === ACCESS_TYPE_EDIT
+    console.log('initial values ', initialValues)
+
     return (
       <div className="container">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -98,7 +127,8 @@ class StudentApp extends Component {
               type="text"
               placeholder="First name"
               component={this.renderField}
-              validate={required}
+              // validate={required}
+              disabled={disabled}
             />
             <Field
               label="Middle name"
@@ -107,6 +137,7 @@ class StudentApp extends Component {
               type="text"
               placeholder="Middle name"
               component={this.renderField}
+              disabled={disabled}
             />
             <Field
               label="Last name"
@@ -115,7 +146,8 @@ class StudentApp extends Component {
               type="text"
               placeholder="Last name"
               component={this.renderField}
-              validate={required}
+              // validate={required}
+              disabled={disabled}
             />
           </div>
           <div className="form-row mt-3">
@@ -125,7 +157,8 @@ class StudentApp extends Component {
               id="birthDate"
               type="date"
               component={this.renderField}
-              validate={required}
+              // validate={required}
+              disabled={disabled}
             />
           </div>
           <div className="form-row mt-3">
@@ -136,7 +169,7 @@ class StudentApp extends Component {
               options={cities}
               component={this.renderSelect}
               onChange={this.handleCityChange}
-              validate={required}
+              // validate={required}
               placeholder="Choose your city"
             />
           </div>
@@ -176,6 +209,13 @@ const validate = (values) => {
   return errors
 }
 
+StudentApp = reduxForm({
+  form: 'GeneralInfo',
+  // validate,
+  enableReinitialize: true,
+})(StudentApp)
+
+
 StudentApp = connect(
   state => ({
     cities: state.info.cities,
@@ -191,7 +231,4 @@ StudentApp = connect(
   })
 )(StudentApp)
 
-export default reduxForm({
-  form: 'GeneralInfo',
-  validate
-})(StudentApp)
+export default StudentApp

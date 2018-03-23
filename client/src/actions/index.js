@@ -246,7 +246,7 @@ export const fetchDocumentsStatus = () => (dispatch) => {
   })
 }
 
-export const fetchStudentGeneralInfo = () => (dispatch) => {
+export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/student/general`
 
   const token = localStorage.getItem('token')
@@ -259,10 +259,12 @@ export const fetchStudentGeneralInfo = () => (dispatch) => {
       type: FETCH_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
+    onSuccess(data)
   }).catch(error => {
     dispatch({
       type: FETCH_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
+    onError()
   })
 }
