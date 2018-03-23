@@ -21,6 +21,10 @@ class StudentController(
         studentRegister.saveGeneralInfo(
             authToken = authToken, generalInfoData = generalInfoData)
 
+    @GetMapping("/general")
+    fun getGeneralInfo(@RequestHeader("Authorization") authToken: String) =
+        studentRegister.getGeneralInfo(authToken)
+
 
     @GetMapping("/document")
     fun getDocumentsStatus(@RequestHeader("Authorization") authToken: String) =

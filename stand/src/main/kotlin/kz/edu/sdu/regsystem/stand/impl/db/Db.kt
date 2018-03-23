@@ -9,6 +9,9 @@ import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 @Component
 class Db {
@@ -17,40 +20,8 @@ class Db {
     val verificationTokens = HashMap<Long, String>()
     val userRoles = HashMap<Long, RoleType>()
     val cities = HashMap<Long, City>()
-    val schools = HashMap<Long, School>()
 
-    init {
-        val u1 = User(
-                id = longCounter.incrementAndGet(),
-                email = "dandibobo537@gmail.com",
-                password = "qwerty",
-                userStatus = UserStatus.ACTIVE)
-
-        val u2 = User(
-            id = longCounter.incrementAndGet(),
-                email = "notActive@gmail.com",
-                password = "qwerty",
-                userStatus = UserStatus.NONACTIVE)
-
-        val u3 = User(
-            id = longCounter.incrementAndGet(),
-            email = "moderator@test.com",
-            password = "qwerty",
-            userStatus = UserStatus.ACTIVE
-        )
-
-        users.put(u1.id, u1)
-        users.put(u2.id, u2)
-        users.put(u3.id, u3)
-
-        verificationTokens.put(u1.id, "123")
-        verificationTokens.put(u2.id, "678")
-
-        userRoles.put(u1.id, RoleType.USER)
-        userRoles.put(u2.id, RoleType.USER)
-        userRoles.put(u3.id, RoleType.MODERATOR)
-
-        //fill cities
+    init { //fill cities
         val c1 = City(id = longCounter.incrementAndGet(), name = "Almaty")
         val c2 = City(id = longCounter.incrementAndGet(), name = "Astana")
         val c3 = City(id = longCounter.incrementAndGet(), name ="Qyzylorda")
@@ -78,5 +49,49 @@ class Db {
             }
         }
 
+        val u1 = User(
+            id = longCounter.incrementAndGet(),
+            email = "dandibobo537@gmail.com",
+            password = "qwerty",
+            userStatus = UserStatus.ACTIVE,
+            firstName = "Daniyar",
+            middleName = "Temirbekovich",
+            lastName = "Zhadyrassyn",
+            birthDate = toDate("1997/06/11"),
+            cityId = c2.id,
+            schoolId = c2.schools[0].id
+            )
+
+        val u2 = User(
+            id = longCounter.incrementAndGet(),
+                email = "notActive@gmail.com",
+                password = "qwerty",
+                userStatus = UserStatus.NONACTIVE)
+
+        val u3 = User(
+            id = longCounter.incrementAndGet(),
+            email = "moderator@test.com",
+            password = "qwerty",
+            userStatus = UserStatus.ACTIVE
+        )
+
+        users.put(u1.id, u1)
+        users.put(u2.id, u2)
+        users.put(u3.id, u3)
+
+        verificationTokens.put(u1.id, "123")
+        verificationTokens.put(u2.id, "678")
+
+        userRoles.put(u1.id, RoleType.USER)
+        userRoles.put(u2.id, RoleType.USER)
+        userRoles.put(u3.id, RoleType.MODERATOR)
+
+    }
+
+    private fun toDate(birthDate: String) : Date {
+        val pattern = "yyyy/MM/dd"
+        val format = SimpleDateFormat(pattern)
+
+        return format.parse(birthDate)
     }
 }
