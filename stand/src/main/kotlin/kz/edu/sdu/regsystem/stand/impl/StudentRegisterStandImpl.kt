@@ -10,6 +10,7 @@ import kz.edu.sdu.regsystem.controller.model.enums.AccessType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.School
+import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.core.env.Environment
@@ -57,8 +58,6 @@ class StudentRegisterStandImpl(
         val user = db.users.values.firstOrNull { it -> it.email == email } ?:
         throw UserDoesNotExistsException("User does not exist")
 
-        db.cities[user.cityId]!!.schools.forEach { println(it.id) }
-
         //check if user not filled general info form before
         if(user.cityId == (-1).toLong() && user.schoolId == (-1).toLong()) {
             return GetGeneralInfoResponseData()
@@ -67,22 +66,28 @@ class StudentRegisterStandImpl(
             val cityDto = db.cities[user.cityId] ?: throw BadRequestException("City Does Not Exist")
             val schoolDto = db.cities[user.cityId]!!.schools.firstOrNull { it.id == user.schoolId } ?: throw BadRequestException("School Does Not Exist")
 
-            return GetGeneralInfoResponseData(
+            val responseData = GetGeneralInfoResponseData(
                 firstName = user.firstName,
                 middleName = user.middleName,
                 lastName = user.lastName,
                 birthDate = user.birthDate,
-                cityData = CityData(
+                city = CityData(
                     value = cityDto.id,
                     label = cityDto.name
                 ),
-                schoolData = SchoolData(
+                accessType = AccessType.EDIT
+            )
+
+            if(schoolDto.schoolStatus == SchoolStatus.NONACTIVE) {
+                responseData.customSchool = schoolDto.name
+            } else {
+                responseData.school = SchoolData(
                     value = schoolDto.id,
                     label = schoolDto.name,
                     schoolStatus = schoolDto.schoolStatus.toString()
-                ),
-                accessType = AccessType.EDIT
-            )
+                )
+            }
+            return responseData
         }
 
     }
