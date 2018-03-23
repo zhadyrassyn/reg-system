@@ -9,7 +9,8 @@ import MySelectComponent from "../my_select_component"
 import {
   fetchCities,
   fetchSchools,
-  saveStudentGeneralInfo
+  saveStudentGeneralInfo,
+  fetchStudentGeneralInfo
 } from "../../actions"
 
 //validations
@@ -23,7 +24,8 @@ class StudentApp extends Component {
   }
 
   componentDidMount() {
-    const { fetchCities } = this.props
+    const { fetchCities, fetchStudentGeneralInfo } = this.props
+    fetchStudentGeneralInfo()
     fetchCities()
   }
 
@@ -80,9 +82,11 @@ class StudentApp extends Component {
 
   render() {
 
-    const { cities, schools } = this.props
+    const { cities, schools, studentInfo } = this.props
     const { handleSubmit, submitting } = this.props
 
+    console.log('Student info', studentInfo)
+    console.log('values ', this.props.values)
     return (
       <div className="container">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -176,12 +180,14 @@ StudentApp = connect(
   state => ({
     cities: state.info.cities,
     schools: state.info.schools,
-    values: getFormValues('GeneralInfo')(state)
+    values: getFormValues('GeneralInfo')(state),
+    initialValues: state.student.studentInfo
   }),
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
-    saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch)
+    saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch),
+    fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch)
   })
 )(StudentApp)
 

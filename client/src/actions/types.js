@@ -26,3 +26,6 @@ export const SAVE_STUDENT_DOCUMENT_FAILURE = 'save_student_document_failure'
 
 export const FETCH_STUDENT_DOCUMENTS_STATUS_SUCCESS = 'fetch_student_documents_status_success'
 export const FETCH_STUDENT_DOCUMENTS_STATUS_FAILURE = 'fetch_student_documents_status_failure'
+
+export const FETCH_STUDENT_GENERAL_INFO_SUCCESS = 'fetch_student_general_info_success'
+export const FETCH_STUDENT_GENERAL_INFO_FAILURE = 'fetch_student_general_info_failure'
