@@ -7,7 +7,7 @@ data class GetGeneralInfoResponseData(
     val firstName: String? = "",
     val middleName: String? = "",
     val lastName: String? = "",
-    val birthDate: Date? = Date(),
+    val birthDate: String? = "",
     val city: CityData? = CityData(-1, ""),
     var school: SchoolData? = SchoolData(-1, ""),
     var customSchool: String = "",

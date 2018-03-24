@@ -164,6 +164,7 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
         type: FETCH_SCHOOLS_FAILURE,
         error: error.response && error.response.message
       })
+      onError()
     })
 }
 

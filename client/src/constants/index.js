@@ -18,3 +18,4 @@ export const REJECTED = 'REJECTED'
 //operaion statuses
 export const ACCESS_TYPE_SAVE = 'SAVE'
 export const ACCESS_TYPE_EDIT = 'EDIT'
+export const ACCESS_TYPE_SAVE_CANCELLABLE = 'SAVE_CANCELLABLE'

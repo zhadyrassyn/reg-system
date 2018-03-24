@@ -15,6 +15,8 @@ import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Service
 class StudentRegisterStandImpl(
@@ -23,6 +25,8 @@ class StudentRegisterStandImpl(
 ) : StudentRegister{
 
     override fun saveGeneralInfo(authToken: String, generalInfoData: GeneralInfoData) {
+
+        println("INPUT $generalInfoData")
         val token = authToken.substring(7)
         val jwtKey = env.getProperty("jwtKey")
 
@@ -62,7 +66,7 @@ class StudentRegisterStandImpl(
         if(user.cityId == (-1).toLong() && user.schoolId == (-1).toLong()) {
             return GetGeneralInfoResponseData()
         } else {
-
+            println("Schols ${db.cities[user.cityId]!!.schools}")
             val cityDto = db.cities[user.cityId] ?: throw BadRequestException("City Does Not Exist")
             val schoolDto = db.cities[user.cityId]!!.schools.firstOrNull { it.id == user.schoolId } ?: throw BadRequestException("School Does Not Exist")
 
@@ -70,7 +74,7 @@ class StudentRegisterStandImpl(
                 firstName = user.firstName,
                 middleName = user.middleName,
                 lastName = user.lastName,
-                birthDate = user.birthDate,
+                birthDate = toDate(user.birthDate),
                 city = CityData(
                     value = cityDto.id,
                     label = cityDto.name
@@ -90,6 +94,11 @@ class StudentRegisterStandImpl(
             return responseData
         }
 
+    }
+
+    private fun toDate(birthDate: Date) : String {
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        return formatter.format(birthDate)
     }
 
 }

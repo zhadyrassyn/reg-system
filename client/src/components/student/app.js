@@ -15,7 +15,8 @@ import {
 
 import {
   ACCESS_TYPE_SAVE,
-  ACCESS_TYPE_EDIT
+  ACCESS_TYPE_EDIT,
+  ACCESS_TYPE_SAVE_CANCELLABLE
 } from "../../constants"
 
 //validations
@@ -25,7 +26,6 @@ class StudentApp extends Component {
   constructor(props) {
     super(props)
 
-    console.log(localStorage.getItem('token'))
   }
 
   componentDidMount() {
@@ -52,9 +52,11 @@ class StudentApp extends Component {
     const { meta: { touched, error, warning } } = field;
     let disabled = field.accessType === ACCESS_TYPE_EDIT
 
-    if(field.type === 'date' && disabled) {
-      field.input.value = moment(field.input.value).format("YYYY-MM-DD")
-    }
+    // if(field.type === 'date' && disabled) {
+    //   console.log('true')
+    //   field.input.value = moment(field.input.value).format("YYYY-MM-DD")
+    //   console.log('input value ', field.input.value)
+    // }
 
     return (
       <div className="col">
@@ -82,15 +84,28 @@ class StudentApp extends Component {
   }
 
   handleCityChange = (city) => {
-      const {fetchSchools} = this.props
+      const {fetchSchools, initialValues} = this.props
       fetchSchools(city.value,
         () => {
-        this.props.values['school'] = {}
-        actionCreators.change('school')
+          initialValues.school = null
+          this.props.initialize(initialValues)
+          // this.props.values['school'] = {}
+          // actionCreators.change('school')
         },
         () => {
-          console.log('error on fetching schools')
-        })
+          console.log('error')
+        }
+        // () => {
+        // console.log('success')
+        // this.props.values['school'] = {}
+        // actionCreators.change('school')
+        //   // initialValues.school = {}
+        //
+        // },
+        // () => {
+        //   console.log('error on fetching schools')
+        // }
+        )
 
     }
 
@@ -107,15 +122,22 @@ class StudentApp extends Component {
     )
   }
 
+  edit = () => {
+    const { initialValues } = this.props
+    initialValues.accessType = ACCESS_TYPE_SAVE_CANCELLABLE
+    this.props.fetchCities()
+  }
+
 
   render() {
 
     const { cities, schools, studentInfo, initialValues } = this.props
     const { handleSubmit, submitting, pristine} = this.props
 
-    const edit = initialValues.accessType === ACCESS_TYPE_EDIT
+    const accessType = initialValues.accessType
 
-    console.log('initialValues', initialValues)
+    console.log('initial values ', initialValues)
+
     return (
       <div className="container">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -195,8 +217,10 @@ class StudentApp extends Component {
             />
           </div>
           <div className="col text-right">
-            {!edit && <button className="btn mt-3 btn-success" type="submit" disabled={submitting}>Save</button>}
-            {edit && <button className="btn mt-3 btn-warning">Edit</button>}
+            {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
+              <button className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')} type="submit" disabled={submitting}>Save</button>}
+            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" onClick={this.edit}>Edit</button>}
+            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success">Cancel</button>}
           </div>
         </form>
       </div>
