@@ -2,9 +2,8 @@ import React, { Component } from "react"
 import "./overview_menu"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import {Field, reduxForm, actionCreators, getFormValues} from "redux-form"
+import {Field, reduxForm, actionCreators, getFormValues, change as changeFieldValue} from "redux-form"
 import MySelectComponent from "../my_select_component"
-import moment from "moment"
 
 import {
   fetchCities,
@@ -36,10 +35,6 @@ class StudentApp extends Component {
         if (data.accessType === ACCESS_TYPE_SAVE) {
           fetchCities()
         } else if(data.accessType === ACCESS_TYPE_EDIT) {
-          // const initialValues = {
-          //   ...data
-          // }
-          // this.props.initialize(initialValues)
         }
       },
       () => {
@@ -51,12 +46,6 @@ class StudentApp extends Component {
   renderField(field) {
     const { meta: { touched, error, warning } } = field;
     let disabled = field.accessType === ACCESS_TYPE_EDIT
-
-    // if(field.type === 'date' && disabled) {
-    //   console.log('true')
-    //   field.input.value = moment(field.input.value).format("YYYY-MM-DD")
-    //   console.log('input value ', field.input.value)
-    // }
 
     return (
       <div className="col">
@@ -87,34 +76,20 @@ class StudentApp extends Component {
       const {fetchSchools, initialValues} = this.props
       fetchSchools(city.value,
         () => {
-          initialValues.school = null
-          this.props.initialize(initialValues)
-          // this.props.values['school'] = {}
-          // actionCreators.change('school')
+          this.props.changeFieldValue('GeneralInfo', 'school', null)
         },
         () => {
           console.log('error')
-        }
-        // () => {
-        // console.log('success')
-        // this.props.values['school'] = {}
-        // actionCreators.change('school')
-        //   // initialValues.school = {}
-        //
-        // },
-        // () => {
-        //   console.log('error on fetching schools')
-        // }
-        )
+        })
 
     }
 
   onSubmit(values) {
-    const {saveStudentGeneralInfo} = this.props
+    const {saveStudentGeneralInfo, initialValues} = this.props
     saveStudentGeneralInfo(
       values,
       () => {
-        console.log('success')
+        console.log('true')
       },
       () => {
         console.log('error')
@@ -122,21 +97,20 @@ class StudentApp extends Component {
     )
   }
 
-  edit = () => {
-    const { initialValues } = this.props
+  onEditClick = () => {
+    const { initialValues, fetchSchools, formValues } = this.props
     initialValues.accessType = ACCESS_TYPE_SAVE_CANCELLABLE
     this.props.fetchCities()
+    this.props.fetchSchools(formValues.city.value)
   }
 
 
   render() {
 
-    const { cities, schools, studentInfo, initialValues } = this.props
-    const { handleSubmit, submitting, pristine} = this.props
+    const { cities, schools, initialValues } = this.props
+    const { handleSubmit, submitting} = this.props
 
     const accessType = initialValues.accessType
-
-    console.log('initial values ', initialValues)
 
     return (
       <div className="container">
@@ -219,7 +193,7 @@ class StudentApp extends Component {
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
               <button className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')} type="submit" disabled={submitting}>Save</button>}
-            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" onClick={this.edit}>Edit</button>}
+            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" onClick={this.onEditClick}>Edit</button>}
             {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success">Cancel</button>}
           </div>
         </form>
@@ -248,14 +222,15 @@ StudentApp = connect(
   state => ({
     cities: state.info.cities,
     schools: state.info.schools,
-    values: getFormValues('GeneralInfo')(state),
+    formValues: getFormValues('GeneralInfo')(state),
     initialValues: state.student.studentInfo
   }),
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
     saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch),
-    fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch)
+    fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
+    changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
   })
 )(StudentApp)
 

@@ -130,7 +130,7 @@ export const signOut = () => {
   }
 }
 
-export const fetchCities = () => (dispatch) => {
+export const fetchCities = (onSucces, onError) => (dispatch) => {
   const request = `${config.url}/cities`
 
   axios.get(request)
@@ -139,12 +139,18 @@ export const fetchCities = () => (dispatch) => {
         type: FETCH_CITIES_SUCCESS,
         data
       })
+      if(onSucces) {
+        onSucces()
+      }
   })
     .catch(error => {
       dispatch({
         type: FETCH_CITIES_FAILURE,
         error: error.response && error.response.message
       })
+      if(onError) {
+        onError()
+      }
     })
 }
 
@@ -157,14 +163,18 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
         type: FETCH_SCHOOLS_SUCCESS,
         data
       })
-      onSuccess()
+      if(onSuccess) {
+        onSuccess()
+      }
     })
     .catch(error => {
       dispatch({
         type: FETCH_SCHOOLS_FAILURE,
         error: error.response && error.response.message
       })
-      onError()
+      if(onError) {
+        onError()
+      }
     })
 }
 
@@ -191,11 +201,17 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
       type: SAVE_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
+    if(onSuccess) {
+      onSuccess()
+    }
   }).catch(error => {
     dispatch({
       type: SAVE_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
+    if(onError) {
+      onError()
+    }
   })
 }
 
