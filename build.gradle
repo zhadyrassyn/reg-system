@@ -35,4 +35,6 @@ allprojects {
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib"
     }
+
+    bootRepackage.enabled = false
 }
