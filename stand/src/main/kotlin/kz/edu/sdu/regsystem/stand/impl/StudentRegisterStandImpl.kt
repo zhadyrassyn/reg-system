@@ -26,7 +26,6 @@ class StudentRegisterStandImpl(
 
     override fun saveGeneralInfo(authToken: String, generalInfoData: GeneralInfoData) {
 
-        println("INPUT $generalInfoData")
         val token = authToken.substring(7)
         val jwtKey = env.getProperty("jwtKey")
 
@@ -66,8 +65,6 @@ class StudentRegisterStandImpl(
         if(user.cityId == (-1).toLong() && user.schoolId == (-1).toLong()) {
             return GetGeneralInfoResponseData()
         } else {
-            println("USER $user")
-            println("Schols ${db.cities[user.cityId]!!.schools}")
             val cityDto = db.cities[user.cityId] ?: throw BadRequestException("City Does Not Exist")
             val schoolDto = db.cities[user.cityId]!!.schools.firstOrNull { it.id == user.schoolId } ?: throw BadRequestException("School Does Not Exist")
 

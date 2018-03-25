@@ -25,6 +25,10 @@ class StudentApp extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      accessType: ACCESS_TYPE_SAVE
+    }
+
   }
 
   componentDidMount() {
@@ -35,6 +39,7 @@ class StudentApp extends Component {
         if (data.accessType === ACCESS_TYPE_SAVE) {
           fetchCities()
         } else if(data.accessType === ACCESS_TYPE_EDIT) {
+          this.setState({accessType: ACCESS_TYPE_EDIT})
         }
       },
       () => {
@@ -86,10 +91,12 @@ class StudentApp extends Component {
 
   onSubmit(values) {
     const {saveStudentGeneralInfo, initialValues} = this.props
+    console.log('Why saving?')
     saveStudentGeneralInfo(
       values,
       () => {
-        console.log('true')
+        console.log('Saved successfully')
+        this.setState({accessType: ACCESS_TYPE_EDIT})
       },
       () => {
         console.log('error')
@@ -99,9 +106,16 @@ class StudentApp extends Component {
 
   onEditClick = () => {
     const { initialValues, fetchSchools, formValues } = this.props
-    initialValues.accessType = ACCESS_TYPE_SAVE_CANCELLABLE
-    this.props.fetchCities()
-    this.props.fetchSchools(formValues.city.value)
+    this.setState({accessType: ACCESS_TYPE_SAVE_CANCELLABLE}, () => {
+      this.props.fetchCities()
+      this.props.fetchSchools(formValues.city.value)
+    })
+  }
+
+  onCancelClicked = () => {
+    const { initialValues } = this.props
+    this.props.initialize(initialValues)
+    this.setState({accessType: ACCESS_TYPE_EDIT})
   }
 
 
@@ -110,8 +124,8 @@ class StudentApp extends Component {
     const { cities, schools, initialValues } = this.props
     const { handleSubmit, submitting} = this.props
 
-    const accessType = initialValues.accessType
-
+    const accessType = this.state.accessType
+    console.log('accessType ', accessType)
     return (
       <div className="container">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -124,7 +138,7 @@ class StudentApp extends Component {
               placeholder="First name"
               component={this.renderField}
               validate={required}
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
             <Field
               label="Middle name"
@@ -133,7 +147,7 @@ class StudentApp extends Component {
               type="text"
               placeholder="Middle name"
               component={this.renderField}
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
             <Field
               label="Last name"
@@ -143,7 +157,7 @@ class StudentApp extends Component {
               placeholder="Last name"
               component={this.renderField}
               validate={required}
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
           </div>
           <div className="form-row mt-3">
@@ -154,7 +168,7 @@ class StudentApp extends Component {
               type="date"
               component={this.renderField}
               validate={required}
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
           </div>
           <div className="form-row mt-3">
@@ -167,7 +181,7 @@ class StudentApp extends Component {
               onChange={this.handleCityChange}
               validate={required}
               placeholder="Choose your city"
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
           </div>
           <div className="form-row mt-3">
@@ -178,7 +192,7 @@ class StudentApp extends Component {
               options={schools}
               component={this.renderSelect}
               placeholder="Choose your school"
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
             <Field
               label="Not finding your school? Write down"
@@ -187,14 +201,14 @@ class StudentApp extends Component {
               type="text"
               component={this.renderField}
               placeholder="..."
-              accessType={initialValues.accessType}
+              accessType={accessType}
             />
           </div>
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
               <button className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')} type="submit" disabled={submitting}>Save</button>}
-            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" onClick={this.onEditClick}>Edit</button>}
-            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success">Cancel</button>}
+            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button" onClick={this.onEditClick}>Edit</button>}
+            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button" onClick={this.onCancelClicked}>Cancel</button>}
           </div>
         </form>
       </div>
