@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - checkout
-      - run: apt-get update && apt-get install -y gradle
+      - run: sudo apt-get update && sudo apt-get install gradle
       # Download and cache dependencies
       - restore_cache:
           keys:
