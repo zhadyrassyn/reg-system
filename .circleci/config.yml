@@ -1,18 +1,9 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/node:7.10
       - image: circleci/openjdk:8-jdk
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
 
     environment:
       # Customize the JVM maximum heap limit
@@ -23,7 +14,7 @@ jobs:
 
     steps:
       - checkout
-
+      - run: apt-get update && apt-get install -y gradle
       # Download and cache dependencies
       - restore_cache:
           keys:
