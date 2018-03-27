@@ -4,13 +4,6 @@ import { connect } from "react-redux"
 
 import StudentApp from "./student"
 
-const alertOptions = {
-  position: 'top right',
-  timeout: 3000,
-  offset: '40px',
-  transition: 'scale',
-}
-
 class App extends Component {
 
   constructor(props) {

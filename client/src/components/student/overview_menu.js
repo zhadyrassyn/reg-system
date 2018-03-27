@@ -30,7 +30,7 @@ export default class OverviewMenu extends Component{
             <ul className="nav nav-pills">
               <li className="nav-item">
                 <button
-                  className={ "nav-link btn " + (activeForm === FORM_GENERAL ? "active" : "") } onClick={this.onGeneralInfoBtnClick}>
+                  className={ "mr-2 nav-link btn " + (activeForm === FORM_GENERAL ? "active" : "") } onClick={this.onGeneralInfoBtnClick}>
                   General info
                 </button>
               </li>

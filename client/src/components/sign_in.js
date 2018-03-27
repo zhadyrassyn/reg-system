@@ -34,7 +34,7 @@ class SignIn extends Component {
         signIn(
           values,
           () => {
-            this.setState({isLoading: false})
+            console.log('success')
           }),
           (message) => {
             console.log('Error ', message)

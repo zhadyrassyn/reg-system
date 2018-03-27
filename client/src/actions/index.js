@@ -93,10 +93,11 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/auth/signin`
   axios.post(request, values)
     .then(response => {
+      localStorage.setItem('token', response.data.token)
+
       dispatch({
         type: SIGN_IN_SUCCESS
       })
-      localStorage.setItem('token', response.data.token)
 
       //check role
       const token = response.data.token

@@ -14,10 +14,6 @@ import SignUp from "./components/sign_up"
 import SignOut from "./components/sign_out"
 import Auth from "./components/require_auth"
 
-//student
-import StudentApp from "./components/student/general_info_form"
-import DocumentsForm from "./components/student/documents_form"
-import OverviewMenu from "./components/student/overview_menu"
 
 //moderator
 import ModeratorApp from "./components/moderator/app"
@@ -50,13 +46,6 @@ if(token) {
   store.dispatch({ type: SIGN_IN_SUCCESS })
 }
 
-const alertOptions = {
-  position: 'top right',
-  timeout: 3000,
-  offset: '40px',
-  transition: 'scale',
-}
-
 const requireModeratorRole = (nextState, replace) => {
   console.log('Called, yo')
   token = localStorage.getItem('token')
@@ -78,10 +67,6 @@ ReactDOM.render(
           <Route path="/signin" component={SignIn}/>
           <Route path="/signout" component={SignOut}/>
           <Route path="/registration" component={SignUp}/>
-          <Route path="/home" component={OverviewMenu}>
-            <Route path="/home/general" component={StudentApp}/>
-            <Route path="/home/documents" components={DocumentsForm}/>
-          </Route>
           <Route path="/moderator" component={ModeratorApp} onEnter={requireModeratorRole}/>
         </Route>
     </Router>

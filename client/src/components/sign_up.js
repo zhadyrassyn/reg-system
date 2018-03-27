@@ -4,7 +4,6 @@ import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {singUp, resendVerificationEmail} from "../actions/index"
 import ConfirmEmail from "./confirm_email"
-import { withAlert } from 'react-alert'
 
 //validations
 const required = value => (value ? undefined : 'Required')
@@ -85,15 +84,9 @@ class SignUp extends Component {
       resendVerificationEmail(
         userEmail,
         () => {
-          // this.props.alert.show('We have resent activation email. Check it out!', {
-          //   type: 'success'
-          // })
           this.setState({emailConfirmationLoader: false})
         },
         () => {
-          // this.props.alert.show('Something went wrong :( Please, try later.', {
-          //   type: 'error'
-          // })
           this.setState({emailConfirmationLoader: false})
         }
       )
