@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import Header from './header'
-import SignUp from './sign_up'
-import {connect} from 'react-redux'
-import { Provider as AlertProvider } from 'react-alert'
-import AlertTemplate from 'react-alert-template-basic'
+import React, { Component } from "react"
+import Header from "./header"
+import { connect } from "react-redux"
+
+import StudentApp from "./student"
 
 const alertOptions = {
   position: 'top right',
@@ -19,12 +18,14 @@ class App extends Component {
   }
 
   render() {
+    const { authenticated } = this.props
+
     return (
       <div>
-        <AlertProvider template={AlertTemplate} {...alertOptions}>
         <Header/>
           {this.props.children}
-        </AlertProvider>
+
+          { authenticated && <StudentApp/> }
       </div>
     )
   }
@@ -32,6 +33,7 @@ class App extends Component {
 
 export default (connect(
   state => ({
+    authenticated: state.auth.authenticated
   }),
   dispatch => ({
   })

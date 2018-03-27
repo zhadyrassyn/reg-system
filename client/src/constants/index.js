@@ -19,3 +19,6 @@ export const REJECTED = 'REJECTED'
 export const ACCESS_TYPE_SAVE = 'SAVE'
 export const ACCESS_TYPE_EDIT = 'EDIT'
 export const ACCESS_TYPE_SAVE_CANCELLABLE = 'SAVE_CANCELLABLE'
+
+export const FORM_GENERAL = 'GENERAL'
+export const FORM_DOCUMENTS = 'DOCUMENTS'

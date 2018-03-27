@@ -15,7 +15,7 @@ import SignOut from "./components/sign_out"
 import Auth from "./components/require_auth"
 
 //student
-import StudentApp from "./components/student/app"
+import StudentApp from "./components/student/general_info_form"
 import DocumentsForm from "./components/student/documents_form"
 import OverviewMenu from "./components/student/overview_menu"
 
@@ -74,7 +74,6 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route path="/account_verification/email/:token" component={VerificationEmail}/>
-      {/*<AlertProvider template={AlertTemplate} {...alertOptions}>*/}
         <Route path="/" component={Auth(App)}>
           <Route path="/signin" component={SignIn}/>
           <Route path="/signout" component={SignOut}/>
@@ -85,7 +84,6 @@ ReactDOM.render(
           </Route>
           <Route path="/moderator" component={ModeratorApp} onEnter={requireModeratorRole}/>
         </Route>
-      {/*</AlertProvider>*/}
     </Router>
   </Provider>
   , document.querySelector('.root'));

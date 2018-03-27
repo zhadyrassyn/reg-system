@@ -21,7 +21,7 @@ import {
 //validations
 const required = value => (value ? undefined : 'Required')
 
-class StudentApp extends Component {
+class GeneralInfoForm extends Component {
   constructor(props) {
     super(props)
 
@@ -125,7 +125,7 @@ class StudentApp extends Component {
     const { handleSubmit, submitting} = this.props
 
     const accessType = this.state.accessType
-    console.log('accessType ', accessType)
+
     return (
       <div className="container">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -225,14 +225,14 @@ const validate = (values) => {
   return errors
 }
 
-StudentApp = reduxForm({
+GeneralInfoForm = reduxForm({
   form: 'GeneralInfo',
   validate,
   enableReinitialize: true,
-})(StudentApp)
+})(GeneralInfoForm)
 
 
-StudentApp = connect(
+GeneralInfoForm = connect(
   state => ({
     cities: state.info.cities,
     schools: state.info.schools,
@@ -246,6 +246,6 @@ StudentApp = connect(
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
   })
-)(StudentApp)
+)(GeneralInfoForm)
 
-export default StudentApp
+export default GeneralInfoForm

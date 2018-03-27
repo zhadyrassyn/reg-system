@@ -3,7 +3,6 @@ import { Link } from 'react-router'
 import {Field, reduxForm} from "redux-form"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import { withAlert } from "react-alert"
 import {signIn} from "../actions";
 
 class Header extends Component {
@@ -99,4 +98,4 @@ export default reduxForm({
   dispatch => ({
     signIn: bindActionCreators(signIn, dispatch)
   })
-)(withAlert(Header)))
+)(Header))

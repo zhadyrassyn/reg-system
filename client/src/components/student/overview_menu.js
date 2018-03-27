@@ -1,41 +1,48 @@
 import React, { Component } from "react"
-import {Link} from "react-router"
-import { connect } from "react-redux"
 
-class OverviewMenu extends Component {
+import {
+  FORM_GENERAL,
+  FORM_DOCUMENTS
+} from "../../constants"
+
+export default class OverviewMenu extends Component{
+
+  constructor(props) {
+    super(props)
+  }
+
+  onGeneralInfoBtnClick = () => {
+    this.props.changeForm(FORM_GENERAL)
+  }
+
+  onDocumentsBtnClick = () => {
+    this.props.changeForm(FORM_DOCUMENTS)
+  }
+
   render() {
-    const location = this.props.location.pathname
+    const activeForm = this.props.activeForm
 
-    let currentBreadcrum = ''
-    if (location === '/home/general') {
-      currentBreadcrum = 'General info'
-    } else if(location == '/home/documents') {
-      currentBreadcrum = 'Documents'
-    }
     return (
       <div className="container">
         <div className="mt-4">
           <div className="nav justify-content-between">
-            <div aria-label="breadcrumb">
-              <ol className="breadcrumb">
-                <li className="breadcrumb-item"><a href="#">Home</a></li>
-                <li className="breadcrumb-item active" aria-current="page">{currentBreadcrum}</li>
-              </ol>
-            </div>
+            <div></div>
             <ul className="nav nav-pills">
               <li className="nav-item">
-                <Link to="/home/general" className="nav-link active btn">General info</Link>
+                <button
+                  className={ "nav-link btn " + (activeForm === FORM_GENERAL ? "active" : "") } onClick={this.onGeneralInfoBtnClick}>
+                  General info
+                </button>
               </li>
               <li className="nav-item">
-                <Link to="/home/documents" className="nav-link btn">Documents</Link>
+                <button className={ "nav-link btn " + (activeForm === FORM_DOCUMENTS ? "active" : "") } onClick={this.onDocumentsBtnClick}>
+                  Documents
+                </button>
               </li>
             </ul>
           </div>
         </div>
-        {this.props.children}
       </div>
     )
   }
 }
-
-export default OverviewMenu
