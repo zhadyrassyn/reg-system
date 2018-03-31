@@ -3,6 +3,14 @@ import Header from "./header"
 import { connect } from "react-redux"
 
 import StudentApp from "./student"
+import ModeratorApp from "./moderator"
+
+import jwtDecode from "jwt-decode"
+
+import {
+  ROLE_MODERATOR,
+  ROLE_USER
+} from "../constants"
 
 class App extends Component {
 
@@ -13,12 +21,26 @@ class App extends Component {
   render() {
     const { authenticated } = this.props
 
+    let user = ROLE_USER;
+
+    const token = localStorage.getItem('token')
+    if(token) {
+      const decoded = jwtDecode(token)
+
+
+      if(decoded.scope.toUpperCase() === ROLE_MODERATOR) {
+        user = ROLE_MODERATOR
+      }
+    }
+
     return (
       <div>
         <Header/>
           {this.props.children}
 
-          { authenticated && <StudentApp/> }
+          { authenticated && user === ROLE_USER && <StudentApp/> }
+
+          { authenticated && user === ROLE_MODERATOR && <ModeratorApp/> }
       </div>
     )
   }

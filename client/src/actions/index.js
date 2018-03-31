@@ -99,17 +99,8 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
         type: SIGN_IN_SUCCESS
       })
 
-      //check role
-      const token = response.data.token
+      browserHistory.push('/')
 
-      console.log('Token ', token)
-      const decoded = jwtDecode(token)
-      console.log('scope ', decoded.scope)
-      if(decoded.scope.toUpperCase() === ROLE_USER) {
-        browserHistory.push('/')
-      } else {
-        browserHistory.push('/moderator')
-      }
       onSuccess()
     })
     .catch(error => {

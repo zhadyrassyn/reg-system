@@ -13,11 +13,6 @@ import SignIn from "./components/sign_in"
 import SignUp from "./components/sign_up"
 import SignOut from "./components/sign_out"
 import Auth from "./components/require_auth"
-
-
-//moderator
-import ModeratorApp from "./components/moderator/app"
-
 import jwtDecode from "jwt-decode"
 
 import {
@@ -67,7 +62,6 @@ ReactDOM.render(
           <Route path="/signin" component={SignIn}/>
           <Route path="/signout" component={SignOut}/>
           <Route path="/registration" component={SignUp}/>
-          <Route path="/moderator" component={ModeratorApp} onEnter={requireModeratorRole}/>
         </Route>
     </Router>
   </Provider>
