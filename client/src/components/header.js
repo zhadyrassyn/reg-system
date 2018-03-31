@@ -63,7 +63,7 @@ class Header extends Component {
           </form>
           }
           {authenticated &&
-          <Link to="/signout" className="nav-link btn btn-outline-danger my-2 my-sm-0">Sign out</Link>
+          <Link to="/signout" className="nav-link btn btn-outline-danger my-2 my-sm-0 width120">Sign out</Link>
           }
         </div>
       </nav>
