@@ -3,6 +3,7 @@ package kz.edu.sdu.regsystem.stand.config
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.ErrorResponse
 import kz.edu.sdu.regsystem.stand.model.exceptions.ForbiddenException
+import kz.edu.sdu.regsystem.stand.model.exceptions.UnauthorizedException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -22,6 +23,13 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(ForbiddenException::class)
     fun forbidden(ex: ForbiddenException) : ResponseEntity<ErrorResponse> {
         val httpError = HttpStatus.FORBIDDEN
+        val errorResponse = ErrorResponse(httpError.value(), httpError.reasonPhrase, ex.message)
+        return ResponseEntity(errorResponse, httpError)
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun unauthorized(ex: UnauthorizedException) : ResponseEntity<ErrorResponse> {
+        val httpError = HttpStatus.UNAUTHORIZED
         val errorResponse = ErrorResponse(httpError.value(), httpError.reasonPhrase, ex.message)
         return ResponseEntity(errorResponse, httpError)
     }
