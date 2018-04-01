@@ -27,7 +27,6 @@ class App extends Component {
     if(token) {
       const decoded = jwtDecode(token)
 
-
       if(decoded.scope.toUpperCase() === ROLE_MODERATOR) {
         user = ROLE_MODERATOR
       }
