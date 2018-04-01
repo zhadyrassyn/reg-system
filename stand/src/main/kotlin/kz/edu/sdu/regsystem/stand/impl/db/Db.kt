@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Component
@@ -74,6 +75,24 @@ class Db {
             password = "qwerty",
             userStatus = UserStatus.ACTIVE
         )
+
+        val stubUsers = ArrayList<User>()
+        for (i in 0..20) {
+            val user = User(
+                id = longCounter.incrementAndGet(),
+                email = "user$i@test.ru",
+                password = "${i}000000",
+                firstName = "User$i first name",
+                middleName = "User$i middle name",
+                lastName = "User$i last name",
+                birthDate = toDate("1996/11/12"),
+                cityId = c1.id,
+                schoolId = c1.schools[i%10].id,
+                userStatus = UserStatus.ACTIVE
+            )
+            users.put(user.id, user)
+            userRoles.put(user.id, RoleType.USER)
+        }
 
         users.put(u1.id, u1)
         users.put(u2.id, u2)
