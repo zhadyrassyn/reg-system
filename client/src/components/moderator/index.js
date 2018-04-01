@@ -23,7 +23,6 @@ class ModeratorApp extends Component {
             </div>
           </div>
         </nav>
-        <div className="divider"></div>
         <section className="table-header py-4 mb-4">
           <div className="container">
             <div className="row justify-content-lg-around">
@@ -55,7 +54,7 @@ class ModeratorApp extends Component {
         <section className="table-body">
           <div className="container">
             <ul className="list-unstyled">
-              <li>
+              <li className="py-4">
                 <div className="row justify-content-lg-around">
                   <div className="col-lg-1 mb-1 mb-lg-0">
                     <p>1</p>
@@ -80,7 +79,7 @@ class ModeratorApp extends Component {
                   </div>
                 </div>
               </li>
-              <li>
+              <li className="py-4">
                 <div className="row justify-content-lg-around">
                   <div className="col-lg-1 mb-1 mb-lg-0">
                     <p>2</p>
