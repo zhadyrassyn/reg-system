@@ -4,5 +4,5 @@ import kz.edu.sdu.regsystem.controller.model.GetStudentsResponse
 
 interface ModeratorRegister {
 
-    fun getStudents() : List<GetStudentsResponse>
+    fun getStudents(currentPage: Int, perPage: Int) : List<GetStudentsResponse>
 }
