@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import SearchBar from "./search_bar"
 import TableHeader from "./table_header"
 import TableBody from "./table_body"
+import Pagination from "./pagination"
 
 import {
   fetchStudents
@@ -30,6 +31,7 @@ class ModeratorApp extends Component {
         <SearchBar/>
         <TableHeader/>
         <TableBody students={students}/>
+        <Pagination/>
       </div>
     )
   }
