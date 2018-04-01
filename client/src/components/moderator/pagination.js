@@ -9,14 +9,12 @@ class Pagination extends Component {
   }
 
   handleChangePage(pageNum) {
-
     this.props.handlePageChangeClick(pageNum)
   }
 
   render() {
-    // const pagination = this.props.value;
-    const totalPages = Math.ceil(28/10)
-    const currentPage =2
+    const { currentPage, perPage } = this.props
+    const totalPages = Math.ceil(22/perPage)
 
     let pageItems = []
     for(let i = 1; i <= totalPages; i++) {

@@ -1,10 +1,6 @@
 import React, { Component } from "react"
 
 class PaginationItem extends Component {
-  constructor(props) {
-    super(props)
-
-  }
 
   handlePageChange(pageNum) {
     this.props.pageChangeClicked(pageNum)
@@ -16,7 +12,7 @@ class PaginationItem extends Component {
 
     return (
       <li onClick={this.handlePageChange.bind(this, pageNum)}
-          className={pageNum === currentPage ? "page-item active" : "page-ite"}><a className='page-link' href="#">{pageNum}</a></li>
+          className={pageNum === currentPage ? "page-item active" : "page-ite"}><button className='page-link btn btn-link'>{pageNum}</button></li>
     )
   }
 

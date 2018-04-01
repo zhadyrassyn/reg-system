@@ -17,11 +17,14 @@ class ModeratorRegisterStandImpl(
 ) : ModeratorRegister {
 
     override fun getStudents(currentPage: Int, perPage: Int): List<GetStudentsResponse> {
-        val from = (currentPage-1) * perPage
-        val to = currentPage + perPage
-
-        return db.users.values
+        val filteredUsers = db.users.values
             .filter { db.userRoles[it.id] == RoleType.USER && it.userStatus == UserStatus.ACTIVE }
+
+        val total = filteredUsers.size
+        val from = (currentPage-1) * perPage
+        val to = if (currentPage * perPage <= total) currentPage * perPage else total
+
+        return filteredUsers
             .subList(from, to)
             .map {
                 val city = db.cities[it.cityId] ?: throw Exception("Cannot find city with id ${it.cityId}")

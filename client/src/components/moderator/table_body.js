@@ -4,25 +4,24 @@ import _ from "lodash"
 
 class TableBody extends Component {
 
-  renderList = (students) => {
-    let index = 1;
+  renderList = (students, startCounter) => {
     return _.map(students, student => (
       <TableRow
          student={ student }
-         index={ index++ }
+         index={ ++startCounter }
          key={ student.id }
       />
     ))
   }
 
   render() {
-    const students = this.props.students
+    const { students, startCounter } = this.props
 
     return (
       <section className="table-body">
         <div className="container">
           <ul className="list-unstyled">
-            {this.renderList(students)}
+            {this.renderList(students, startCounter)}
           </ul>
         </div>
       </section>

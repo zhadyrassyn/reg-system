@@ -12,6 +12,15 @@ import {
 
 class ModeratorApp extends Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      currentPage: 1,
+      perPage: 10
+    }
+  }
+
   componentWillMount() {
     document.body.style.backgroundColor = "#F8F6F9";
   }
@@ -20,18 +29,28 @@ class ModeratorApp extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStudents()
+    const { currentPage, perPage } = this.state
+    this.props.fetchStudents(currentPage, perPage)
+  }
+
+  handlePageChangeClick = (pageNum) => {
+    this.props.fetchStudents(pageNum, this.state.perPage,
+      () => {
+        this.setState({ currentPage: pageNum })
+      })
   }
 
   render() {
-    const {students} = this.props
+    const { students } = this.props
+    const { currentPage, perPage } = this.state
+    const startCounter = (currentPage-1) * perPage
 
     return (
       <div className="wrapper">
         <SearchBar/>
         <TableHeader/>
-        <TableBody students={students}/>
-        <Pagination/>
+        <TableBody students={ students } startCounter={ startCounter }/>
+        <Pagination currentPage={ currentPage } perPage={ perPage } handlePageChangeClick={this.handlePageChangeClick}/>
       </div>
     )
   }
