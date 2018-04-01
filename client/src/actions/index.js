@@ -19,16 +19,12 @@ import {
   FETCH_STUDENT_DOCUMENTS_STATUS_FAILURE,
   FETCH_STUDENT_DOCUMENTS_STATUS_SUCCESS,
   FETCH_STUDENT_GENERAL_INFO_FAILURE,
-  FETCH_STUDENT_GENERAL_INFO_SUCCESS
+  FETCH_STUDENT_GENERAL_INFO_SUCCESS,
+  FETCH_STUDENTS_FAILURE,
+  FETCH_STUDENTS_SUCCESS
 } from "./types"
 
-import {
-  ROLE_MODERATOR,
-  ROLE_USER
-} from "../constants"
-
 import axios from "axios"
-import jwtDecode from "jwt-decode"
 import config from "../config"
 import { browserHistory } from "react-router"
 
@@ -275,5 +271,33 @@ export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
       error: error.response && error.response.message
     })
     onError()
+  })
+}
+
+/* MODERATOR ACTIONS */
+export const fetchStudents = (onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students`
+
+  const token = localStorage.getItem('token')
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({ data }) => {
+    dispatch({
+      type: FETCH_STUDENTS_SUCCESS,
+      data
+    })
+    if(onSuccess) {
+      onSuccess(data)
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_STUDENTS_FAILURE,
+      error: error.response && error.response.message
+    })
+    if(onError) {
+      onError()
+    }
   })
 }

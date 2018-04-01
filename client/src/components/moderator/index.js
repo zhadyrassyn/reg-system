@@ -1,4 +1,10 @@
-import React, {Component} from 'react'
+import React, { Component } from "react"
+import { bindActionCreators } from "redux"
+import { connect } from "react-redux"
+
+import {
+  fetchStudents
+} from "../../actions"
 
 class ModeratorApp extends Component {
 
@@ -9,7 +15,12 @@ class ModeratorApp extends Component {
     document.body.style.backgroundColor = null;
   }
 
+  componentDidMount() {
+    this.props.fetchStudents()
+  }
+
   render() {
+    console.log('Students ', this.props.students)
     return (
       <div className="wrapper">
         <nav className="navbar justify-content-between py-4">
@@ -113,4 +124,11 @@ class ModeratorApp extends Component {
   }
 }
 
-export default ModeratorApp
+export default connect(
+  state => ({
+    students: state.moderator.students
+  }),
+  dispatch => ({
+    fetchStudents: bindActionCreators(fetchStudents, dispatch)
+  })
+)(ModeratorApp)

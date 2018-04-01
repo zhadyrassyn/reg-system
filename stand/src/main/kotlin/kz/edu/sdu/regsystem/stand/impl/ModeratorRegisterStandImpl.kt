@@ -41,7 +41,6 @@ class ModeratorRegisterStandImpl(
         val df = SimpleDateFormat("dd/MM/yyyy")
 
         return df.format(birthDate)
-
     }
 
 }
