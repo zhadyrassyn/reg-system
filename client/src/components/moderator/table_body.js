@@ -1,61 +1,28 @@
 import React, { Component } from "react"
+import TableRow from "./table_row"
+import _ from "lodash"
 
 class TableBody extends Component {
+
+  renderList = (students) => {
+    let index = 1;
+    return _.map(students, student => (
+      <TableRow
+         student={ student }
+         index={ index++ }
+         key={ student.id }
+      />
+    ))
+  }
+
   render() {
+    const students = this.props.students
+
     return (
       <section className="table-body">
         <div className="container">
           <ul className="list-unstyled">
-            <li className="py-4">
-              <div className="row justify-content-lg-around">
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>1</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Daniyar</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Temirbekovich</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Zhadyrassyn</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>11/06/1997</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Qyzylorda</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>3</p>
-                </div>
-              </div>
-            </li>
-            <li className="py-4">
-              <div className="row justify-content-lg-around">
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>2</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Daniyar</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Temirbekovich</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Zhadyrassyn</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>11/06/1997</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>Qyzylorda</p>
-                </div>
-                <div className="col-lg-1 mb-1 mb-lg-0">
-                  <p>3</p>
-                </div>
-              </div>
-            </li>
+            {this.renderList(students)}
           </ul>
         </div>
       </section>

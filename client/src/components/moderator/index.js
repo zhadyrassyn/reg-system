@@ -29,7 +29,7 @@ class ModeratorApp extends Component {
       <div className="wrapper">
         <SearchBar/>
         <TableHeader/>
-        <TableBody/>
+        <TableBody students={students}/>
       </div>
     )
   }
