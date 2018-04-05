@@ -97,7 +97,9 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
 
       browserHistory.push('/')
 
-      onSuccess()
+      if(onSuccess) {
+        onSuccess()
+      }
     })
     .catch(error => {
       const message = error.response && error.response.data && error.response.data.message
@@ -105,9 +107,12 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
         type: SIGN_IN_FAILURE,
         message
       })
-      onError(message)
-      browserHistory.push('/signin')
 
+      if(onError) {
+        onError(message)
+      }
+
+      browserHistory.push('/signin')
     })
 }
 
