@@ -5,6 +5,7 @@ import kz.edu.sdu.regsystem.stand.props.StorageProperties
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
@@ -12,5 +13,6 @@ import org.springframework.context.annotation.ComponentScan
 @EnableConfigurationProperties(StorageProperties::class)
 class StandLauncher
 
-fun main(args: Array<String>) = SpringApplication.run(StandLauncher::class.java, *args)
-
+fun main(args: Array<String>) {
+    runApplication<StandLauncher>(*args)
+}

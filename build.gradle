@@ -1,31 +1,44 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
-    ext.springboot_version = '1.5.10.RELEASE'
-    ext.jackson_module_version = '2.9.0'
-    ext.apache_poi_version = '3.14'
+    ext {
+        kotlinVersion = '1.2.31'
+        springBootVersion = '2.0.0.RELEASE'
+        ext.jackson_module_version = '2.9.0'
+    }
 
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springboot_version"
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
     }
 }
 allprojects {
-    apply plugin: 'idea'
-    apply plugin: "kotlin-spring"
     apply plugin: 'kotlin'
-    apply plugin: 'maven'
+    apply plugin: 'kotlin-spring'
     apply plugin: 'eclipse'
+    apply plugin: 'idea'
     apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-    group = "kz.kcell.handbook "
+    group = "kz.edu.sdu.regsystem "
 
     repositories {
         mavenCentral()
+    }
+
+    sourceCompatibility = 1.8
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
     }
 
     sourceSets {
@@ -36,5 +49,4 @@ allprojects {
         compile "org.jetbrains.kotlin:kotlin-stdlib"
     }
 
-    bootRepackage.enabled = false
 }
