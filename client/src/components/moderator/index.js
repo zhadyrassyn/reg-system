@@ -93,11 +93,19 @@ class ModeratorApp extends Component {
           contentLabel="Example Modal">
           <div className="container">
             <div>
-              <button onClick={this.closeModal}>X</button>
+              <button onClick={this.closeModal} className="close" type="button"/>
             </div>
-            <p>Daniyar Temirbekovich Zhadyrassyn, 20 years old</p>
+            <p>Daniyar Temirbekovich Zhadyrassyn, 11/06/1997. Status: Accept</p>
             <p>Город: Алматы. Школа: 3</p>
             <p>Email: zhadyrassyn.daniyar@is.sdu.edu.kz</p>
+            <div className="form-group">
+              <label htmlFor="generalInfoComment"><strong>Leave comment</strong></label>
+              <textarea className="form-control" id="generalInfoComment" rows="3" placeholder="Leave comment..."/>
+            </div>
+            <div>
+              <button className="btn btn-outline-success width120">Accept</button>
+              <button className="btn btn-outline-danger width120 ml-2">Reject</button>
+            </div>
             <div>
               Documents
               1.UD
