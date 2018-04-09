@@ -21,7 +21,9 @@ import {
   FETCH_STUDENT_GENERAL_INFO_FAILURE,
   FETCH_STUDENT_GENERAL_INFO_SUCCESS,
   FETCH_STUDENTS_FAILURE,
-  FETCH_STUDENTS_SUCCESS
+  FETCH_STUDENTS_SUCCESS,
+  FETCH_STUDENT_FULL_INFO_FAILURE,
+  FETCH_STUDENT_FULL_INFO_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -299,6 +301,33 @@ export const fetchStudents = (currentPage, perPage, onSuccess, onError) => (disp
   }).catch(error => {
     dispatch({
       type: FETCH_STUDENTS_FAILURE,
+      error: error.response && error.response.message
+    })
+    if(onError) {
+      onError()
+    }
+  })
+}
+
+export const fetchStudentFullInfo = (id, onSuccess, onError) => {
+  const request = `${config.url}/moderator/students/${id}`
+
+  const token = localStorage.getItem('token')
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({ data }) => {
+    dispatch({
+      type: FETCH_STUDENT_FULL_INFO_SUCCESS,
+      data
+    })
+    if(onSuccess) {
+      onSuccess(data)
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_STUDENT_FULL_INFO_FAILURE,
       error: error.response && error.response.message
     })
     if(onError) {

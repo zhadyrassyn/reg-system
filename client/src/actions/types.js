@@ -32,3 +32,6 @@ export const FETCH_STUDENT_GENERAL_INFO_FAILURE = 'fetch_student_general_info_fa
 
 export const FETCH_STUDENTS_SUCCESS = 'fetch_students_success'
 export const FETCH_STUDENTS_FAILURE = 'fetch_students_failure'
+
+export const FETCH_STUDENT_FULL_INFO_SUCCESS = 'fetch_student_full_info_success'
+export const FETCH_STUDENT_FULL_INFO_FAILURE = 'fetch_student_full_info_failure'

@@ -2,11 +2,11 @@ import React, { Component } from "react"
 
 class TableRow extends Component {
   render() {
-    const { student, index, openModal } = this.props
-    const { firstName, middleName, lastName, birthDate, school, city, email } = student
-
+    const { student, index, handleOpenModal } = this.props
+    const { firstName, middleName, lastName, birthDate, school, city, email, id } = student
+    console.log('id ', id)
     return (
-      <li className="py-3" onClick={openModal}>
+      <li className="py-3" onClick={handleOpenModal(id)}>
         <div className="row text-center">
           <div className="col-lg-1 mb-1 mb-lg-0">
             <p>{ index }</p>

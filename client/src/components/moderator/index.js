@@ -41,7 +41,8 @@ class ModeratorApp extends Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
-  openModal() {
+  openModal(id) {
+    console.log('selected student ', id)
     this.setState({modalIsOpen: true});
   }
 
@@ -84,7 +85,7 @@ class ModeratorApp extends Component {
       <div className="wrapper">
         <SearchBar/>
         <TableHeader/>
-        <TableBody students={ students } startCounter={ startCounter } openModal={this.openModal}/>
+        <TableBody students={ students } startCounter={ startCounter } openModal={this.openModal.bind(this)}/>
         <Pagination currentPage={ currentPage } perPage={ perPage } handlePageChangeClick={this.handlePageChangeClick}/>
         <Modal
           isOpen={this.state.modalIsOpen}

@@ -4,15 +4,20 @@ import _ from "lodash"
 
 class TableBody extends Component {
 
-  renderList = (students, startCounter, openModal) => {
+  renderList = (students, startCounter, handleOpenModal) => {
     return _.map(students, student => (
       <TableRow
          student={ student }
          index={ ++startCounter }
          key={ student.id }
-         openModal={openModal}
+         handleOpenModal={handleOpenModal}
       />
     ))
+  }
+
+  handleOpenModal = (id) => {
+    // this.props.openModal(id)
+    console.log('handleOpenModal' + id)
   }
 
   render() {
@@ -22,7 +27,7 @@ class TableBody extends Component {
       <section className="table-body">
         <div className="container">
           <ul className="list-unstyled">
-            {this.renderList(students, startCounter, openModal)}
+            {this.renderList(students, startCounter, this.handleOpenModal.bind(this))}
           </ul>
         </div>
       </section>
