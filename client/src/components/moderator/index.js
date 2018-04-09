@@ -75,6 +75,7 @@ class ModeratorApp extends Component {
   }
 
   render() {
+    console.log(localStorage.getItem('token'))
     const { students } = this.props
     const { currentPage, perPage } = this.state
     const startCounter = (currentPage-1) * perPage

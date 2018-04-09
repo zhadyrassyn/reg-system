@@ -11,3 +11,25 @@ data class GetStudentsResponse(
     val birthDate: String,
     val userStatus: String
 )
+
+data class GetStudentInfoResponse(
+    var id: Long = -1,
+    var firstName: String = "",
+    var middleName: String = "",
+    var lastName: String = "",
+    var email: String = "",
+    var city: String = "",
+    var school: String = "",
+    var birthDate: String = "",
+    var generalInfoStatus: String = "",
+    var generalInfoComment: String = "",
+    var documentsComment: String = "",
+    var documents: List<DocumentInfoResposne> = ArrayList()
+)
+
+data class DocumentInfoResposne(
+    val id: Long,
+    val type: String,
+    val status: String,
+    val url: String
+)

@@ -9,8 +9,10 @@ class ModeratorController(
     val moderatorRegister: ModeratorRegister
 ) {
 
-    @GetMapping
-    @RequestMapping("/students")
+    @GetMapping("/students")
     fun getStudents(@RequestParam("currentPage")currentPage: Int,
                     @RequestParam("perPage")perPage: Int) = moderatorRegister.getStudents(currentPage, perPage)
+
+    @GetMapping("/students/{id}")
+    fun getStudentInfo(@PathVariable("id") id: Long) = moderatorRegister.getStudentInfo(id)
 }

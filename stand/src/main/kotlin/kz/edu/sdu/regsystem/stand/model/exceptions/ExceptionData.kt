@@ -9,6 +9,10 @@ open class UserDoesNotExistsException (override var message: String): BadRequest
 
 open class UserAlreadyExistsException (override var message: String): BadRequestException(message)
 
+open class CityDoesNotExistException (override var message: String) : BadRequestException(message)
+
+open class SchoolDoesNotExistException (override var message: String) : BadRequestException(message)
+
 /* END BAD REQUEST EXCEPTIONS */
 
 /* FORBIDDEN EXCEPTIONS */

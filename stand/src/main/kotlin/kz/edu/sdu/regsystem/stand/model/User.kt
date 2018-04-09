@@ -1,7 +1,10 @@
 package kz.edu.sdu.regsystem.stand.model
 
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
+import kz.edu.sdu.regsystem.stand.model.enums.GeneralInfoStatus
+import kz.edu.sdu.regsystem.stand.model.enums.UserDocumentsStatus
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
+import java.sql.ClientInfoStatus
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -15,4 +18,6 @@ data class User(var id: Long = -1,
                 var birthDate: Date = Date(),
                 var cityId: Long = -1,
                 var schoolId: Long = -1,
+                var generalInfoStatus: GeneralInfoStatus = GeneralInfoStatus.WAITING_FOR_RESPONSE,
+                var documentsStatus: UserDocumentsStatus = UserDocumentsStatus.WAITING_FOR_RESPONSE,
                 var documents: HashMap<DocumentType, Document> = HashMap())
