@@ -5,6 +5,7 @@ import SearchBar from "./search_bar"
 import TableHeader from "./table_header"
 import TableBody from "./table_body"
 import Pagination from "./pagination"
+import EditStudent from "./edit_student"
 
 import Modal from "react-modal"
 
@@ -22,7 +23,8 @@ const customStyles = {
 Modal.setAppElement(".root")
 
 import {
-  fetchStudents
+  fetchStudents,
+  fetchStudentFullInfo
 } from "../../actions"
 
 class ModeratorApp extends Component {
@@ -42,8 +44,16 @@ class ModeratorApp extends Component {
   }
 
   openModal(id) {
-    console.log('selected student ', id)
-    this.setState({modalIsOpen: true});
+    this.props.fetchStudentFullInfo(
+      id,
+      () => {
+        console.log('success on fetch student full info')
+        this.setState({modalIsOpen: true});
+      },
+      () => {
+        console.log('fail on fetch student full info')
+      }
+    )
   }
 
   afterOpenModal() {
@@ -76,10 +86,12 @@ class ModeratorApp extends Component {
   }
 
   render() {
-    console.log(localStorage.getItem('token'))
-    const { students } = this.props
+    const { students, selectedStudent } = this.props
     const { currentPage, perPage } = this.state
     const startCounter = (currentPage-1) * perPage
+
+    console.log('Selected student', selectedStudent)
+    console.log(localStorage.getItem('token'))
 
     return (
       <div className="wrapper">
@@ -93,143 +105,7 @@ class ModeratorApp extends Component {
           onRequestClose={this.closeModal}
           style={customStyles}
           contentLabel="Example Modal">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <button onClick={this.closeModal} className="close" type="button"/>
-                <h3>General info</h3>
-                <p>Daniyar Temirbekovich Zhadyrassyn, 11/06/1997. Status: Accept</p>
-                <p>Город: Алматы. Школа: 3</p>
-                <p>Email: zhadyrassyn.daniyar@is.sdu.edu.kz</p>
-                <div className="form-group">
-                  <label htmlFor="generalInfoComment"><strong>Leave comment</strong></label>
-                  <textarea className="form-control" id="generalInfoComment" rows="3" placeholder="Leave comment..."/>
-                </div>
-                <div>
-                  <button className="btn btn-outline-success width120">Accept</button>
-                  <button className="btn btn-outline-danger width120 ml-2">Reject</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="row mt-3">
-              <div className="col-md-12">
-                <h3>Documents</h3>
-                <ol>
-                  <li>
-                    <span>Document</span>
-                    <div className="form-check form-check-inline ml-2">
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Accepted</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Rejected</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Waiting for response</label>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <span>Document</span>
-                    <div className="form-check form-check-inline ml-2">
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Accepted</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Rejected</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Waiting for response</label>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <span>Document</span>
-                    <div className="form-check form-check-inline ml-2">
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Accepted</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Rejected</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Waiting for response</label>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <span>Document</span>
-                    <div className="form-check form-check-inline ml-2">
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Accepted</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Rejected</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Waiting for response</label>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <span>Document</span>
-                    <div className="form-check form-check-inline ml-2">
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Accepted</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Rejected</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Waiting for response</label>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <span><a href="#" target="_blank">Document</a></span>
-                    <div className="form-check form-check-inline ml-2">
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Accepted</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Rejected</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked/>
-                        <label className="form-check-label" htmlFor="inlineRadio1">Waiting for response</label>
-                      </div>
-                    </div>
-                  </li>
-                </ol>
-                <div className="form-group">
-                  <label htmlFor="documentsComment"><strong>Leave comment</strong></label>
-                  <textarea className="form-control" id="documentsComment" rows="3" placeholder="Leave comment..."/>
-                </div>
-                <div>
-                  <button className="btn btn-outline-success width120">Accept</button>
-                  <button className="btn btn-outline-danger width120 ml-2">Reject</button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EditStudent closeModal={this.closeModal} selectedStudent={selectedStudent}/>
         </Modal>
       </div>
     )
@@ -238,9 +114,11 @@ class ModeratorApp extends Component {
 
 export default connect(
   state => ({
-    students: state.moderator.students
+    students: state.moderator.students,
+    selectedStudent: state.moderator.selectedStudent,
   }),
   dispatch => ({
-    fetchStudents: bindActionCreators(fetchStudents, dispatch)
+    fetchStudents: bindActionCreators(fetchStudents, dispatch),
+    fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch)
   })
 )(ModeratorApp)

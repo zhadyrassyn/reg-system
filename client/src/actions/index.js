@@ -309,7 +309,7 @@ export const fetchStudents = (currentPage, perPage, onSuccess, onError) => (disp
   })
 }
 
-export const fetchStudentFullInfo = (id, onSuccess, onError) => {
+export const fetchStudentFullInfo = (id, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/moderator/students/${id}`
 
   const token = localStorage.getItem('token')
