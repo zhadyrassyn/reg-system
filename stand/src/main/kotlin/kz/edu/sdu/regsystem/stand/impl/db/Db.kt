@@ -1,5 +1,6 @@
 package kz.edu.sdu.regsystem.stand.impl.db
 
+import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.stand.model.City
 import kz.edu.sdu.regsystem.stand.model.Document
 import kz.edu.sdu.regsystem.stand.model.School
@@ -23,6 +24,14 @@ class Db {
     val cities = HashMap<Long, City>()
 
     init { //fill cities
+
+        val documentEnums =
+            arrayOf(DocumentType.DIPLOMA_CERTIFICATE,
+            DocumentType.FLUOROGRAPHY, DocumentType.HEALTH_063, DocumentType.HEALTH_086,
+            DocumentType.IDENTITY_CARD_BACK, DocumentType.IDENTITY_CARD_FRONT, DocumentType.PHOTO_3x4,
+            DocumentType.UNT_CT_CERTIFICATE
+        )
+
         val c1 = City(id = longCounter.incrementAndGet(), name = "Almaty")
         val c2 = City(id = longCounter.incrementAndGet(), name = "Astana")
         val c3 = City(id = longCounter.incrementAndGet(), name ="Qyzylorda")
@@ -49,7 +58,6 @@ class Db {
                         schoolStatus = SchoolStatus.ACTIVE))
             }
         }
-
         val u1 = User(
             id = 1000,
             email = "dandibobo537@gmail.com",
@@ -62,6 +70,15 @@ class Db {
             cityId = c2.id,
             schoolId = c2.schools[0].id
             )
+
+        documentEnums.forEach {
+            u1.documents.put(it, Document(
+                id = longCounter.incrementAndGet(),
+                documentType = it,
+                path = null
+            ))
+        }
+
 
         val u2 = User(
             id = longCounter.incrementAndGet(),
@@ -90,6 +107,15 @@ class Db {
                 schoolId = c1.schools[i%10].id,
                 userStatus = UserStatus.ACTIVE
             )
+
+            documentEnums.forEach {
+                user.documents.put(it, Document(
+                    id = longCounter.incrementAndGet(),
+                    documentType = it,
+                    path = null
+                ))
+            }
+
             users.put(user.id, user)
             userRoles.put(user.id, RoleType.USER)
         }
