@@ -44,6 +44,7 @@ class ModeratorApp extends Component {
   }
 
   openModal(id) {
+
     this.props.fetchStudentFullInfo(
       id,
       () => {
@@ -59,10 +60,12 @@ class ModeratorApp extends Component {
   afterOpenModal() {
     // references are now sync'd and can be accessed.
     console.log("true modal")
+    document.body.style.overflow = "hidden";
   }
 
   closeModal() {
     this.setState({modalIsOpen: false});
+    document.body.style.overflow = "auto";
   }
 
 
