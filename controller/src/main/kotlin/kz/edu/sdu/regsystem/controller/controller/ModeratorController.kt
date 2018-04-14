@@ -1,6 +1,8 @@
 package kz.edu.sdu.regsystem.controller.controller
 
+import kz.edu.sdu.regsystem.controller.model.EditGeneralInfORequest
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,4 +17,9 @@ class ModeratorController(
 
     @GetMapping("/students/{id}")
     fun getStudentInfo(@PathVariable("id") id: Long) = moderatorRegister.getStudentInfo(id)
+
+    @PostMapping("/students/{id}/editGeneralInfo")
+    @ResponseStatus(HttpStatus.OK)
+    fun editGeneralInfO(@PathVariable("id") id: Long,
+                        @RequestBody request: EditGeneralInfORequest) = moderatorRegister.editGeneralInfo(id, request)
 }

@@ -1,10 +1,12 @@
 package kz.edu.sdu.regsystem.stand.impl
 
 import kz.edu.sdu.regsystem.controller.model.DocumentInfoResposne
+import kz.edu.sdu.regsystem.controller.model.EditGeneralInfORequest
 import kz.edu.sdu.regsystem.controller.model.GetStudentInfoResponse
 import kz.edu.sdu.regsystem.controller.model.GetStudentsResponse
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.model.enums.GeneralInfoStatus
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
@@ -20,6 +22,15 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun editGeneralInfo(id: Long, request: EditGeneralInfORequest) {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        user.generalInfoStatusDto.comment = request.comment
+        user.generalInfoStatusDto.status = GeneralInfoStatus.valueOf(request.status)
+    }
+
     override fun getStudentInfo(id: Long): GetStudentInfoResponse {
         val response = GetStudentInfoResponse()
 
@@ -45,7 +56,8 @@ class ModeratorRegisterStandImpl(
         response.city = city.name
         response.school = school.name
         response.birthDate = dateToStringForm(user.birthDate)
-        response.generalInfoStatus = user.generalInfoStatus.name
+        response.generalInfoStatus = user.generalInfoStatusDto.status.name
+        response.generalInfoComment = user.generalInfoStatusDto.comment!!
         response.documents = documents
 
         return response

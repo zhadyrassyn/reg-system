@@ -33,3 +33,8 @@ data class DocumentInfoResposne(
     val status: String,
     val url: String
 )
+
+data class EditGeneralInfORequest(
+    val comment: String? = null,
+    val status: String
+)

@@ -18,6 +18,5 @@ data class User(var id: Long = -1,
                 var birthDate: Date = Date(),
                 var cityId: Long = -1,
                 var schoolId: Long = -1,
-                var generalInfoStatus: GeneralInfoStatus = GeneralInfoStatus.WAITING_FOR_RESPONSE,
-                var documentsStatus: UserDocumentsStatus = UserDocumentsStatus.WAITING_FOR_RESPONSE,
+                var generalInfoStatusDto: GeneralInfoStatusDto = GeneralInfoStatusDto(),
                 var documents: HashMap<DocumentType, Document> = HashMap())
