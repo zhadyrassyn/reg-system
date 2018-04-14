@@ -16,8 +16,9 @@ class ResourcesController(val resourceRegister: ResourceRegister) {
 
     @GetMapping("/{fileName}", produces = arrayOf(MediaType.IMAGE_JPEG_VALUE,
         MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE))
-    fun getUploadFile(@PathVariable("fileName")fileName: String,
-                      @RequestHeader("Authorization")auth: String): ResponseEntity<InputStreamResource>? = resourceRegister.getFile(fileName)
+    fun getUploadFile(@PathVariable("fileName")fileName: String): ResponseEntity<InputStreamResource>? {
+        return resourceRegister.getFile(fileName)
+    }
 
 
 }

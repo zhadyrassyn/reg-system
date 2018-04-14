@@ -45,7 +45,7 @@ class ModeratorRegisterStandImpl(
                 id = it.id,
                 type = it.documentType.name,
                 status = it.documentStatus.name,
-                url = it.path.toString())
+                url = if(it.path == null) "default.png" else it.path!!.fileName.toString())
             }
 
         response.id = user.id

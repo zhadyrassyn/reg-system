@@ -53,6 +53,7 @@ import {
 
 } from "../../constants"
 
+import config from "../../config"
 
 class EditStudentDocuments extends Component {
   renderDocuments(userDocuments) {
@@ -63,9 +64,11 @@ class EditStudentDocuments extends Component {
         const option3 = document.type + WAITING_FOR_RESPONSE
         const option4 = document.type + NOT_SEND
 
+        const path = `${config.url}/upload/${userDocuments[document.type].url}`
+
         return (
           <li key={ document.type } className="list-group-item">
-            <p><strong>{ document.text }</strong></p>
+            <p><a href={path} target="_blank">{ document.text }</a></p>
             <div className="form-check form-check-inline ml-2">
               <div className="form-check form-check-inline">
                 <input className="form-check-input" type="radio" name={ option1 } id={ option1 } value={ option1 }
@@ -113,7 +116,6 @@ class EditStudentDocuments extends Component {
         </div>
         <div>
           <button className="btn btn-outline-info">Save comment for documents</button>
-          {/*<button className="btn btn-outline-danger width120 ml-2">Reject</button>*/}
         </div>
       </div>
     )
