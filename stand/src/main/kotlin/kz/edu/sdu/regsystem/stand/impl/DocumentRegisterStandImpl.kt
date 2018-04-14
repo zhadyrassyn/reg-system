@@ -12,6 +12,7 @@ import kz.edu.sdu.regsystem.stand.props.StorageProperties
 import kz.edu.sdu.regsystem.stand.model.exceptions.StorageException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.core.env.Environment
+import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
