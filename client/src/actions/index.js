@@ -23,7 +23,9 @@ import {
   FETCH_STUDENTS_FAILURE,
   FETCH_STUDENTS_SUCCESS,
   FETCH_STUDENT_FULL_INFO_FAILURE,
-  FETCH_STUDENT_FULL_INFO_SUCCESS
+  FETCH_STUDENT_FULL_INFO_SUCCESS,
+  EDIT_STUDENT_GENERAL_INFO_FAILURE,
+  EDIT_STUDENT_GENERAL_INFO_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -315,7 +317,7 @@ export const fetchStudentFullInfo = (id, onSuccess, onError) => (dispatch) => {
   const token = localStorage.getItem('token')
   axios.get(request, {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`
     }
   }).then(({ data }) => {
     dispatch({
@@ -328,6 +330,37 @@ export const fetchStudentFullInfo = (id, onSuccess, onError) => (dispatch) => {
   }).catch(error => {
     dispatch({
       type: FETCH_STUDENT_FULL_INFO_FAILURE,
+      error: error.response && error.response.message
+    })
+    if(onError) {
+      onError()
+    }
+  })
+}
+
+export const editGeneralInfo = (id, generalInfoComment, generalInfoStatus, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/${id}/editGeneralInfo`
+
+  const token = localStorage.getItem('token')
+  const data = {
+    comment: generalInfoComment,
+    status: generalInfoStatus
+  }
+  axios.post(request, data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(() => {
+    dispatch({
+      type: EDIT_STUDENT_GENERAL_INFO_SUCCESS,
+      data
+    })
+    if(onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: EDIT_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
     if(onError) {

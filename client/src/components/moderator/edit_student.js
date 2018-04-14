@@ -23,7 +23,8 @@ class EditStudent extends Component {
   }
 
   render() {
-    const { closeModal, selectedStudent } = this.props
+    const { closeModal, selectedStudent, onGeneralInfoEdit } = this.props
+    console.log('selectedStudent ', selectedStudent)
     const {
       id, firstName, middleName, lastName, email, birthDate, city, school, documentsComment,
       generalInfoComment, generalInfoStatus,
@@ -57,6 +58,7 @@ class EditStudent extends Component {
             {activeForm === FORM_GENERAL &&
               <EditStudentGeneralInfo
                 selectedStudent={ selectedStudent }
+                onGeneralInfoEdit={ onGeneralInfoEdit }
               />
             }
             {activeForm === FORM_DOCUMENTS &&
