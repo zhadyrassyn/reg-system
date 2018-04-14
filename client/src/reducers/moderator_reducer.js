@@ -40,8 +40,8 @@ export default (state = initialState, action) => {
         ...state,
         selectedStudent: {
           ...state.selectedStudent,
-          generalInfoComment: action.data.generalInfoComment,
-          generalInfoStatus: action.data.generalInfoStatus
+          generalInfoComment: action.data.comment,
+          generalInfoStatus: action.data.status
         }
       }
     case EDIT_STUDENT_GENERAL_INFO_FAILURE:

@@ -25,10 +25,6 @@ class EditStudent extends Component {
   render() {
     const { closeModal, selectedStudent, onGeneralInfoEdit } = this.props
     console.log('selectedStudent ', selectedStudent)
-    const {
-      id, firstName, middleName, lastName, email, birthDate, city, school, documentsComment,
-      generalInfoComment, generalInfoStatus,
-    } = selectedStudent
 
     const documents = _.mapKeys(selectedStudent.documents, "type")
     const activeForm = this.state.activeForm

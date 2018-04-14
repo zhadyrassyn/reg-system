@@ -11,14 +11,8 @@ class EditStudentGeneralInfo extends Component {
     super(props)
 
     this.state = {
-      comment: ""
+      comment: this.props.selectedStudent.generalInfoComment
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log('nextprops')
-    console.log('gj ' , nextProps.selectedStudent.generalInfoComment)
-    this.setState({comment: nextProps.selectedStudent.generalInfoComment})
   }
 
   onGeneralInfoEdit = (status) => {
@@ -31,8 +25,7 @@ class EditStudentGeneralInfo extends Component {
 
   render() {
     const {
-      id, firstName, middleName, lastName, email, birthDate, city, school, documentsComment,
-      generalInfoComment, generalInfoStatus,
+      id, firstName, middleName, lastName, email, birthDate, city, school, generalInfoStatus,
     } = this.props.selectedStudent
 
     const comment = this.state.comment
@@ -50,8 +43,8 @@ class EditStudentGeneralInfo extends Component {
           onChange={this.onTextAreaChange}/>
         </div>
         <div>
-          <button className="btn btn-outline-success" onClick={this.onGeneralInfoEdit.bind(this, ACCEPTED)}>User info seems correct</button>
-          <button className="btn btn-outline-danger ml-2" onClick={this.onGeneralInfoEdit.bind(this, REJECTED)}>User info seems wrong</button>
+          <button className={"btn " + (generalInfoStatus === ACCEPTED ? " btn-success" : "btn-outline-success")} onClick={this.onGeneralInfoEdit.bind(this, ACCEPTED)}>User info seems correct</button>
+          <button className={"btn ml-2 " + (generalInfoStatus === REJECTED ? " btn-danger" : "btn-outline-danger")} onClick={this.onGeneralInfoEdit.bind(this, REJECTED)}>User info seems wrong</button>
         </div>
       </div>
     )
