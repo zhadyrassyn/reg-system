@@ -7,7 +7,9 @@ import {
   EDIT_STUDENT_GENERAL_INFO_FAILURE,
   EDIT_STUDENT_GENERAL_INFO_SUCCESS,
   SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
-  SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS
+  SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS,
+  CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
+  CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE
 } from "../actions/types"
 
 const initialState = {
@@ -28,9 +30,10 @@ export default (state = initialState, action) => {
         error: action.error
       }
     case FETCH_STUDENT_FULL_INFO_SUCCESS:
+      action.data.documents = _.mapKeys(action.data.documents, "id")
       return {
         ...state,
-        selectedStudent: action.data
+        selectedStudent: action.data,
       }
     case FETCH_STUDENT_FULL_INFO_FAILURE:
       return {
@@ -60,6 +63,25 @@ export default (state = initialState, action) => {
         }
       }
     case SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+
+    case CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS:
+
+      console.log('copy ', action.data)
+      return {
+        ...state,
+        selectedStudent : {
+          ...state.selectedStudent,
+          documents: {
+            ...state.selectedStudent.documents,
+            [action.data.id] : action.data
+          }
+        }
+      }
+    case CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE:
       return {
         ...state,
         error: action.error

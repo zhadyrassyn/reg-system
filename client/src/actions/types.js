@@ -41,3 +41,6 @@ export const EDIT_STUDENT_GENERAL_INFO_FAILURE = 'edit_student_general_info_fail
 
 export const SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS = 'save_student_documents_comment_success'
 export const SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE = 'save_student_documents_comment_failure'
+
+export const CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS = 'change_student_document_status_success'
+export const CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE = 'change_student_document_status_failure'

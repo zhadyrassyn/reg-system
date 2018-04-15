@@ -27,7 +27,9 @@ import {
   EDIT_STUDENT_GENERAL_INFO_FAILURE,
   EDIT_STUDENT_GENERAL_INFO_SUCCESS,
   SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
-  SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS
+  SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS,
+  CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE,
+  CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -396,5 +398,34 @@ export const saveDocumentsComment = (id, comment, onSuccess, onError) => (dispat
     if(onError) {
       onError()
     }
+  })
+}
+
+export const changeDocumentStatus = (id, document, onSuccess, onError) => (dispatch) => {
+  console.log('document ', document)
+  const request = `${config.url}/moderator/students/${id}/documents/${document.id}?status=${document.status}`
+
+  const token = localStorage.getItem('token')
+
+  axios.post(request, {}, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(() => {
+    dispatch({
+      type: CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
+      data: document
+    })
+    // if(onSuccess) {
+    //   onSuccess()
+    // }
+  }).catch(error => {
+    dispatch({
+      type: CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE,
+      error: error.response && error.response.message
+    })
+    // if(onError) {
+    //   onError()
+    // }
   })
 }

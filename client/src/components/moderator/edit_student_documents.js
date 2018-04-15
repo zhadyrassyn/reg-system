@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import _ from "lodash"
+import DocumentRow from "./document_row"
 
 const documents = [
   {
@@ -68,39 +69,23 @@ class EditStudentDocuments extends Component {
   renderDocuments(userDocuments) {
     return _.map(
       documents, document => {
-        const option1 = document.type + ACCEPTED
-        const option2 = document.type + REJECTED
-        const option3 = document.type + WAITING_FOR_RESPONSE
-        const option4 = document.type + NOT_SEND
 
         const path = `${config.url}/upload/${userDocuments[document.type].url}`
+        const status = userDocuments[document.type].status
+        const id = userDocuments[document.type].id
+        const title = document.text
+
+        const onDocumentStatusChange = this.props.onDocumentStatusChange
 
         return (
-          <li key={ document.type } className="list-group-item">
-            <p><a href={path} target="_blank">{ document.text }</a></p>
-            <div className="form-check form-check-inline ml-2">
-              <div className="form-check form-check-inline">
-                <input className="form-check-input" type="radio" name={ option1 } id={ option1 } value={ option1 }
-                       defaultChecked={ userDocuments[document.type].status === ACCEPTED}/>
-                <label className="form-check-label text-success" htmlFor={ option1 }>{ ACCEPTED }</label>
-              </div>
-              <div className="form-check form-check-inline">
-                <input className="form-check-input" type="radio" name={ option2 } id={ option2 } value={ option2 }
-                       defaultChecked={ userDocuments[document.type].status === REJECTED}/>
-                <label className="form-check-label text-danger" htmlFor={ option2 }>{ REJECTED }</label>
-              </div>
-              <div className="form-check form-check-inline">
-                <input className="form-check-input" type="radio" name={ option3 } id={ option3 } value={ option3 }
-                       defaultChecked={ userDocuments[document.type].status === WAITING_FOR_RESPONSE}/>
-                <label className="form-check-label text-warning" htmlFor={ option3 }>{ WAITING_FOR_RESPONSE }</label>
-              </div>
-              <div className="form-check form-check-inline">
-                <input className="form-check-input" type="radio" name={ option4 } id={ option4 } value={ option4 }
-                       defaultChecked={ userDocuments[document.type].status === NOT_SEND}/>
-                <label className="form-check-label text-info" htmlFor={ option4 }>{ NOT_SEND }</label>
-              </div>
-            </div>
-          </li>
+          <DocumentRow key={ document.type }
+                       path={ path }
+                       status={ status }
+                       title={ title }
+                       id={ id }
+                       onDocumentStatusChange={ onDocumentStatusChange }
+                       document={ userDocuments[document.type] }
+          />
         )
       }
     )

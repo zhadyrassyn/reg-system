@@ -26,7 +26,8 @@ import {
   fetchStudents,
   fetchStudentFullInfo,
   editGeneralInfo,
-  saveDocumentsComment
+  saveDocumentsComment,
+  changeDocumentStatus
 } from "../../actions"
 
 class ModeratorApp extends Component {
@@ -110,6 +111,16 @@ class ModeratorApp extends Component {
       })
   }
 
+  changeDocumentStatus = (document, successCallback, errorCallback) => {
+
+    this.props.changeDocumentStatus(
+      this.props.selectedStudent.id,
+      document,
+      successCallback,
+      errorCallback
+    )
+  }
+
   render() {
     const { students, selectedStudent } = this.props
     const { currentPage, perPage } = this.state
@@ -134,6 +145,7 @@ class ModeratorApp extends Component {
                        selectedStudent={selectedStudent}
                        onGeneralInfoEdit={this.onGeneralInfoEdit}
                        onSaveDocumentsComment={this.saveDocumentsComment}
+                       onDocumentStatusChange={this.changeDocumentStatus}
           />
         </Modal>
       </div>
@@ -150,6 +162,7 @@ export default connect(
     fetchStudents: bindActionCreators(fetchStudents, dispatch),
     fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch),
     editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),
-    saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch)
+    saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch),
+    changeDocumentStatus: bindActionCreators(changeDocumentStatus, dispatch)
   })
 )(ModeratorApp)

@@ -33,5 +33,7 @@ class ModeratorController(
     @ResponseStatus(HttpStatus.OK)
     fun changeDocumentStatus(@PathVariable("id") id: Long,
                              @PathVariable("documentId") documentId: Long,
-                             @RequestParam("status") status: String) = moderatorRegister.changeDocumentStatus(id, documentId, status)
+                             @RequestParam("status") status: String) {
+        moderatorRegister.changeDocumentStatus(id, documentId, status)
+    }
 }
