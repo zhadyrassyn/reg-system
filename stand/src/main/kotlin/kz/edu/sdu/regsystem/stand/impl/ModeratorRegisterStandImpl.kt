@@ -20,39 +20,6 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
-    override fun search(text: String): List<GetStudentsResponse> {
-        return db.users.values
-            .filter {
-                db.userRoles[it.id] == RoleType.USER
-                    && it.userStatus == UserStatus.ACTIVE
-                    && (
-                    it.id.toString().contains(text, ignoreCase = true)
-                        || it.firstName.contains(text, ignoreCase = true)
-                        || it.middleName.contains(text, ignoreCase = true)
-                        || it.lastName.contains(text, ignoreCase = true)
-                        || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-                        || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains("text", ignoreCase = true)
-                        || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
-                    )
-
-            }
-            .map {
-                val city = db.cities[it.cityId] ?: throw Exception("Cannot find city with id ${it.cityId}")
-                val school = city.schools.firstOrNull { school -> school.id == it.schoolId }
-                    ?: throw BadRequestException("Cannot find school with id ${it.schoolId}")
-
-                GetStudentsResponse(
-                    id = it.id,
-                    firstName = it.firstName,
-                    middleName = it.middleName,
-                    lastName = it.lastName,
-                    email = it.email,
-                    city = city.name,
-                    school = school.name,
-                    userStatus = it.userStatus.toString(),
-                    birthDate = dateToStringForm(it.birthDate))
-            }
-    }
 
     override fun changeDocumentStatus(id: Long, documentId: Long, status: String) {
         val user = db.users.values.firstOrNull {
