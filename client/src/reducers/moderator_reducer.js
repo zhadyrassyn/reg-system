@@ -5,7 +5,9 @@ import {
   FETCH_STUDENT_FULL_INFO_FAILURE,
   FETCH_STUDENT_FULL_INFO_SUCCESS,
   EDIT_STUDENT_GENERAL_INFO_FAILURE,
-  EDIT_STUDENT_GENERAL_INFO_SUCCESS
+  EDIT_STUDENT_GENERAL_INFO_SUCCESS,
+  SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
+  SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS
 } from "../actions/types"
 
 const initialState = {
@@ -45,6 +47,19 @@ export default (state = initialState, action) => {
         }
       }
     case EDIT_STUDENT_GENERAL_INFO_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+    case SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS:
+      return {
+        ...state,
+        selectedStudent: {
+          ...state.selectedStudent,
+          documentsComment: action.data.comment
+        }
+      }
+    case SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE:
       return {
         ...state,
         error: action.error

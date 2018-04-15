@@ -23,7 +23,7 @@ class EditStudent extends Component {
   }
 
   render() {
-    const { closeModal, selectedStudent, onGeneralInfoEdit } = this.props
+    const { closeModal, selectedStudent, onGeneralInfoEdit, onSaveDocumentsComment } = this.props
     console.log('selectedStudent ', selectedStudent)
 
     const documents = _.mapKeys(selectedStudent.documents, "type")
@@ -60,6 +60,7 @@ class EditStudent extends Component {
             {activeForm === FORM_DOCUMENTS &&
               <EditStudentDocuments
                 selectedStudent={ selectedStudent }
+                onSaveDocumentsComment={ onSaveDocumentsComment }
               />
             }
           </div>

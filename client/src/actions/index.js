@@ -25,7 +25,9 @@ import {
   FETCH_STUDENT_FULL_INFO_FAILURE,
   FETCH_STUDENT_FULL_INFO_SUCCESS,
   EDIT_STUDENT_GENERAL_INFO_FAILURE,
-  EDIT_STUDENT_GENERAL_INFO_SUCCESS
+  EDIT_STUDENT_GENERAL_INFO_SUCCESS,
+  SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
+  SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -361,6 +363,34 @@ export const editGeneralInfo = (id, generalInfoComment, generalInfoStatus, onSuc
   }).catch(error => {
     dispatch({
       type: EDIT_STUDENT_GENERAL_INFO_FAILURE,
+      error: error.response && error.response.message
+    })
+    if(onError) {
+      onError()
+    }
+  })
+}
+
+export const saveDocumentsComment = (id, comment, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/${id}/documents/comment`
+
+  const token = localStorage.getItem('token')
+  const data = { comment }
+  axios.post(request, data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(() => {
+    dispatch({
+      type: SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS,
+      data
+    })
+    if(onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
       error: error.response && error.response.message
     })
     if(onError) {

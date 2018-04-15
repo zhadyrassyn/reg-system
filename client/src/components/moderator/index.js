@@ -25,7 +25,8 @@ Modal.setAppElement(".root")
 import {
   fetchStudents,
   fetchStudentFullInfo,
-  editGeneralInfo
+  editGeneralInfo,
+  saveDocumentsComment
 } from "../../actions"
 
 class ModeratorApp extends Component {
@@ -89,6 +90,16 @@ class ModeratorApp extends Component {
       })
   }
 
+  saveDocumentsComment = (comment) => {
+    this.props.saveDocumentsComment(this.props.selectedStudent.id, comment,
+      () => {
+        console.log('123')
+      },
+      () => {
+        console.log('456')
+      })
+  }
+
   onGeneralInfoEdit = (generalInfoComment, generalInfoStatus) => {
     this.props.editGeneralInfo(this.props.selectedStudent.id, generalInfoComment, generalInfoStatus,
       () => {
@@ -119,7 +130,11 @@ class ModeratorApp extends Component {
           onRequestClose={this.closeModal}
           style={customStyles}
           contentLabel="Example Modal">
-          <EditStudent closeModal={this.closeModal} selectedStudent={selectedStudent} onGeneralInfoEdit={this.onGeneralInfoEdit}/>
+          <EditStudent closeModal={this.closeModal}
+                       selectedStudent={selectedStudent}
+                       onGeneralInfoEdit={this.onGeneralInfoEdit}
+                       onSaveDocumentsComment={this.saveDocumentsComment}
+          />
         </Modal>
       </div>
     )
@@ -134,6 +149,7 @@ export default connect(
   dispatch => ({
     fetchStudents: bindActionCreators(fetchStudents, dispatch),
     fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch),
-    editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch)
+    editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),
+    saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch)
   })
 )(ModeratorApp)

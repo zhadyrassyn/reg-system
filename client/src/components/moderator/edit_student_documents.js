@@ -56,6 +56,15 @@ import {
 import config from "../../config"
 
 class EditStudentDocuments extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      documentsComment: this.props.selectedStudent.documentsComment
+    }
+  }
+
   renderDocuments(userDocuments) {
     return _.map(
       documents, document => {
@@ -97,12 +106,20 @@ class EditStudentDocuments extends Component {
     )
   }
 
+  handleTextAreaChange = (event) => {
+    this.setState({ documentsComment: event.target.value })
+  }
+
+  handleSaveCommentBtn = () => {
+    this.props.onSaveDocumentsComment(this.state.documentsComment )
+  }
+
   render() {
-    const {
-      id, firstName, middleName, lastName, email, birthDate, city, school, documentsComment,
-      generalInfoComment, generalInfoStatus,
-    } = this.props.selectedStudent
+    const comment = this.state.documentsComment
+
     const documents = _.mapKeys(this.props.selectedStudent.documents, "type")
+
+    const btnClass = "btn " + (this.props.selectedStudent.documentsComment === comment ? "btn-info " : "btn-outline-info")
 
     return (
       <div>
@@ -112,10 +129,11 @@ class EditStudentDocuments extends Component {
         </ol>
         <div className="form-group">
           <label htmlFor="documentsComment"><strong>Leave comment</strong></label>
-          <textarea className="form-control" id="documentsComment" rows="3" placeholder="Leave comment..." defaultValue={ generalInfoComment }/>
+          <textarea className="form-control" id="documentsComment" rows="3" placeholder="Leave comment..."
+                    defaultValue={ comment } onChange={this.handleTextAreaChange.bind(this)}/>
         </div>
         <div>
-          <button className="btn btn-outline-info">Save comment for documents</button>
+          <button className={btnClass} onClick={this.handleSaveCommentBtn}>Save comment for documents</button>
         </div>
       </div>
     )

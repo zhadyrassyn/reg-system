@@ -38,3 +38,6 @@ export const FETCH_STUDENT_FULL_INFO_FAILURE = 'fetch_student_full_info_failure'
 
 export const EDIT_STUDENT_GENERAL_INFO_SUCCESS = 'edit_student_general_info_success'
 export const EDIT_STUDENT_GENERAL_INFO_FAILURE = 'edit_student_general_info_failure'
+
+export const SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS = 'save_student_documents_comment_success'
+export const SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE = 'save_student_documents_comment_failure'

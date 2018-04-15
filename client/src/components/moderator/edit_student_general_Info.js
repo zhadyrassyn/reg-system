@@ -25,11 +25,13 @@ class EditStudentGeneralInfo extends Component {
 
   render() {
     const {
-      id, firstName, middleName, lastName, email, birthDate, city, school, generalInfoStatus,
+      id, firstName, middleName, lastName, email, birthDate, city, school, generalInfoStatus, generalInfoComment
     } = this.props.selectedStudent
 
     const comment = this.state.comment
-    console.log('comment ', comment)
+
+    const acceptBtnClass = "btn " + (generalInfoStatus === ACCEPTED && comment === generalInfoComment ? "btn-success" : "btn-outline-success")
+    const rejectBtnClass = "btn ml-2 " + (generalInfoStatus === REJECTED && comment === generalInfoComment ? "btn-danger" : "btn-outline-danger")
 
     return (
       <div>
@@ -43,8 +45,8 @@ class EditStudentGeneralInfo extends Component {
           onChange={this.onTextAreaChange}/>
         </div>
         <div>
-          <button className={"btn " + (generalInfoStatus === ACCEPTED ? " btn-success" : "btn-outline-success")} onClick={this.onGeneralInfoEdit.bind(this, ACCEPTED)}>User info seems correct</button>
-          <button className={"btn ml-2 " + (generalInfoStatus === REJECTED ? " btn-danger" : "btn-outline-danger")} onClick={this.onGeneralInfoEdit.bind(this, REJECTED)}>User info seems wrong</button>
+          <button className={ acceptBtnClass } onClick={this.onGeneralInfoEdit.bind(this, ACCEPTED)}>User info seems correct</button>
+          <button className={ rejectBtnClass } onClick={this.onGeneralInfoEdit.bind(this, REJECTED)}>User info seems wrong</button>
         </div>
       </div>
     )
