@@ -1,6 +1,6 @@
-import React, { Component } from "react"
-import { bindActionCreators } from "redux"
-import { connect } from "react-redux"
+import React, {Component} from "react"
+import {bindActionCreators} from "redux"
+import {connect} from "react-redux"
 import SearchBar from "./search_bar"
 import TableHeader from "./table_header"
 import TableBody from "./table_body"
@@ -10,7 +10,7 @@ import EditStudent from "./edit_student"
 import Modal from "react-modal"
 
 const customStyles = {
-  content : {
+  content: {
     width: "100%",
     height: "100%",
     top: 0,
@@ -36,6 +36,7 @@ class ModeratorApp extends Component {
     super(props)
 
     this.state = {
+      search: "",
       currentPage: 1,
       perPage: 10,
       modalIsOpen: false
@@ -75,19 +76,29 @@ class ModeratorApp extends Component {
   componentWillMount() {
     document.body.style.backgroundColor = "#F8F6F9";
   }
+
   componentWillUnmount() {
     document.body.style.backgroundColor = null;
   }
 
   componentDidMount() {
-    const { currentPage, perPage } = this.state
-    this.props.fetchStudents(currentPage, perPage)
+    const {currentPage, perPage, search} = this.state
+    this.props.fetchStudents(search, currentPage, perPage)
   }
 
   handlePageChangeClick = (pageNum) => {
-    this.props.fetchStudents(pageNum, this.state.perPage,
+    const {search} = this.state
+    this.props.fetchStudents(search, pageNum, this.state.perPage,
       () => {
-        this.setState({ currentPage: pageNum })
+        this.setState({currentPage: pageNum})
+      })
+  }
+
+  handleSearch = (search) => {
+    this.props.fetchStudents(search, 1, this.state.perPage,
+      () => {
+        console.log('success')
+        this.setState({currentPage: 1, search})
       })
   }
 
@@ -122,16 +133,19 @@ class ModeratorApp extends Component {
   }
 
   render() {
-    const { students, selectedStudent } = this.props
-    const { currentPage, perPage } = this.state
-    const startCounter = (currentPage-1) * perPage
+    const {students, selectedStudent} = this.props
+    const {currentPage, perPage} = this.state
+    const startCounter = (currentPage - 1) * perPage
+    const total = _.keys(students).length
+    console.log(students)
+    console.log(total)
 
     return (
       <div className="wrapper">
-        <SearchBar/>
+        <SearchBar onSearch={this.handleSearch}/>
         <TableHeader/>
-        <TableBody students={ students } startCounter={ startCounter } openModal={this.openModal.bind(this)}/>
-        <Pagination currentPage={ currentPage } perPage={ perPage } handlePageChangeClick={this.handlePageChangeClick}/>
+        <TableBody students={students} startCounter={startCounter} openModal={this.openModal.bind(this)}/>
+        <Pagination currentPage={currentPage} perPage={perPage} total={students.length} handlePageChangeClick={this.handlePageChangeClick}/>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}

@@ -288,8 +288,8 @@ export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
 }
 
 /* MODERATOR ACTIONS */
-export const fetchStudents = (currentPage, perPage, onSuccess, onError) => (dispatch) => {
-  const request = `${config.url}/moderator/students?currentPage=${currentPage}&perPage=${perPage}`
+export const fetchStudents = (text, currentPage, perPage, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students?currentPage=${currentPage}&perPage=${perPage}&text=${text}`
 
   const token = localStorage.getItem('token')
   axios.get(request, {

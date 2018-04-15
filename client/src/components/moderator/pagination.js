@@ -13,7 +13,7 @@ class Pagination extends Component {
   }
 
   render() {
-    const { currentPage, perPage } = this.props
+    const { currentPage, perPage, total } = this.props
     const totalPages = Math.ceil(22/perPage)
 
     let pageItems = []

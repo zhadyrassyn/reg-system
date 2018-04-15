@@ -69,8 +69,6 @@ export default (state = initialState, action) => {
       }
 
     case CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS:
-
-      console.log('copy ', action.data)
       return {
         ...state,
         selectedStudent : {
