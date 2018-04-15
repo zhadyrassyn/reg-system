@@ -14,7 +14,6 @@ import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @Service
@@ -120,9 +119,27 @@ class ModeratorRegisterStandImpl(
         return response
     }
 
-    override fun getStudents(currentPage: Int, perPage: Int): List<GetStudentsResponse> {
-        val filteredUsers = db.users.values
-            .filter { db.userRoles[it.id] == RoleType.USER && it.userStatus == UserStatus.ACTIVE }
+    override fun getStudents(text: String, currentPage: Int, perPage: Int): List<GetStudentsResponse> {
+        val filteredUsers = if (Objects.isNull(text)) {
+            db.users.values
+                .filter { db.userRoles[it.id] == RoleType.USER && it.userStatus == UserStatus.ACTIVE }
+        } else {
+            db.users.values
+                .filter {
+                    db.userRoles[it.id] == RoleType.USER
+                        && it.userStatus == UserStatus.ACTIVE
+                        && (
+                        it.id.toString().contains(text, ignoreCase = true)
+                            || it.firstName.contains(text, ignoreCase = true)
+                            || it.middleName.contains(text, ignoreCase = true)
+                            || it.lastName.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains("text", ignoreCase = true)
+                            || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
+                        )
+
+                }
+        }
 
         val total = filteredUsers.size
         val from = (currentPage - 1) * perPage

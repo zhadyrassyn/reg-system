@@ -42,9 +42,3 @@ data class EditGeneralInfORequest(
 data class SaveCommentForDocumentsRequest(
     val comment: String
 )
-
-data class SearchRequest(
-    val text: String,
-    val currentPage: Int,
-    val perPage: Int
-)

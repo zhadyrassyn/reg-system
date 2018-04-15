@@ -13,8 +13,9 @@ class ModeratorController(
 ) {
 
     @GetMapping("/students")
-    fun getStudents(@RequestParam("currentPage") currentPage: Int,
-                    @RequestParam("perPage") perPage: Int) = moderatorRegister.getStudents(currentPage, perPage)
+    fun getStudents(@RequestParam("text") text: String,
+                    @RequestParam("currentPage") currentPage: Int,
+                    @RequestParam("perPage") perPage: Int) = moderatorRegister.getStudents(text, currentPage, perPage)
 
     @GetMapping("/students/{id}")
     fun getStudentInfo(@PathVariable("id") id: Long) = moderatorRegister.getStudentInfo(id)
@@ -36,6 +37,6 @@ class ModeratorController(
                              @RequestParam("status") status: String) = moderatorRegister.changeDocumentStatus(id, documentId, status)
 
     @GetMapping("/students/search")
-    fun search(@RequestParam("text") text:String) = moderatorRegister.search(text)
+    fun search(@RequestParam("text") text: String) = moderatorRegister.search(text)
 
 }
