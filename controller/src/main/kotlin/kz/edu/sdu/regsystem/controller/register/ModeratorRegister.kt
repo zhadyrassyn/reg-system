@@ -14,4 +14,6 @@ interface ModeratorRegister {
     fun editGeneralInfo(id: Long, request: EditGeneralInfORequest)
 
     fun saveCommentForDocuments(id: Long, request: SaveCommentForDocumentsRequest)
+
+    fun changeDocumentStatus(id: Long, documentId: Long, status: String)
 }

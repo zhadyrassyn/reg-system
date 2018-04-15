@@ -3,6 +3,7 @@ package kz.edu.sdu.regsystem.stand.impl
 import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.model.enums.DocumentStatus
 import kz.edu.sdu.regsystem.stand.model.enums.GeneralInfoStatus
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
@@ -19,6 +20,18 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun changeDocumentStatus(id: Long, documentId: Long, status: String) {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        val document = user.documents.values.firstOrNull {
+            it.id == documentId
+        } ?: throw BadRequestException("Document with $documentId does not exist")
+
+        document.documentStatus = DocumentStatus.valueOf(status)
+    }
+
     override fun saveCommentForDocuments(id: Long, request: SaveCommentForDocumentsRequest) {
         val user = db.users.values.firstOrNull {
             it.id == id

@@ -13,8 +13,8 @@ class ModeratorController(
 ) {
 
     @GetMapping("/students")
-    fun getStudents(@RequestParam("currentPage")currentPage: Int,
-                    @RequestParam("perPage")perPage: Int) = moderatorRegister.getStudents(currentPage, perPage)
+    fun getStudents(@RequestParam("currentPage") currentPage: Int,
+                    @RequestParam("perPage") perPage: Int) = moderatorRegister.getStudents(currentPage, perPage)
 
     @GetMapping("/students/{id}")
     fun getStudentInfo(@PathVariable("id") id: Long) = moderatorRegister.getStudentInfo(id)
@@ -28,4 +28,10 @@ class ModeratorController(
     @ResponseStatus(HttpStatus.OK)
     fun saveCommentForDocuments(@PathVariable("id") id: Long,
                                 @RequestBody request: SaveCommentForDocumentsRequest) = moderatorRegister.saveCommentForDocuments(id, request)
+
+    @PostMapping("/students/{id}/documents/{documentId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun changeDocumentStatus(@PathVariable("id") id: Long,
+                             @PathVariable("documentId") documentId: Long,
+                             @RequestParam("status") status: String) = moderatorRegister.changeDocumentStatus(id, documentId, status)
 }
