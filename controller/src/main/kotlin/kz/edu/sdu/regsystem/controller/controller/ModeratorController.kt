@@ -36,4 +36,7 @@ class ModeratorController(
                              @PathVariable("documentId") documentId: Long,
                              @RequestParam("status") status: String) = moderatorRegister.changeDocumentStatus(id, documentId, status)
 
+    @GetMapping("/students/total")
+    fun fetchTotalAmountOfStudents(@RequestParam("text") text: String) = moderatorRegister.fetchTotalAmountOfStudents(text)
+
 }

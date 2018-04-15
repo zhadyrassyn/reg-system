@@ -13,4 +13,6 @@ interface ModeratorRegister {
     fun saveCommentForDocuments(id: Long, request: SaveCommentForDocumentsRequest)
 
     fun changeDocumentStatus(id: Long, documentId: Long, status: String)
+
+    fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse
 }

@@ -20,6 +20,31 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse {
+        val response = FetchTotalAmountOfStudentsResponse()
+        response.total = if (Objects.isNull(text)) {
+            db.users.values
+                .filter { db.userRoles[it.id] == RoleType.USER && it.userStatus == UserStatus.ACTIVE }.size
+        } else {
+            db.users.values
+                .filter {
+                    db.userRoles[it.id] == RoleType.USER
+                        && it.userStatus == UserStatus.ACTIVE
+                        && (
+                        it.id.toString().contains(text, ignoreCase = true)
+                            || it.firstName.contains(text, ignoreCase = true)
+                            || it.middleName.contains(text, ignoreCase = true)
+                            || it.lastName.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains("text", ignoreCase = true)
+                            || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
+                        )
+
+                }.size
+        }
+
+        return response
+    }
 
     override fun changeDocumentStatus(id: Long, documentId: Long, status: String) {
         val user = db.users.values.firstOrNull {

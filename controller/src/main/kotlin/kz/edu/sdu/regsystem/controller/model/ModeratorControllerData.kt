@@ -42,3 +42,7 @@ data class EditGeneralInfORequest(
 data class SaveCommentForDocumentsRequest(
     val comment: String
 )
+
+data class FetchTotalAmountOfStudentsResponse(
+    var total: Int = 0
+)
