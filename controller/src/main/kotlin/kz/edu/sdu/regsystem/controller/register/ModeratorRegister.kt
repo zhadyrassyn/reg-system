@@ -1,9 +1,6 @@
 package kz.edu.sdu.regsystem.controller.register
 
-import kz.edu.sdu.regsystem.controller.model.EditGeneralInfORequest
-import kz.edu.sdu.regsystem.controller.model.GetStudentInfoResponse
-import kz.edu.sdu.regsystem.controller.model.GetStudentsResponse
-import kz.edu.sdu.regsystem.controller.model.SaveCommentForDocumentsRequest
+import kz.edu.sdu.regsystem.controller.model.*
 
 interface ModeratorRegister {
 
@@ -16,4 +13,6 @@ interface ModeratorRegister {
     fun saveCommentForDocuments(id: Long, request: SaveCommentForDocumentsRequest)
 
     fun changeDocumentStatus(id: Long, documentId: Long, status: String)
+
+    fun search(text: String): List<GetStudentsResponse>
 }

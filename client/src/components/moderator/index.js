@@ -126,9 +126,6 @@ class ModeratorApp extends Component {
     const { currentPage, perPage } = this.state
     const startCounter = (currentPage-1) * perPage
 
-    console.log('Selected student', selectedStudent)
-    console.log(localStorage.getItem('token'))
-
     return (
       <div className="wrapper">
         <SearchBar/>

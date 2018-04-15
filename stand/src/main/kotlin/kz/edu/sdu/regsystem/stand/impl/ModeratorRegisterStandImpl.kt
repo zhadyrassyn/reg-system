@@ -14,12 +14,47 @@ import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Service
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun search(text: String): List<GetStudentsResponse> {
+        return db.users.values
+            .filter {
+                db.userRoles[it.id] == RoleType.USER
+                    && it.userStatus == UserStatus.ACTIVE
+                    && (
+                    it.id.toString().contains(text, ignoreCase = true)
+                        || it.firstName.contains(text, ignoreCase = true)
+                        || it.middleName.contains(text, ignoreCase = true)
+                        || it.lastName.contains(text, ignoreCase = true)
+                        || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
+                        || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains("text", ignoreCase = true)
+                        || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
+                    )
+
+            }
+            .map {
+                val city = db.cities[it.cityId] ?: throw Exception("Cannot find city with id ${it.cityId}")
+                val school = city.schools.firstOrNull { school -> school.id == it.schoolId }
+                    ?: throw BadRequestException("Cannot find school with id ${it.schoolId}")
+
+                GetStudentsResponse(
+                    id = it.id,
+                    firstName = it.firstName,
+                    middleName = it.middleName,
+                    lastName = it.lastName,
+                    email = it.email,
+                    city = city.name,
+                    school = school.name,
+                    userStatus = it.userStatus.toString(),
+                    birthDate = dateToStringForm(it.birthDate))
+            }
+    }
+
     override fun changeDocumentStatus(id: Long, documentId: Long, status: String) {
         val user = db.users.values.firstOrNull {
             it.id == id
@@ -56,14 +91,17 @@ class ModeratorRegisterStandImpl(
             it.id == id
         } ?: throw UserDoesNotExistsException("User with id $id does not exist")
 
-        val city = db.cities.values.firstOrNull { it.id == user.cityId } ?: throw CityDoesNotExistException("City with ${user.cityId} does not exist")
-        val school = city.schools.firstOrNull { school -> school.id == user.schoolId } ?: throw SchoolDoesNotExistException("Cannot find school with id ${user.schoolId}")
+        val city = db.cities.values.firstOrNull { it.id == user.cityId }
+            ?: throw CityDoesNotExistException("City with ${user.cityId} does not exist")
+        val school = city.schools.firstOrNull { school -> school.id == user.schoolId }
+            ?: throw SchoolDoesNotExistException("Cannot find school with id ${user.schoolId}")
         val documents = user.documents.values
-            .map { DocumentInfoResposne(
-                id = it.id,
-                type = it.documentType.name,
-                status = it.documentStatus.name,
-                url = if(it.path == null) "default.png" else it.path!!.fileName.toString())
+            .map {
+                DocumentInfoResposne(
+                    id = it.id,
+                    type = it.documentType.name,
+                    status = it.documentStatus.name,
+                    url = if (it.path == null) "default.png" else it.path!!.fileName.toString())
             }
 
         response.id = user.id
@@ -87,16 +125,17 @@ class ModeratorRegisterStandImpl(
             .filter { db.userRoles[it.id] == RoleType.USER && it.userStatus == UserStatus.ACTIVE }
 
         val total = filteredUsers.size
-        val from = (currentPage-1) * perPage
+        val from = (currentPage - 1) * perPage
         val to = if (currentPage * perPage <= total) currentPage * perPage else total
 
         return filteredUsers
             .subList(from, to)
             .map {
                 val city = db.cities[it.cityId] ?: throw Exception("Cannot find city with id ${it.cityId}")
-                val school = city.schools.firstOrNull { school -> school.id == it.schoolId } ?: throw BadRequestException("Cannot find school with id ${it.schoolId}")
+                val school = city.schools.firstOrNull { school -> school.id == it.schoolId }
+                    ?: throw BadRequestException("Cannot find school with id ${it.schoolId}")
 
-            GetStudentsResponse(
+                GetStudentsResponse(
                     id = it.id,
                     firstName = it.firstName,
                     middleName = it.middleName,
@@ -110,7 +149,7 @@ class ModeratorRegisterStandImpl(
             }
     }
 
-    private fun dateToStringForm(birthDate: Date) : String {
+    private fun dateToStringForm(birthDate: Date): String {
         val df = SimpleDateFormat("dd/MM/yyyy")
 
         return df.format(birthDate)
