@@ -38,3 +38,7 @@ data class EditGeneralInfORequest(
     val comment: String? = null,
     val status: String
 )
+
+data class SaveCommentForDocumentsRequest(
+    val comment: String
+)

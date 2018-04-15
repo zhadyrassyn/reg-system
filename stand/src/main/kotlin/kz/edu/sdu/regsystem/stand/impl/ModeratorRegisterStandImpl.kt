@@ -1,9 +1,6 @@
 package kz.edu.sdu.regsystem.stand.impl
 
-import kz.edu.sdu.regsystem.controller.model.DocumentInfoResposne
-import kz.edu.sdu.regsystem.controller.model.EditGeneralInfORequest
-import kz.edu.sdu.regsystem.controller.model.GetStudentInfoResponse
-import kz.edu.sdu.regsystem.controller.model.GetStudentsResponse
+import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.enums.GeneralInfoStatus
@@ -22,6 +19,14 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun saveCommentForDocuments(id: Long, request: SaveCommentForDocumentsRequest) {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        user.documentsComment = request.comment
+    }
+
     override fun editGeneralInfo(id: Long, request: EditGeneralInfORequest) {
         val user = db.users.values.firstOrNull {
             it.id == id
@@ -58,6 +63,7 @@ class ModeratorRegisterStandImpl(
         response.birthDate = dateToStringForm(user.birthDate)
         response.generalInfoStatus = user.generalInfoStatusDto.status.name
         response.generalInfoComment = user.generalInfoStatusDto.comment!!
+        response.documentsComment = user.documentsComment
         response.documents = documents
 
         return response
