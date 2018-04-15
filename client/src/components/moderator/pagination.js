@@ -14,7 +14,7 @@ class Pagination extends Component {
 
   render() {
     const { currentPage, perPage, total } = this.props
-    const totalPages = Math.ceil(22/perPage)
+    const totalPages = Math.ceil(total/perPage)
 
     let pageItems = []
     for(let i = 1; i <= totalPages; i++) {

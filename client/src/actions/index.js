@@ -29,7 +29,9 @@ import {
   SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
   SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS,
   CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE,
-  CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS
+  CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
+  FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
+  FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -427,5 +429,34 @@ export const changeDocumentStatus = (id, document, onSuccess, onError) => (dispa
     // if(onError) {
     //   onError()
     // }
+  })
+}
+
+export const fetchTotalAmountOfStudents = (text, onSuccess, onError) => (dispatch) => {
+  console.log('document ', document)
+  const request = `${config.url}/moderator/students/total?text=${text}`
+
+  const token = localStorage.getItem('token')
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({data}) => {
+    dispatch({
+      type: FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
+      data
+    })
+    if(onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
+      error: error.response && error.response.message
+    })
+    if(onError) {
+      onError()
+    }
   })
 }

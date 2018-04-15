@@ -27,7 +27,8 @@ import {
   fetchStudentFullInfo,
   editGeneralInfo,
   saveDocumentsComment,
-  changeDocumentStatus
+  changeDocumentStatus,
+  fetchTotalAmountOfStudents
 } from "../../actions"
 
 class ModeratorApp extends Component {
@@ -83,7 +84,14 @@ class ModeratorApp extends Component {
 
   componentDidMount() {
     const {currentPage, perPage, search} = this.state
-    this.props.fetchStudents(search, currentPage, perPage)
+    this.props.fetchTotalAmountOfStudents(search,
+      () => {
+        this.props.fetchStudents(search, currentPage, perPage)
+      },
+      () => {
+        console.log('error on fetching students')
+      })
+
   }
 
   handlePageChangeClick = (pageNum) => {
@@ -95,11 +103,18 @@ class ModeratorApp extends Component {
   }
 
   handleSearch = (search) => {
-    this.props.fetchStudents(search, 1, this.state.perPage,
+    this.props.fetchTotalAmountOfStudents(search,
       () => {
-        console.log('success')
-        this.setState({currentPage: 1, search})
+        this.props.fetchStudents(search, 1, this.state.perPage,
+          () => {
+            console.log('success')
+            this.setState({currentPage: 1, search})
+          })
+      },
+      () => {
+        console.log('error on fetching students')
       })
+
   }
 
   saveDocumentsComment = (comment) => {
@@ -133,10 +148,9 @@ class ModeratorApp extends Component {
   }
 
   render() {
-    const {students, selectedStudent} = this.props
+    const {students, selectedStudent, total} = this.props
     const {currentPage, perPage} = this.state
     const startCounter = (currentPage - 1) * perPage
-    const total = _.keys(students).length
     console.log(students)
     console.log(total)
 
@@ -145,7 +159,8 @@ class ModeratorApp extends Component {
         <SearchBar onSearch={this.handleSearch}/>
         <TableHeader/>
         <TableBody students={students} startCounter={startCounter} openModal={this.openModal.bind(this)}/>
-        <Pagination currentPage={currentPage} perPage={perPage} total={students.length} handlePageChangeClick={this.handlePageChangeClick}/>
+        <Pagination currentPage={currentPage} perPage={perPage} total={total}
+                    handlePageChangeClick={this.handlePageChangeClick}/>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -168,12 +183,14 @@ export default connect(
   state => ({
     students: state.moderator.students,
     selectedStudent: state.moderator.selectedStudent,
+    total: state.moderator.total
   }),
   dispatch => ({
     fetchStudents: bindActionCreators(fetchStudents, dispatch),
     fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch),
     editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),
     saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch),
-    changeDocumentStatus: bindActionCreators(changeDocumentStatus, dispatch)
+    changeDocumentStatus: bindActionCreators(changeDocumentStatus, dispatch),
+    fetchTotalAmountOfStudents: bindActionCreators(fetchTotalAmountOfStudents, dispatch)
   })
 )(ModeratorApp)

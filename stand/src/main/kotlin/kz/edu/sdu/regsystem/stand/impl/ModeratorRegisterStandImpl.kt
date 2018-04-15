@@ -36,7 +36,7 @@ class ModeratorRegisterStandImpl(
                             || it.middleName.contains(text, ignoreCase = true)
                             || it.lastName.contains(text, ignoreCase = true)
                             || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains("text", ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains(text, ignoreCase = true)
                             || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
                         )
 
@@ -126,7 +126,7 @@ class ModeratorRegisterStandImpl(
                             || it.middleName.contains(text, ignoreCase = true)
                             || it.lastName.contains(text, ignoreCase = true)
                             || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains("text", ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains(text, ignoreCase = true)
                             || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
                         )
 

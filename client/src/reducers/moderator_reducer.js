@@ -9,12 +9,15 @@ import {
   SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
   SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS,
   CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
-  CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE
+  CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE,
+  FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
+  FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS
 } from "../actions/types"
 
 const initialState = {
   students: {},
-  selectedStudent: {}
+  selectedStudent: {},
+  total: 0
 }
 
 export default (state = initialState, action) => {
@@ -80,6 +83,16 @@ export default (state = initialState, action) => {
         }
       }
     case CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+    case FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS:
+      return {
+        ...state,
+        total: action.data.total
+      }
+    case FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE:
       return {
         ...state,
         error: action.error

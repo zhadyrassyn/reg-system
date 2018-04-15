@@ -44,3 +44,6 @@ export const SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE = 'save_student_documents_co
 
 export const CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS = 'change_student_document_status_success'
 export const CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE = 'change_student_document_status_failure'
+
+export const FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS = 'fetch_total_amount_of_students_success'
+export const FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE = 'fetch_total_amount_of_students_failure'
