@@ -26,11 +26,15 @@ spring:
     multipart:
       max-file-size: 128KB
       max-request-size: 128KB
+  datasource:
+        url: jdbc:postgresql://localhost:5432/regsystem
+        username: regsystem
+        password: zhaba12#
+        driver-class-name: org.postgresql.Driver
 
 ---
 spring:
   profiles: pre
 
----
 spring:
   profiles: prod
