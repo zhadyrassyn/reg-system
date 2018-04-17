@@ -1,12 +1,36 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea
-.gradle
-build
-reg-system.iml
 
 controller/out
-stand/out
 client/node_modules
 client/package-lock.json
 
+stand/out
+
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
+out
+logs/
 upload-dir
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/

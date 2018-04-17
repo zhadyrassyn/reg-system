@@ -1,0 +1,36 @@
+server:
+  port: 8081
+  spring:
+    profiles:
+      active: dev
+
+---
+spring:
+  profiles: dev
+  mail:
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enabled: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+    host: smtp.gmail.com
+    port: 587
+    username: dandibobo537@gmail.com
+  servlet:
+    multipart:
+      max-file-size: 128KB
+      max-request-size: 128KB
+
+---
+spring:
+  profiles: pre
+
+---
+spring:
+  profiles: prod
