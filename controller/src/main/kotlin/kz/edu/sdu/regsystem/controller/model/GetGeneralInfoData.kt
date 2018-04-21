@@ -9,7 +9,7 @@ data class GetGeneralInfoResponseData(
     val lastName: String? = "",
     val birthDate: String? = "",
     val city: CityData? = CityData(-1, "", "", ""),
-    var school: SchoolData? = SchoolData(-1, ""),
+    var school: SchoolData? = SchoolData(-1, "", "", ""),
     var customSchool: String = "",
     val accessType: AccessType = AccessType.SAVE
 )
