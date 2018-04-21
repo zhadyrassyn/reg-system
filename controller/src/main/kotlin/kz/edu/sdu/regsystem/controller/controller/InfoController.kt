@@ -14,5 +14,5 @@ class InfoController(val infoRegister: InfoRegister) {
     fun getCities() = infoRegister.getCities()
 
     @GetMapping("{id}/schools")
-    fun getSchooldByCity(@PathVariable("id") cityId: Long) = infoRegister.getSchools(cityId)
+    fun getSchoolsByCity(@PathVariable("id") cityId: Long) = infoRegister.getSchools(cityId)
 }
