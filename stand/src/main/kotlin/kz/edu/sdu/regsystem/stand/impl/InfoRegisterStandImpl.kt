@@ -16,11 +16,11 @@ class InfoRegisterStandImpl(
     override fun getSchools(cityId: Long): List<SchoolData> {
         return db.cities[cityId]!!.schools
             .filter { it.schoolStatus == SchoolStatus.ACTIVE }
-            .map { SchoolData(it.id, it.name) }
+            .map { SchoolData(it.id, it.name, it.name, it.name) }
     }
 
     @Cacheable("cities")
     override fun getCities(): List<CityData> {
-        return db.cities.values.map { CityData(it.id, it.name) }
+        return db.cities.values.map { CityData(it.id, it.name, it.name, it.name) }
     }
 }
