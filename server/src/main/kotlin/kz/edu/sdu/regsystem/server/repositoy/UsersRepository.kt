@@ -9,24 +9,20 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
+import java.sql.SQLException
+import java.sql.Timestamp
+import java.util.*
 
 @Repository
 class UsersRepository(val jdbcTemplate: JdbcTemplate) {
     fun ifUserExists(email: String) : Boolean {
-        val query = "SELECT COUNT(*) AS COUNT FROM USERS WHERE email=?"
+        val query = "SELECT COUNT(*) AS TOTAL FROM USERS WHERE email=?"
 
-        val keyHolder = GeneratedKeyHolder()
+        val amount = jdbcTemplate.queryForObject(query, RowMapper { rs, rowNum ->
+            rs.getString("total")
+        }, email) ?: throw SQLException("Cannot execute statement $query")
 
-        jdbcTemplate.update(
-            { con ->
-                val ps = con.prepareStatement(query, arrayOf("count"))
-                ps.setString(1, email)
-                ps
-            },
-            keyHolder
-        )
-
-        return keyHolder.key!!.toInt() == 0
+        return amount.toInt() != 0
     }
 
     fun fetchUserByEmail(email: String) : User? {
@@ -52,5 +48,25 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
                 role = RoleTypesEnum.valueOf(rs.getString("role"))
             )
         }, email)
+    }
+
+    fun save(user: User): Long {
+        val query = "INSERT INTO USERS(email, password, status, role, reg_date) VALUES (?, ?, ?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, user.email)
+                ps.setString(counter++, user.password)
+                ps.setString(counter++, user.status.name)
+                ps.setString(counter++, user.role.name)
+                ps.setTimestamp(counter, Timestamp(Date().time))
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
     }
 }

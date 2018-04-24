@@ -4,7 +4,7 @@ import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
 import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
 import java.util.*
 
-data class User(var id: Long,
+data class User(var id: Long? = 0,
                 var email: String? = null,
                 var password: String? = null,
                 var firstName: String? = null,

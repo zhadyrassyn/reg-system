@@ -12,3 +12,7 @@ open class UserAlreadyExistsException:  BadRequestException {
 
     constructor(message: String, error: Throwable): super(message, error)
 }
+
+data class ErrorResponse(val statusCode: Int,
+                         val statusMessage: String,
+                         val message: String?)
