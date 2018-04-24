@@ -5,6 +5,7 @@ import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
 import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
 import kz.edu.sdu.regsystem.server.repositoy.VerificationTokenRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.annotations.Test
@@ -12,6 +13,7 @@ import org.testng.Assert.*
 import java.security.MessageDigest
 import kotlin.experimental.and
 
+@SpringBootTest
 class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 
     @Autowired
@@ -45,6 +47,7 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 
         assertNotNull(user)
         assertEquals(user!!.email, authRequest.email)
+        
         assertEquals(user.password, convertToMd5(authRequest.password))
         assertEquals(user.role, RoleTypesEnum.USER)
 

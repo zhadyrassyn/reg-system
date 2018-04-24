@@ -29,6 +29,7 @@ class InfoRegisterServerImplTest : AbstractTestNGSpringContextTests() {
     var schools: List<School> = ArrayList<School>()
 
     fun initDb() {
+        jdbcTemplate.execute("DELETE FROM USERS")
         jdbcTemplate.execute("DELETE FROM SCHOOL")
         jdbcTemplate.execute("DELETE FROM CITY")
 

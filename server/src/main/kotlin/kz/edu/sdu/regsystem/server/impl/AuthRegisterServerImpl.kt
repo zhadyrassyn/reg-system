@@ -3,12 +3,19 @@ package kz.edu.sdu.regsystem.server.impl
 import kz.edu.sdu.regsystem.controller.model.AuthRequest
 import kz.edu.sdu.regsystem.controller.model.AuthResponse
 import kz.edu.sdu.regsystem.controller.register.AuthRegister
+import kz.edu.sdu.regsystem.server.exception.UserAlreadyExistsException
+import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
 import org.springframework.stereotype.Service
 
 @Service
-class AuthRegisterServerImpl : AuthRegister{
+class AuthRegisterServerImpl(val usersRepository: UsersRepository) : AuthRegister{
+
+    @Throws(UserAlreadyExistsException::class)
     override fun signUp(signUpRequest: AuthRequest) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (usersRepository.ifUserExists(signUpRequest.email)) {
+            throw UserAlreadyExistsException("User with email ${signUpRequest.email} already exists")
+        }
+
     }
 
     override fun verifyUser(token: String): AuthResponse {
