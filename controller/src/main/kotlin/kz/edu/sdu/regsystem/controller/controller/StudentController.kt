@@ -17,24 +17,24 @@ class StudentController(
     @PostMapping("/general/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     fun saveGeneralInfo(@RequestBody generalInfoData: GeneralInfoData,
-                        @RequestHeader("Authorization") authToken: String) =
+                        @PathVariable("id") id: Long) =
         studentRegister.saveGeneralInfo(
-            authToken = authToken, generalInfoData = generalInfoData)
+            id = id, generalInfoData = generalInfoData)
 
-    @GetMapping("/general")
-    fun getGeneralInfo(@RequestHeader("Authorization") authToken: String) =
-        studentRegister.getGeneralInfo(authToken)
+    @GetMapping("/general/{id}")
+    fun getGeneralInfo(@PathVariable("id") id: Long) =
+        studentRegister.getGeneralInfo(id)
 
+    @GetMapping("/document/{id}")
+    fun getDocumentsStatus(@PathVariable("id") id: Long) =
+        documentRegister.fetchDocumentsStatus(id)
 
-    @GetMapping("/document")
-    fun getDocumentsStatus(@RequestHeader("Authorization") authToken: String) =
-        documentRegister.fetchDocumentsStatus(authToken)
-
-    @PostMapping("/document")
+    @PostMapping("/document/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveDocument(@RequestHeader("Authorization") authToken: String,
+    fun saveDocument(@PathVariable("id") id: Long,
                      @RequestParam("file") file: MultipartFile,
-                     @RequestParam("type") documentType: DocumentType) = documentRegister.store(
-        file = file, documentType = documentType, authToken = authToken)
+                     @RequestParam("type") documentType: DocumentType) =
+        documentRegister.store(
+        file = file, documentType = documentType, id = id)
 
 }

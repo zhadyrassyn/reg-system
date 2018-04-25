@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile
 interface DocumentRegister {
     fun init();
 
-    fun store(file: MultipartFile, documentType: DocumentType, authToken: String)
+    fun store(file: MultipartFile, documentType: DocumentType, id: Long)
 
-    fun fetchDocumentsStatus(authToken: String) : List<DocumentData>
+    fun fetchDocumentsStatus(id: Long) : List<DocumentData>
 }
