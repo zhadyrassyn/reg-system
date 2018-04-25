@@ -120,8 +120,17 @@ class GeneralInfoForm extends Component {
 
 
   render() {
+    let { cities, schools, initialValues } = this.props
 
-    const { cities, schools, initialValues } = this.props
+    if(cities) {
+      cities.map(city => {
+        return {}
+      }
+      )
+    }
+
+    console.log('cities ', cities)
+    // const selectBoxCities = cities.m
     const { handleSubmit, submitting} = this.props
 
     const accessType = this.state.accessType
@@ -231,13 +240,56 @@ GeneralInfoForm = reduxForm({
   enableReinitialize: true,
 })(GeneralInfoForm)
 
+function refactorCities(cities) {
+  if(cities) {
+    cities = cities.map(city => ({
+      ...city,
+      value: city.id,
+      label: city.nameRu
+    }))
+  }
+
+  return cities
+}
+
+function refactorSchools(schools) {
+  if(schools) {
+    schools = schools.map(school => ({
+      ...school,
+      value: school.id,
+      label: school.nameRu
+    }))
+  }
+
+  return schools
+}
+
+function refactorGeneralInfo(studentInfo) {
+  if(studentInfo && studentInfo.city && studentInfo.school) {
+    studentInfo = {
+      ...studentInfo,
+      city: {
+        ...studentInfo.city,
+        value: studentInfo.city.id,
+        label: studentInfo.city.nameRu
+      },
+      school: {
+        ...studentInfo.school,
+        value: studentInfo.school.id,
+        label: studentInfo.school.nameRu
+      }
+    }
+  }
+  console.log('student info ', studentInfo)
+  return studentInfo
+}
 
 GeneralInfoForm = connect(
   state => ({
-    cities: state.info.cities,
-    schools: state.info.schools,
+    cities: refactorCities(state.info.cities),
+    schools: refactorSchools(state.info.schools),
     formValues: getFormValues('GeneralInfo')(state),
-    initialValues: state.student.studentInfo
+    initialValues: refactorGeneralInfo(state.student.studentInfo)
   }),
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),

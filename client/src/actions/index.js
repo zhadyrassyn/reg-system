@@ -37,6 +37,7 @@ import {
 import axios from "axios"
 import config from "../config"
 import { browserHistory } from "react-router"
+import { fetchIdFromToken } from "../utils"
 
 export const singUp = ({email, password}, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/auth/signup`
@@ -182,7 +183,11 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
 }
 
 export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch) => {
-  const request = `${config.url}/student/general`
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/general/${userId}`
 
   const data = {
     firstName: values.firstName,
@@ -194,7 +199,6 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
     customSchool: values.customSchool
   }
 
-  const token = localStorage.getItem('token')
   axios.post(request, data, {
     headers: {
       "Authorization": `Bearer ${token}`
@@ -204,6 +208,7 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
       type: SAVE_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
+
     if(onSuccess) {
       onSuccess()
     }
@@ -212,6 +217,7 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
       type: SAVE_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
+
     if(onError) {
       onError()
     }
@@ -219,10 +225,13 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
 }
 
 export const saveDocument = (file, documentType) => (dispatch) => {
-  const request = `${config.url}/student/document`
   const token = localStorage.getItem('token')
-  const formData = new FormData()
 
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/document/${userId}`
+
+  const formData = new FormData()
   formData.append('file', file)
   formData.append('type', documentType)
 
@@ -246,9 +255,12 @@ export const saveDocument = (file, documentType) => (dispatch) => {
 }
 
 export const fetchDocumentsStatus = () => (dispatch) => {
-  const request = `${config.url}/student/document`
-
   const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/document/${userId}`
+
   axios.get(request, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -267,9 +279,12 @@ export const fetchDocumentsStatus = () => (dispatch) => {
 }
 
 export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
-  const request = `${config.url}/student/general`
-
   const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/general/${userId}`
+
   axios.get(request, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -279,13 +294,19 @@ export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
       type: FETCH_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
-    onSuccess(data)
+
+    if(onSuccess) {
+      onSuccess(data)
+    }
   }).catch(error => {
     dispatch({
       type: FETCH_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
-    onError()
+
+    if(onError) {
+      onError()
+    }
   })
 }
 
