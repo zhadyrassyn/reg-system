@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class ModeratorAuthInterceptor(
+class StudentAuthInterceptor(
     val db: Db,
     val env: Environment
 ) : HandlerInterceptorAdapter() {
@@ -38,7 +38,7 @@ class ModeratorAuthInterceptor(
         val user = db.users.values.firstOrNull { it.email == email }
             ?: throw UserDoesNotExistsException("User with email $email does not exists")
 
-        if (db.userRoles[user.id] != RoleType.MODERATOR) {
+        if (db.userRoles[user.id] != RoleType.USER) {
             throw ForbiddenException("Rest end point is forbidden for user $email")
         }
 
