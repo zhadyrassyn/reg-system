@@ -4,7 +4,10 @@ import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.VerificationToken
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
+import java.sql.Timestamp
+import java.util.*
 
 @Repository
 class VerificationTokenRepository(val jdbcTemplate: JdbcTemplate) {
@@ -24,5 +27,23 @@ class VerificationTokenRepository(val jdbcTemplate: JdbcTemplate) {
         },
             userId
         )
+    }
+
+    fun save(userId: Long, activationToken: String) : Long {
+        val query = "INSERT INTO VERIFICATION_TOKEN(token, created_date, user_id) VALUES (?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, activationToken)
+                ps.setTimestamp(counter++, Timestamp(Date().time))
+                ps.setLong(counter, userId)
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
     }
 }

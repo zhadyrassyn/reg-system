@@ -1,17 +1,20 @@
 package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.controller.model.AuthRequest
+import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
+import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
+import kz.edu.sdu.regsystem.server.exception.UserAlreadyExistsException
 import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
 import kz.edu.sdu.regsystem.server.repositoy.VerificationTokenRepository
+import kz.edu.sdu.regsystem.server.utils.Utils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+import org.testng.Assert.assertEquals
+import org.testng.Assert.assertNotNull
 import org.testng.annotations.Test
-import org.testng.Assert.*
-import java.security.MessageDigest
-import kotlin.experimental.and
 
 @SpringBootTest
 class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
@@ -28,14 +31,19 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
+    val authRequest = AuthRequest(
+        email = "bojaxim@uemail99.com",
+        password = "google"
+    )
+
+    fun initDb() {
+        jdbcTemplate.execute("DELETE FROM VERIFICATION_TOKEN")
+        jdbcTemplate.execute("DELETE FROM USERS")
+    }
+
     @Test
     fun signUpUserDoesNotExists() {
-        jdbcTemplate.execute("DELETE FROM USERS")
-
-        val authRequest = AuthRequest(
-            email = "dandibobo537@gmail.com",
-            password = "google"
-        )
+        initDb()
 
         //
         //
@@ -48,14 +56,34 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
         assertNotNull(user)
         assertEquals(user!!.email, authRequest.email)
         
-        assertEquals(user.password, convertToMd5(authRequest.password))
+        assertEquals(user.password, Utils.encrypt(authRequest.password))
         assertEquals(user.role, RoleTypesEnum.USER)
 
-        val verificationToken = verificationTokenRepository.fetchToken(user.id)
+        val verificationToken = verificationTokenRepository.fetchToken(user.id!!)
         assertNotNull(verificationToken)
         assertNotNull(verificationToken!!.token)
 
         //assert that email was sent
+    }
+
+    @Test(expectedExceptions = [(UserAlreadyExistsException::class)])
+    fun signUpUserAlreadyExists() {
+        initDb()
+
+        val user = User(
+            email = authRequest.email,
+            password = authRequest.password,
+            status = UsersStatusEnum.NONACTIVE,
+            role = RoleTypesEnum.USER
+        )
+
+        usersRepository.save(user)
+
+        //
+        //
+        authRegisterServerImpl.signUp(authRequest)
+        //
+        //
     }
 
     @Test
@@ -68,19 +96,6 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun signIn() {
-    }
-
-    fun convertToMd5(password: String) : String {
-        val md = MessageDigest.getInstance("MD5")
-        md.update(password.toByteArray())
-
-        val byteData = md.digest()
-        val sb = StringBuffer()
-        for (i in 0 until byteData.size) {
-            sb.append(Integer.toString((byteData[i] and 0xff.toByte()) + 0x100, 16).substring(1))
-        }
-
-        return sb.toString()
     }
 
 }

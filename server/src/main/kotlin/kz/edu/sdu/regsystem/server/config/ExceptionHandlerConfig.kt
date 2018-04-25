@@ -21,7 +21,7 @@ class ExceptionHandlerConfig : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(Exception::class)
-    fun onUnkownError(ex: Exception) : ResponseEntity<ErrorResponse> {
+    fun onInternalServerError(ex: Exception) : ResponseEntity<ErrorResponse> {
         logger.error(ex.message, ex)
 
         val httpError = HttpStatus.INTERNAL_SERVER_ERROR
