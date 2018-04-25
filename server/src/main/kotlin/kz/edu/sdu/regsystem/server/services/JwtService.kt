@@ -1,4 +1,4 @@
-package kz.edu.sdu.regsystem.server.impl.email
+package kz.edu.sdu.regsystem.server.services
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

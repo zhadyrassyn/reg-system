@@ -14,7 +14,7 @@ class StudentController(
     val studentRegister: StudentRegister,
     val documentRegister: DocumentRegister
 ) {
-    @PostMapping("/general")
+    @PostMapping("/general/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     fun saveGeneralInfo(@RequestBody generalInfoData: GeneralInfoData,
                         @RequestHeader("Authorization") authToken: String) =

@@ -7,8 +7,8 @@ import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
 import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
 import kz.edu.sdu.regsystem.server.exception.*
-import kz.edu.sdu.regsystem.server.impl.email.EmailSender
-import kz.edu.sdu.regsystem.server.impl.email.JwtService
+import kz.edu.sdu.regsystem.server.services.EmailSender
+import kz.edu.sdu.regsystem.server.services.JwtService
 import kz.edu.sdu.regsystem.server.model.EmailConfig
 import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
 import kz.edu.sdu.regsystem.server.repositoy.VerificationTokenRepository

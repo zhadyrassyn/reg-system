@@ -1,4 +1,4 @@
-package kz.edu.sdu.regsystem.server.impl.email
+package kz.edu.sdu.regsystem.server.services
 
 import kz.edu.sdu.regsystem.server.model.EmailConfig
 import org.springframework.mail.SimpleMailMessage
