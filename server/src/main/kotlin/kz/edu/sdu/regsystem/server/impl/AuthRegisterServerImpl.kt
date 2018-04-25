@@ -6,9 +6,7 @@ import kz.edu.sdu.regsystem.controller.register.AuthRegister
 import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
 import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
-import kz.edu.sdu.regsystem.server.exception.UserAlreadyExistsException
-import kz.edu.sdu.regsystem.server.exception.UserDoesNotExistsException
-import kz.edu.sdu.regsystem.server.exception.VerificationTokenDoesNotExistsException
+import kz.edu.sdu.regsystem.server.exception.*
 import kz.edu.sdu.regsystem.server.impl.email.EmailSender
 import kz.edu.sdu.regsystem.server.impl.email.JwtService
 import kz.edu.sdu.regsystem.server.model.EmailConfig
@@ -94,7 +92,15 @@ class AuthRegisterServerImpl(
     }
 
     override fun signIn(signInRequest: AuthRequest): AuthResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val user = usersRepository.fetchUserByEmail(signInRequest.email)
+            ?: throw UserDoesNotExistsException("User with email ${signInRequest.email} does not exist")
+        if(user.password != Utils.encrypt(signInRequest.password)) {
+            throw PasswordMismatchException("Password for user with email ${signInRequest.email} mismatch")
+        } else if(user.status == UsersStatusEnum.NONACTIVE) {
+            throw UserNotConfirmedException("User with email ${signInRequest.email} not confirmed itself")
+        }
+
+        return AuthResponse(token = jwtService.generateToken(user))
     }
 
 }

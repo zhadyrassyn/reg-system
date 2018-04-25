@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.config
 
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.exception.ErrorResponse
+import kz.edu.sdu.regsystem.server.exception.Unauthorized
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -16,6 +17,15 @@ class ExceptionHandlerConfig : ResponseEntityExceptionHandler() {
         logger.error(ex.message, ex)
 
         val httpError = HttpStatus.BAD_REQUEST
+        val errorResponse = ErrorResponse(httpError.value(), httpError.reasonPhrase, ex.message)
+        return ResponseEntity(errorResponse, httpError)
+    }
+
+    @ExceptionHandler(Unauthorized::class)
+    fun onUnauthorized(ex: Unauthorized) : ResponseEntity<ErrorResponse> {
+        logger.error(ex.message, ex)
+
+        val httpError = HttpStatus.UNAUTHORIZED
         val errorResponse = ErrorResponse(httpError.value(), httpError.reasonPhrase, ex.message)
         return ResponseEntity(errorResponse, httpError)
     }

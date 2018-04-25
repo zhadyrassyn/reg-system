@@ -25,6 +25,25 @@ open class UserDoesNotExistsException:  BadRequestException {
     constructor(message: String, error: Throwable): super(message, error)
 }
 
+open class PasswordMismatchException:  BadRequestException {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, error: Throwable): super(message, error)
+}
+
+/* UNAUTHORIZED ERROS */
+open class Unauthorized : Exception {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, error: Throwable) : super(message, error)
+}
+
+open class UserNotConfirmedException:  Unauthorized {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, error: Throwable): super(message, error)
+}
+
 /* INTERNAL SERVER ERROR */
 open class InternalServerError : Exception {
     constructor(message: String) : super(message)
