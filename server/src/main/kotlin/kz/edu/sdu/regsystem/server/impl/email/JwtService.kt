@@ -12,7 +12,6 @@ import java.util.*
 class JwtService(val jwtConfig: JwtConfig) {
     fun generateToken(user: User): String {
         val key = jwtConfig.key
-        println("KEY $key")
 
         return Jwts.builder()
             .setSubject(user.email)

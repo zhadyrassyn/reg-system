@@ -86,7 +86,11 @@ class AuthRegisterServerImpl(
     }
 
     override fun resendActivationEmail(email: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val user = usersRepository.fetchUserByEmail(email)
+            ?: throw UserDoesNotExistsException("User with email $email does not exist.")
+        val activationToken = verificationTokenRepository.fetchToken(user.id)
+            ?: throw VerificationTokenDoesNotExistsException("Verification token for user $email does not exist")
+        sendEmail(activationToken.token, user.email!!)
     }
 
     override fun signIn(signInRequest: AuthRequest): AuthResponse {

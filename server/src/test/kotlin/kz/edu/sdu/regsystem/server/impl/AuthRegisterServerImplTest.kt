@@ -130,15 +130,6 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
     }
 
     @Test
-    fun resendActivationEmail() {
-        initDb()
-
-        val email = "bojaxim@uemail99.com"
-
-
-    }
-
-    @Test
     fun signIn() {
     }
 

@@ -17,9 +17,9 @@ class EmailSender(val emailConfig: EmailConfig) {
         mailSender.password = emailConfig.password
 
         val props = mailSender.javaMailProperties
-        props.put("mail.transport.protocol", emailConfig.transportProtocol)
-        props.put("mail.smtp.auth", emailConfig.auth)
-        props.put("mail.smtp.starttls.enable", emailConfig.starttlsEnabled)
+        props["mail.transport.protocol"] = emailConfig.transportProtocol
+        props["mail.smtp.auth"] = emailConfig.auth
+        props["mail.smtp.starttls.enable"] = emailConfig.starttlsEnabled
 
         mailSender.send(mail)
     }
