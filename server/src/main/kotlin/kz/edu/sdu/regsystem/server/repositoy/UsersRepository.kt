@@ -69,4 +69,38 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
 
         return keyHolder.key!!.toLong()
     }
+
+    fun changeStatus(id: Long, status: UsersStatusEnum) {
+        val query = "UPDATE USERS SET status=? WHERE id=?"
+        jdbcTemplate.update(query,
+            {ps ->
+                ps.setString(1, status.name)
+                ps.setLong(2, id)
+            })
+    }
+
+    fun fetchUserById(id: Long): User? {
+        val query = "SELECT * FROM USERS WHERE id=?"
+
+        return jdbcTemplate.queryForObject(
+            query, RowMapper { rs, rowNum ->
+            User(
+                id = rs.getLong("id"),
+                email = rs.getString("email"),
+                password = rs.getString("password"),
+                firstName = rs.getString("first_name"),
+                middleName = rs.getString("middle_name"),
+                lastName = rs.getString("last_name"),
+                birthDate = rs.getDate("bithDate"),
+                status = UsersStatusEnum.valueOf(rs.getString("status")),
+                city = City(
+                    id = rs.getLong("id")
+                ),
+                school = School(
+                    id = rs.getLong("id")
+                ),
+                role = RoleTypesEnum.valueOf(rs.getString("role"))
+            )
+        }, id)
+    }
 }

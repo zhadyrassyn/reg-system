@@ -7,7 +7,10 @@ import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
 import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
 import kz.edu.sdu.regsystem.server.exception.UserAlreadyExistsException
+import kz.edu.sdu.regsystem.server.exception.UserDoesNotExistsException
+import kz.edu.sdu.regsystem.server.exception.VerificationTokenDoesNotExistsException
 import kz.edu.sdu.regsystem.server.impl.email.EmailSender
+import kz.edu.sdu.regsystem.server.impl.email.JwtService
 import kz.edu.sdu.regsystem.server.model.EmailConfig
 import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
 import kz.edu.sdu.regsystem.server.repositoy.VerificationTokenRepository
@@ -22,7 +25,8 @@ class AuthRegisterServerImpl(
     val usersRepository: UsersRepository,
     val emailSender: EmailSender,
     val emailConfig: EmailConfig,
-    val verificationTokenRepository: VerificationTokenRepository) : AuthRegister {
+    val verificationTokenRepository: VerificationTokenRepository,
+    val jwtService: JwtService) : AuthRegister {
 
     private val logger = LoggerFactory.getLogger(AuthRegisterServerImpl::class.java)
 
@@ -48,13 +52,13 @@ class AuthRegisterServerImpl(
 
         sendEmail(activationToken, signUpRequest.email)
 
-        verificationTokenRepository.save(user.id!!, activationToken)
+        verificationTokenRepository.save(user.id, activationToken)
 
     }
 
     private fun sendEmail(activationToken: String, email: String) {
-        println(emailConfig.password)
-        println(emailConfig.username)
+        logger.info(emailConfig.password)
+        logger.info(emailConfig.username)
         val link = "${emailConfig.frontendUrl}/account_verification/email/$activationToken"
         val message = SimpleMailMessage()
 
@@ -69,7 +73,16 @@ class AuthRegisterServerImpl(
     }
 
     override fun verifyUser(token: String): AuthResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val verificationTokenDto = verificationTokenRepository.fetchToken(token)
+            ?: throw VerificationTokenDoesNotExistsException("Activation token $token does not exist")
+
+        val userId = verificationTokenDto.user!!.id
+        usersRepository.changeStatus(userId, UsersStatusEnum.ACTIVE)
+
+        val user = usersRepository.fetchUserById(userId)
+            ?: throw UserDoesNotExistsException("User with id $userId does not exist")
+
+        return AuthResponse(token = jwtService.generateToken(user))
     }
 
     override fun resendActivationEmail(email: String) {

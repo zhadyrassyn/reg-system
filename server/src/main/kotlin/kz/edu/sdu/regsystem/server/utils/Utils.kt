@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.server.utils
 
 import java.security.MessageDigest
+import java.util.*
 import kotlin.experimental.and
 
 object Utils {
@@ -17,5 +18,12 @@ object Utils {
         }
 
         return sb.toString()
+    }
+
+    fun getNextDay(): Date {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date()
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        return calendar.time
     }
 }

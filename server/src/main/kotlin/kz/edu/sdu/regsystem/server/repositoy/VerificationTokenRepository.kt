@@ -29,6 +29,24 @@ class VerificationTokenRepository(val jdbcTemplate: JdbcTemplate) {
         )
     }
 
+    fun fetchToken(activationToken: String) : VerificationToken? {
+        val query = "SELECT * FROM VERIFICATION_TOKEN WHERE token=?"
+
+        return jdbcTemplate.queryForObject(query,
+            RowMapper { rs, rowNum ->
+                VerificationToken(
+                    id = rs.getLong("id"),
+                    token = rs.getString("token"),
+                    createdDate = rs.getDate("created_date"),
+                    user = User(
+                        id = rs.getLong("user_id")
+                    )
+                )
+            },
+            activationToken
+        )
+    }
+
     fun save(userId: Long, activationToken: String) : Long {
         val query = "INSERT INTO VERIFICATION_TOKEN(token, created_date, user_id) VALUES (?, ?, ?)"
 

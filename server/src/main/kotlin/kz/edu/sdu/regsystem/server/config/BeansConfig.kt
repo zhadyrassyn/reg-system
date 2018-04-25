@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.config
 
 import kz.edu.sdu.regsystem.server.exception.BootstrapException
 import kz.edu.sdu.regsystem.server.model.EmailConfig
+import kz.edu.sdu.regsystem.server.model.JwtConfig
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
@@ -18,6 +19,8 @@ class BeansConfig(val env: Environment) {
     val EMAIL_STARTTLS_ENABLED = "spring.mail.properties.mail.smtp.starttls.enabled"
 
     val EMAIL_FRONTEND_URL="frontend.url"
+
+    val JWT_KEY="jwt.key"
 
     @Bean("emailConfig")
     fun getEmailConfig() : EmailConfig {
@@ -42,6 +45,15 @@ class BeansConfig(val env: Environment) {
                 throw BootstrapException("Cannot find '$EMAIL_STARTTLS_ENABLED' config"),
             frontendUrl = env.getProperty(EMAIL_FRONTEND_URL) ?: throw BootstrapException(
                 "Cannot find '$EMAIL_FRONTEND_URL' config"
+            )
+        )
+    }
+
+    @Bean("jwtConfig")
+    fun getJwtConfig() : JwtConfig {
+        return JwtConfig(
+            key = env.getProperty(JWT_KEY) ?: throw BootstrapException(
+                "Cannot find '$JWT_KEY' config"
             )
         )
     }

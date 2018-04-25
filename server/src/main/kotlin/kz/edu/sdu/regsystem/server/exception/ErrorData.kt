@@ -13,6 +13,18 @@ open class UserAlreadyExistsException:  BadRequestException {
     constructor(message: String, error: Throwable): super(message, error)
 }
 
+open class VerificationTokenDoesNotExistsException:  BadRequestException {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, error: Throwable): super(message, error)
+}
+
+open class UserDoesNotExistsException:  BadRequestException {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, error: Throwable): super(message, error)
+}
+
 /* INTERNAL SERVER ERROR */
 open class InternalServerError : Exception {
     constructor(message: String) : super(message)

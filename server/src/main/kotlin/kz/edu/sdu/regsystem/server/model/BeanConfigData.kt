@@ -10,3 +10,7 @@ data class EmailConfig(
     var starttlsEnabled: Boolean,
     var frontendUrl: String
 )
+
+data class JwtConfig(
+    var key: String
+)
