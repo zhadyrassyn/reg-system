@@ -15,7 +15,7 @@ class InfoRegisterServerImpl(val infoRepository: InfoRepository) : InfoRegister 
             status = SchoolStatusEnum.ACTIVE.name
         ).map {
             SchoolData(
-                schoolId = it.id,
+                id = it.id,
                 nameRu = it.nameRu,
                 nameEn = it.nameEn,
                 nameKk = it.nameKk,

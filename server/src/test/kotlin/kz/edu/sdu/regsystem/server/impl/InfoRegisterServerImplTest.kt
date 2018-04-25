@@ -107,7 +107,7 @@ class InfoRegisterServerImplTest : AbstractTestNGSpringContextTests() {
         assertNotNull(response)
         assertEquals(response.size, 1)
 
-        assertEquals(response[0].schoolId, schools[0].id)
+        assertEquals(response[0].id, schools[0].id)
         assertEquals(response[0].nameRu, schools[0].nameRu)
         assertEquals(response[0].nameEn, schools[0].nameEn)
         assertEquals(response[0].nameKk, schools[0].nameKk)

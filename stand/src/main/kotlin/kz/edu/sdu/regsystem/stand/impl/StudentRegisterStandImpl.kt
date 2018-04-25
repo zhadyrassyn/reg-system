@@ -1,7 +1,5 @@
 package kz.edu.sdu.regsystem.stand.impl
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureException
 import kz.edu.sdu.regsystem.controller.model.CityData
 import kz.edu.sdu.regsystem.controller.model.GeneralInfoData
 import kz.edu.sdu.regsystem.controller.model.GetGeneralInfoResponseData
@@ -24,16 +22,8 @@ class StudentRegisterStandImpl(
     val env: Environment
 ) : StudentRegister{
 
-    override fun saveGeneralInfo(authToken: String, generalInfoData: GeneralInfoData) {
-
-        val token = authToken.substring(7)
-        val jwtKey = env.getProperty("jwtKey")
-
-        val email = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.subject
-            ?: throw SignatureException("Cannot parse jwt.")
-
-
-        val user = db.users.values.firstOrNull { it -> it.email == email } ?:
+    override fun saveGeneralInfo(id: Long, generalInfoData: GeneralInfoData) {
+        val user = db.users.values.firstOrNull { it -> it.id == id } ?:
             throw UserDoesNotExistsException("User does not exist")
 
         user.firstName = generalInfoData.firstName
@@ -51,14 +41,8 @@ class StudentRegisterStandImpl(
         }
     }
 
-    override fun getGeneralInfo(authToken: String) : GetGeneralInfoResponseData {
-        val token = authToken.substring(7)
-        val jwtKey = env.getProperty("jwtKey")
-
-        val email = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(token).body.subject
-            ?: throw SignatureException("Cannot parse jwt.")
-
-        val user = db.users.values.firstOrNull { it -> it.email == email } ?:
+    override fun getGeneralInfo(id: Long) : GetGeneralInfoResponseData {
+        val user = db.users.values.firstOrNull { it -> it.id == id } ?:
         throw UserDoesNotExistsException("User does not exist")
 
         //check if user not filled general info form before
@@ -74,8 +58,10 @@ class StudentRegisterStandImpl(
                 lastName = user.lastName,
                 birthDate = toDate(user.birthDate),
                 city = CityData(
-                    value = cityDto.id,
-                    label = cityDto.name
+                    id = cityDto.id,
+                    nameRu = cityDto.name,
+                    nameEn = cityDto.name,
+                    nameKk = cityDto.name
                 ),
                 accessType = AccessType.EDIT
             )
@@ -84,8 +70,10 @@ class StudentRegisterStandImpl(
                 responseData.customSchool = schoolDto.name
             } else {
                 responseData.school = SchoolData(
-                    value = schoolDto.id,
-                    label = schoolDto.name,
+                    id = schoolDto.id,
+                    nameKk = schoolDto.name,
+                    nameEn = schoolDto.name,
+                    nameRu = schoolDto.name,
                     schoolStatus = schoolDto.schoolStatus.toString()
                 )
             }

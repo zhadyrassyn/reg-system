@@ -2,19 +2,18 @@ package kz.edu.sdu.regsystem.stand.impl
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import kz.edu.sdu.regsystem.controller.model.AuthResponse
 import kz.edu.sdu.regsystem.controller.model.AuthRequest
+import kz.edu.sdu.regsystem.controller.model.AuthResponse
 import kz.edu.sdu.regsystem.controller.register.AuthRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.impl.email.EmailSender
 import kz.edu.sdu.regsystem.stand.model.User
+import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
+import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserAlreadyExistsException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserNotActiveException
-import org.springframework.stereotype.Component
-import kz.edu.sdu.regsystem.stand.impl.email.EmailSender
-import kz.edu.sdu.regsystem.stand.model.enums.RoleType
-import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import org.springframework.core.env.Environment
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.stereotype.Service
