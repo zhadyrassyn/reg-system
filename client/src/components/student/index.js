@@ -1,7 +1,10 @@
 import React, { Component } from "react"
 
 import OverviewMenu from "./overview_menu"
-import GeneralInfoForm from "./general_info_form"
+import PersonalInfoForm from "./personal_info_form"
+import EducationInfoForm from "./education_info_form"
+import MedicalInfoForm from "./medical_info_form"
+import CertificatesInfoForm from "./certificates_info_form"
 import DocumentsForm from "./documents_form"
 import {connect} from "react-redux"
 
@@ -24,8 +27,8 @@ class StudentApp extends Component {
     }
   }
 
-  changeForm = (formType) => {
-    this.setState({ activeForm: formType })
+  changeForm = (form) => {
+    this.setState({ activeForm: form })
   }
 
   render() {
@@ -35,17 +38,16 @@ class StudentApp extends Component {
     return (
       <div>
         <OverviewMenu activeForm={activeForm} changeForm={this.changeForm.bind(this)} lang={lang}/>
-        { activeForm === FORM_PERSONAL_INFO && <GeneralInfoForm /> }
-        { activeForm === FORM_EDUCATION_INFO && <GeneralInfoForm /> }
-        { activeForm === FORM_CERTIFICATES_INFO && <GeneralInfoForm /> }
-        { activeForm === FORM_MEDICAL_INFO && <DocumentsForm /> }
-
+        { activeForm === FORM_PERSONAL_INFO && <PersonalInfoForm /> }
+        { activeForm === FORM_EDUCATION_INFO && <EducationInfoForm /> }
+        { activeForm === FORM_MEDICAL_INFO && <MedicalInfoForm /> }
+        { activeForm === FORM_CERTIFICATES_INFO && <CertificatesInfoForm /> }
       </div>
     )
   }
 }
 
-StudentApp = connect(
+export default connect(
   state => ({
     lang: state.lang
   }),
@@ -53,5 +55,3 @@ StudentApp = connect(
 
   })
 )(StudentApp)
-
-export default StudentApp

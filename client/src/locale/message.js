@@ -58,5 +58,25 @@ export const message = {
     ru: 'Забыли пароль?',
     en: 'Forget password?',
     kk: 'Забыли пароль?'
+  },
+  personal_info: {
+    ru: 'Личная инфомация',
+    en: 'Personal info',
+    kk: 'Личная инфомация'
+  },
+  education_info: {
+    ru: 'Образование',
+    en: 'Education',
+    kk: 'Образование'
+  },
+  medical_info: {
+    ru: 'Медицинская информация',
+    en: 'Medical info',
+    kk: 'Медицинская информация'
+  },
+  certificates_info: {
+    ru: 'Сертификаты',
+    en: 'Certificates',
+    kk: 'Сертификаты'
   }
 }

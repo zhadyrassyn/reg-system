@@ -21,14 +21,13 @@ import {
 //validations
 const required = value => (value ? undefined : 'Required')
 
-class GeneralInfoForm extends Component {
+class PersonalInfoForm extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       accessType: ACCESS_TYPE_SAVE
     }
-
   }
 
   componentDidMount() {
@@ -233,11 +232,11 @@ const validate = (values) => {
   return errors
 }
 
-GeneralInfoForm = reduxForm({
+PersonalInfoForm = reduxForm({
   form: 'GeneralInfo',
   validate,
   enableReinitialize: true,
-})(GeneralInfoForm)
+})(PersonalInfoForm)
 
 function refactorCities(cities) {
   if(cities) {
@@ -283,7 +282,7 @@ function refactorGeneralInfo(studentInfo) {
   return studentInfo
 }
 
-GeneralInfoForm = connect(
+export default connect(
   state => ({
     cities: refactorCities(state.info.cities),
     schools: refactorSchools(state.info.schools),
@@ -297,6 +296,4 @@ GeneralInfoForm = connect(
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
   })
-)(GeneralInfoForm)
-
-export default GeneralInfoForm
+)(PersonalInfoForm)

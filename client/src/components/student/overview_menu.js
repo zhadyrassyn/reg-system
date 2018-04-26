@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import {message} from "../../locale/message"
 
 import {
   FORM_GENERAL,
@@ -27,17 +28,17 @@ export default class OverviewMenu extends Component{
     this.props.changeForm(FORM_GENERAL)
   }
 
-  onDocumentsBtnClick = () => {
-    this.props.changeForm(FORM_DOCUMENTS)
+  changeForm = (form) => {
+    this.props.changeForm(form)
   }
 
-  renderList = (activeForm) => {
+  renderList = (activeForm, lang) => {
     return FORMS.map(form => {
       return (
         <li className="nav-item" key={form}>
           <button
-            className={ "mr-2 nav-link btn " + (activeForm === form ? "active" : "btn-info") } onClick={this.onGeneralInfoBtnClick}>
-            {form}
+            className={ "mr-2 nav-link btn " + (activeForm === form ? "active" : "btn-info") } onClick={this.changeForm.bind(this, form)}>
+            {message[form][lang]}
           </button>
         </li>
       )
@@ -45,15 +46,16 @@ export default class OverviewMenu extends Component{
   }
 
   render() {
-    const activeForm = this.props.activeForm
+    const {activeForm, lang} = this.props
+
     console.log('active form ', activeForm)
     return (
       <div className="container-fluid">
-        <div className="mt-4">
+        <div className="my-3">
           <div className="nav justify-content-between">
             <div/>
             <ul className="nav nav-pills">
-              {this.renderList(activeForm)}
+              {this.renderList(activeForm, lang)}
             </ul>
           </div>
         </div>
