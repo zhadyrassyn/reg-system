@@ -4,6 +4,7 @@ import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {singUp, resendVerificationEmail} from "../actions/index"
 import ConfirmEmail from "./confirm_email"
+import {message} from "../locale/message";
 
 //validations
 const required = value => (value ? undefined : 'Required')
@@ -94,7 +95,7 @@ class SignUp extends Component {
   }
 
   render() {
-    const { handleSubmit, submitting} = this.props;
+    const { handleSubmit, submitting, lang} = this.props;
     const { isLoading, signedUp, userEmail, emailConfirmationLoader } = this.state
 
     if(signedUp) {
@@ -106,38 +107,38 @@ class SignUp extends Component {
 
         <form className="mx-auto mt-5 px-4 pt-4 pb-2" id="sign_up_form" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <Field
-            label="Email address"
+            label={message.email[lang]}
             name="email"
             id="email"
             type="text"
-            placeholder="Enter email"
+            placeholder={message.enter_email[lang]}
             validate={[required, email]}
             component={this.renderField}
           />
 
           <Field
-            label="Password"
+            label={message.password[lang]}
             name="password"
             id="password"
             type="password"
-            placeholder="Password"
+            placeholder={message.enter_password[lang]}
             hint="true"
-            hintText="Must be 8-20 characters long."
+            hintText={message.password_length_rule[lang]}
             validate={[required, minLength8]}
             component={this.renderField}
           />
 
           <Field
-            label="Confirm password"
+            label={message.confirm_password[lang]}
             name="confirmPasword"
             id="confirmPasword"
             type="password"
-            placeholder="Confirm password"
+            placeholder={message.confirm_password[lang]}
             validate={required}
             component={this.renderField}
           />
 
-          <button type="submit" className={"btn btn-primary " + (isLoading ? "disabled" : "")} id="sign_up_btn" disabled={submitting}>Submit</button>
+          <button type="submit" className={"btn btn-primary " + (isLoading ? "disabled" : "")} id="sign_up_btn" disabled={submitting}>{message.sign_up[lang]}</button>
           <div className="text-center mt-3">
             {isLoading && <span className="spinner"><i className="fa fa-spinner fa-spin fa-2x" /></span>}
           </div>
@@ -162,7 +163,8 @@ export default reduxForm({
   validate
 })(connect(
   state => ({
-    error: state.error
+    error: state.error,
+    lang: state.lang
   }),
   dispatch => ({
     signUp: bindActionCreators(singUp, dispatch),

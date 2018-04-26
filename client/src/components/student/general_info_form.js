@@ -125,8 +125,7 @@ class GeneralInfoForm extends Component {
     if(cities) {
       cities.map(city => {
         return {}
-      }
-      )
+      })
     }
 
     console.log('cities ', cities)

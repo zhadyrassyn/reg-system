@@ -46,9 +46,9 @@ class Header extends Component {
           <a className="navbar-brand">{message.header_title[lang]}</a>
 
           <div className="nav">
-            <div className="nav-item dropdown">
+            <div className="nav-item dropdown mr-2">
               <button className="dropbtn">{message.lang_title[lang]} <i className="fas fa-chevron-down"></i></button>
-              <div className="dropdown-content">
+              <div className="dropdown-content" id="dropdown-content-block">
                 <a href="#" onClick={this.changeLang} name="ru">РУ</a>
                 <a href="#" onClick={this.changeLang} name="en">EN</a>
                 <a href="#" onClick={this.changeLang} name="kk">ҚАЗ</a>
@@ -60,29 +60,28 @@ class Header extends Component {
               <Field
                 type="text"
                 name="email"
-                placeholder="Email"
+                placeholder={message.email[lang]}
                 component={this.renderField}
               />
               <Field
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder={message.password[lang]}
                 component={this.renderField}
               />
-              <button className="btn btn-outline-success my-2 my-sm-0" type="submit" disabled={submitting}>Sign in
+              <button className="btn btn-outline-success my-2 my-sm-0" type="submit" disabled={submitting}>{message.sign_in[lang]}
               </button>
-              <small className="mx-3 form-text text-muted">Forget password?</small>
+              <small className="mx-3 form-text text-muted">{message.forget_password[lang]}</small>
             </form>
             }
             {!authenticated && signInFailed &&
             <form className="form-inline">
-              <Link to="/signin" className="nav-link btn btn-outline-success my-2 my-sm-0 mr-2">Sign in</Link>
-              <Link to="/registration" className="nav-link btn btn-outline-primary my-2 my-sm-0">Sign up</Link>
+              <Link to="/signin" className="nav-link btn btn-outline-success my-2 my-sm-0 mr-2">{message.sign_in[lang]}</Link>
+              <Link to="/registration" className="nav-link btn btn-outline-primary my-2 my-sm-0">{message.sign_up[lang]}</Link>
             </form>
             }
             {authenticated &&
-            <Link to="/signout" className="nav-link btn btn-outline-danger my-2 my-sm-0 width120">Sign out</Link>
-
+            <Link to="/signout" className="nav-link btn btn-outline-danger my-2 my-sm-0 width120">{message.sign_out[lang]}</Link>
             }
           </div>
 
