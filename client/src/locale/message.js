@@ -128,5 +128,25 @@ export const message = {
     ru: 'Отменить',
     en: 'Cancel',
     kk: 'Отменить'
+  },
+  gender: {
+    ru: 'Пол',
+    en: 'Gender',
+    kk: 'Пол'
+  },
+  gender_man: {
+    ru: 'Мужской',
+    en: 'Man',
+    kk: 'Женский'
+  },
+  gender_woman: {
+    ru: 'Женский',
+    en: 'Woman',
+    kk: 'Женский'
+  },
+  gender_another: {
+    ru: 'Предпочитаю не говоить',
+    en: 'Prefer not to say',
+    kk: 'Предпочитаю не говоить'
   }
 }

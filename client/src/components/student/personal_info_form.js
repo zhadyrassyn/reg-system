@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import "./overview_menu"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
@@ -33,13 +33,13 @@ class PersonalInfoForm extends Component {
   }
 
   componentDidMount() {
-    const { fetchCities, fetchStudentGeneralInfo } = this.props
+    const {fetchCities, fetchStudentGeneralInfo} = this.props
     fetchStudentGeneralInfo(
       (data) => {
         console.log('Data ', data)
         if (data.accessType === ACCESS_TYPE_SAVE) {
           fetchCities()
-        } else if(data.accessType === ACCESS_TYPE_EDIT) {
+        } else if (data.accessType === ACCESS_TYPE_EDIT) {
           this.setState({accessType: ACCESS_TYPE_EDIT})
         }
       },
@@ -50,13 +50,14 @@ class PersonalInfoForm extends Component {
   }
 
   renderField(field) {
-    const { meta: { touched, error, warning } } = field;
+    const {meta: {touched, error, warning}} = field;
     let disabled = field.accessType === ACCESS_TYPE_EDIT
 
     return (
       <div className="col">
         <label htmlFor={field.id}>{field.label}</label>
-        <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder} id={field.id}
+        <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}
+               id={field.id}
                disabled={disabled} {...field.input}
         />
         {touched && error && <span>{error}</span>}
@@ -65,30 +66,64 @@ class PersonalInfoForm extends Component {
   }
 
   renderSelect(field) {
-    const { meta: { touched, error, warning } } = field;
+    const {meta: {touched, error, warning}} = field;
 
     const disabled = field.accessType === ACCESS_TYPE_EDIT
 
     return (
       <div className="col">
         <label htmlFor={field.id}>{field.label}</label>
-        <MySelectComponent options={field.options} placeholder={field.placeholder} disabled={disabled} {...field.input}/>
+        <MySelectComponent options={field.options} placeholder={field.placeholder}
+                           disabled={disabled} {...field.input}/>
+        {touched && error && <span>{error}</span>}
+      </div>
+    )
+  }
+
+  renderGender(field) {
+    const {meta: {touched, error, warning}} = field;
+    let disabled = field.accessType === ACCESS_TYPE_EDIT
+
+    return (
+      <div className="col">
+        <label className="d-block">{field.label}</label>
+        <div className="form-check form-check-inline">
+          <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option1}
+                 value={field.option1} />
+          <label className="form-check-label" htmlFor={field.option1}>{field.option1Label}</label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option2}
+                 value={field.option2}/>
+          <label className="form-check-label" htmlFor={field.option2}>{field.option2Label}</label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option3}
+                 value={field.option3}/>
+          <label className="form-check-label" htmlFor={field.option3}>{field.option3Label}</label>
+        </div>
+
+        {/*<label htmlFor={field.id}>{field.label}</label>*/}
+        {/*<input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}*/}
+               {/*id={field.id}*/}
+               {/*disabled={disabled} */}
+        {/*/>*/}
         {touched && error && <span>{error}</span>}
       </div>
     )
   }
 
   handleCityChange = (city) => {
-      const {fetchSchools, initialValues} = this.props
-      fetchSchools(city.value,
-        () => {
-          this.props.changeFieldValue('GeneralInfo', 'school', null)
-        },
-        () => {
-          console.log('error')
-        })
+    const {fetchSchools, initialValues} = this.props
+    fetchSchools(city.value,
+      () => {
+        this.props.changeFieldValue('GeneralInfo', 'school', null)
+      },
+      () => {
+        console.log('error')
+      })
 
-    }
+  }
 
   onSubmit(values) {
     const {saveStudentGeneralInfo, initialValues} = this.props
@@ -106,7 +141,7 @@ class PersonalInfoForm extends Component {
   }
 
   onEditClick = () => {
-    const { initialValues, fetchSchools, formValues } = this.props
+    const {initialValues, fetchSchools, formValues} = this.props
     this.setState({accessType: ACCESS_TYPE_SAVE_CANCELLABLE}, () => {
       this.props.fetchCities()
       this.props.fetchSchools(formValues.city.value)
@@ -114,16 +149,16 @@ class PersonalInfoForm extends Component {
   }
 
   onCancelClicked = () => {
-    const { initialValues } = this.props
+    const {initialValues} = this.props
     this.props.initialize(initialValues)
     this.setState({accessType: ACCESS_TYPE_EDIT})
   }
 
 
   render() {
-    let { cities, schools, initialValues, lang } = this.props
+    let {cities, schools, initialValues, lang} = this.props
 
-    if(cities) {
+    if (cities) {
       cities.map(city => {
         return {}
       })
@@ -131,7 +166,7 @@ class PersonalInfoForm extends Component {
 
     console.log('cities ', cities)
     // const selectBoxCities = cities.m
-    const { handleSubmit, submitting} = this.props
+    const {handleSubmit, submitting} = this.props
 
     const accessType = this.state.accessType
 
@@ -179,6 +214,18 @@ class PersonalInfoForm extends Component {
               validate={required}
               accessType={accessType}
             />
+
+            <Field
+              label={message.gender[lang]}
+              option1="man"
+              option2="woman"
+              option3="another"
+              option1Label={message.gender_man[lang]}
+              option2Label={message.gender_woman[lang]}
+              option3Label={message.gender_another[lang]}
+              component={this.renderGender}
+              accessType={accessType}
+            />
           </div>
           <div className="form-row mt-3">
             <Field
@@ -215,9 +262,13 @@ class PersonalInfoForm extends Component {
           </div>
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
-              <button className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')} type="submit" disabled={submitting}>{message.save[lang]}</button>}
-            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button" onClick={this.onEditClick}>{message.edit[lang]}</button>}
-            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button" onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}
+            <button
+              className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}
+              type="submit" disabled={submitting}>{message.save[lang]}</button>}
+            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button"
+                                                        onClick={this.onEditClick}>{message.edit[lang]}</button>}
+            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"
+                                                                    onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}
           </div>
         </form>
       </div>
@@ -228,7 +279,7 @@ class PersonalInfoForm extends Component {
 const validate = (values) => {
   const errors = {}
 
-  if(!values.school && !values.customSchool) {
+  if (!values.school && !values.customSchool) {
     errors.school = "Required"
   }
   return errors
@@ -241,7 +292,7 @@ PersonalInfoForm = reduxForm({
 })(PersonalInfoForm)
 
 function refactorCities(cities) {
-  if(cities) {
+  if (cities) {
     cities = cities.map(city => ({
       ...city,
       value: city.id,
@@ -253,7 +304,7 @@ function refactorCities(cities) {
 }
 
 function refactorSchools(schools) {
-  if(schools) {
+  if (schools) {
     schools = schools.map(school => ({
       ...school,
       value: school.id,
@@ -265,7 +316,7 @@ function refactorSchools(schools) {
 }
 
 function refactorGeneralInfo(studentInfo) {
-  if(studentInfo && studentInfo.city && studentInfo.school) {
+  if (studentInfo && studentInfo.city && studentInfo.school) {
     studentInfo = {
       ...studentInfo,
       city: {
