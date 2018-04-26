@@ -31,13 +31,16 @@ import {
   CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE,
   CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
   FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
-  FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS
+  FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
+  CHANGE_LANG
 } from "./types"
 
 import axios from "axios"
 import config from "../config"
 import { browserHistory } from "react-router"
 import { fetchIdFromToken } from "../utils"
+
+export const changeLang = lang => ({ type: CHANGE_LANG, lang })
 
 export const singUp = ({email, password}, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/auth/signup`
