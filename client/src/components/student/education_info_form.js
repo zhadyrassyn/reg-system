@@ -17,22 +17,65 @@ class EducationInfoForm extends Component {
         <form>
           <div className="form-row">
             <div className="col">
-              <label>Область</label>
-              <select className="form-group">
+              <label>{message.area[lang]}</label>
+              <select className="form-control">
                 <option>Кызылордиская область</option>
                 <option>Кызылордиская область</option>
                 <option>Кызылордиская область</option>
               </select>
             </div>
             <div className="col">
-              <label>Район</label>
-              <select className="form-group">
+              <label>{message.region[lang]}</label>
+              <select className="form-control">
                 <option>Кызылординский район</option>
                 <option>Кызылординский район</option>
                 <option>Кызылординский район</option>
               </select>
             </div>
+            <div className="col">
+              <label>{message.city[lang]}/{message.village[lang]}</label>
+              <select className="form-control">
+                <option>Кызылорда</option>
+                <option>Арал</option>
+                <option>Жанакорган</option>
+              </select>
+            </div>
           </div>
+
+          <div className="form-row mt-3">
+            <div className="col">
+              <label>{message.school[lang]}</label>
+              <select className="form-control">
+                <option>БИЛ</option>
+                <option>НУ</option>
+                <option>3</option>
+              </select>
+            </div>
+            <div className="col">
+              <label>{message.customSchool[lang]}</label>
+              <input type="text" className="form-control" placeholder={message.customSchool[lang]}/>
+            </div>
+            <div className="col">
+              <label>{message.school_finish[lang]}</label>
+              <input type="date" className="form-control"/>
+            </div>
+          </div>
+
+          <div className="form-row mt-3">
+            <div className="col">
+              <label>{message.ent_certificate_number[lang]}</label>
+              <input type="text" className="form-control" placeholder={message.ent_certificate_number[lang]}/>
+            </div>
+            <div className="col">
+              <label>{message.ent_amount[lang]}</label>
+              <input type="text" className="form-control" placeholder={message.ent_amount[lang]}/>
+            </div>
+            <div className="col">
+              <label>{message.ikt[lang]}</label>
+              <input type="text" className="form-control" placeholder={message.ikt[lang]}/>
+            </div>
+          </div>
+
           <div className="form-row mt-3">
             <legend>{message.documents[lang]}</legend>
             <ul className="list-unstyled">

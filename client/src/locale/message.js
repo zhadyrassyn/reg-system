@@ -263,5 +263,40 @@ export const message = {
     ru: 'Cертификат ЕНТ / сертификат КТА (выпускники колледжа)',
     en: 'Certificate of UNT / CT',
     kk: 'ҰБТ сертификаты / КТ сертификаты (колледж түлектері)'
+  },
+  area: {
+    ru: 'Область',
+    en: 'Area',
+    kk: 'Область'
+  },
+  region: {
+    ru: 'Район',
+    en: 'Region',
+    kk: 'Район'
+  },
+  village: {
+    ru: 'Село',
+    en: 'Village',
+    kk: 'Село'
+  },
+  school_finish: {
+    ru: 'Год окончания школы',
+    en: 'School finish date',
+    kk: 'Год окончания школы'
+  },
+  ent_certificate_number: {
+    ru: 'Номер сертификата ЕНТ',
+    en: 'Number of UTS',
+    kk: 'Номер сертификата ЕНТ'
+  },
+  ent_amount: {
+    ru: 'Количество баллов без языка обучения',
+    en: 'Amount of points without profile language',
+    kk: 'Количество баллов без языка обучения'
+  },
+  ikt: {
+    ru: 'ИКТ',
+    en: 'Unkown',
+    kk: 'ТЖК'
   }
 }
