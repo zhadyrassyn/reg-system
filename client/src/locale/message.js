@@ -313,5 +313,10 @@ export const message = {
     ru: 'Флюрография',
     en: 'flurography',
     kk: 'Флюрография'
+  },
+  add_certificate: {
+    ru: 'Добавить сертификат',
+    en: 'Add certificate',
+    kk: 'Добавить сертификат'
   }
 }
