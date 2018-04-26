@@ -4,6 +4,7 @@ import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {Field, reduxForm, actionCreators, getFormValues, change as changeFieldValue} from "redux-form"
 import MySelectComponent from "../my_select_component"
+import InputMask from 'react-input-mask'
 
 import {
   fetchCities,
@@ -89,7 +90,7 @@ class PersonalInfoForm extends Component {
         <label className="d-block">{field.label}</label>
         <div className="form-check form-check-inline">
           <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option1}
-                 value={field.option1} />
+                 value={field.option1} defaultChecked/>
           <label className="form-check-label" htmlFor={field.option1}>{field.option1Label}</label>
         </div>
         <div className="form-check form-check-inline">
@@ -103,11 +104,6 @@ class PersonalInfoForm extends Component {
           <label className="form-check-label" htmlFor={field.option3}>{field.option3Label}</label>
         </div>
 
-        {/*<label htmlFor={field.id}>{field.label}</label>*/}
-        {/*<input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}*/}
-               {/*id={field.id}*/}
-               {/*disabled={disabled} */}
-        {/*/>*/}
         {touched && error && <span>{error}</span>}
       </div>
     )
@@ -126,18 +122,19 @@ class PersonalInfoForm extends Component {
   }
 
   onSubmit(values) {
-    const {saveStudentGeneralInfo, initialValues} = this.props
-    console.log('Why saving?')
-    saveStudentGeneralInfo(
-      values,
-      () => {
-        console.log('Saved successfully')
-        this.setState({accessType: ACCESS_TYPE_EDIT})
-      },
-      () => {
-        console.log('error')
-      }
-    )
+    console.log('values ', values)
+    // const {saveStudentGeneralInfo, initialValues} = this.props
+    // console.log('Why saving?')
+    // saveStudentGeneralInfo(
+    //   values,
+    //   () => {
+    //     console.log('Saved successfully')
+    //     this.setState({accessType: ACCESS_TYPE_EDIT})
+    //   },
+    //   () => {
+    //     console.log('error')
+    //   }
+    // )
   }
 
   onEditClick = () => {
@@ -172,7 +169,7 @@ class PersonalInfoForm extends Component {
 
     return (
       <div className="container-fluid">
-        <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        <form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="my-2">
           <div className="form-row">
             <Field
               label={message.first_name[lang]}
@@ -214,9 +211,9 @@ class PersonalInfoForm extends Component {
               validate={required}
               accessType={accessType}
             />
-
             <Field
               label={message.gender[lang]}
+              name="gender"
               option1="man"
               option2="woman"
               option3="another"
@@ -226,39 +223,266 @@ class PersonalInfoForm extends Component {
               component={this.renderGender}
               accessType={accessType}
             />
+            <div className="col">
+              <label>Группа крови</label>
+              <select className="custom-select">
+                <option selected>1</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
           </div>
           <div className="form-row mt-3">
             <Field
-              label={message.city[lang]}
-              name="city"
-              id="city"
-              options={cities}
-              component={this.renderSelect}
-              onChange={this.handleCityChange}
+              label={message.iin[lang]}
+              name="iin"
+              id="iin"
+              type="number"
+              placeholder={message.iin[lang]}
+              component={this.renderField}
               validate={required}
-              placeholder={message.city[lang]}
+              accessType={accessType}
+            />
+            <Field
+              label={message.ud_number[lang]}
+              name="ud_number"
+              id="ud_number"
+              type="number"
+              placeholder={message.ud_number[lang]}
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+            />
+            <Field
+              label={message.nationality[lang]}
+              name="nationality"
+              id="nationality"
+              type="text"
+              placeholder={message.nationality[lang]}
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+            />
+            <Field
+              label={message.citizenship[lang]}
+              name="citizenship"
+              id="citizenship"
+              type="text"
+              placeholder={message.citizenship[lang]}
+              component={this.renderField}
+              validate={required}
               accessType={accessType}
             />
           </div>
+          {/*<div className="form-row mt-3">*/}
+          {/*<Field*/}
+          {/*label={message.city[lang]}*/}
+          {/*name="city"*/}
+          {/*id="city"*/}
+          {/*options={cities}*/}
+          {/*component={this.renderSelect}*/}
+          {/*onChange={this.handleCityChange}*/}
+          {/*validate={required}*/}
+          {/*placeholder={message.city[lang]}*/}
+          {/*accessType={accessType}*/}
+          {/*/>*/}
+          {/*</div>*/}
           <div className="form-row mt-3">
+            <div className="col">
+              <label>{message.birthPlace[lang]}</label>
+              <select className="form-control">
+                <option>Кызылординская область</option>
+                <option>Кызылординская область</option>
+                <option>Кызылординская область</option>
+                <option>Кызылординская область</option>
+              </select>
+            </div>
             <Field
-              label={message.school[lang]}
-              name="school"
-              id="school"
-              options={schools}
-              component={this.renderSelect}
-              placeholder={message.school[lang]}
-              accessType={accessType}
-            />
-            <Field
-              label={message.customSchool[lang]}
-              id="customSchool"
-              name="customSchool"
+              label={message.birthPlaceCustom[lang]}
+              id="birthPlaceCustom"
+              name="birthPlaceCustom"
               type="text"
               component={this.renderField}
-              placeholder={message.customSchool[lang]}
+              placeholder={message.birthPlaceCustom[lang]}
               accessType={accessType}
             />
+            <Field
+              label={message.givenPlace[lang]}
+              id="givenPlace"
+              name="givenPlace"
+              type="text"
+              component={this.renderField}
+              placeholder={message.givenPlace[lang]}
+              accessType={accessType}
+            />
+            <Field
+              label={message.givenDate[lang]}
+              name="givenDate"
+              id="givenDate"
+              type="date"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+            />
+          </div>
+          <div className="form-row mt-3">
+            <legend>{message.registeredAddress[lang]}</legend>
+            <Field
+              label={message.street[lang]}
+              name="regStreet"
+              id="regStreet"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.street[lang]}
+            />
+            <Field
+              label={message.house[lang]}
+              name="regHouse"
+              id="regHouse"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.house[lang]}
+            />
+            <Field
+              label={message.fraction[lang]}
+              name="regFraction"
+              id="regFraction"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.fraction[lang]}
+            />
+            <Field
+              label={message.flat[lang]}
+              name="regFlat"
+              id="regFlat"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.flat[lang]}
+            />
+          </div>
+          <div className="form-row mt-3">
+            <legend>{message.factAddress[lang]}</legend>
+            <Field
+              label={message.street[lang]}
+              name="factStreet"
+              id="factStreet"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.street[lang]}
+            />
+            <Field
+              label={message.house[lang]}
+              name="factHouse"
+              id="factHouse"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.house[lang]}
+            />
+            <Field
+              label={message.fraction[lang]}
+              name="factFraction"
+              id="factFraction"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.fraction[lang]}
+            />
+            <Field
+              label={message.flat[lang]}
+              name="factFlat"
+              id="factFlat"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.flat[lang]}
+            />
+          </div>
+          <div className="form-row mt-3">
+            <legend>{message.contact_info[lang]}</legend>
+            <div className="col">
+              <label>{message.tel_phone[lang]}</label>
+              <InputMask {...this.props} mask="+7(999) 999 99 99" maskChar="-" className="form-control"/>
+            </div>
+            <div className="col">
+              <label>{message.mobile_phone[lang]}</label>
+              <InputMask {...this.props} mask="+7(999) 999 99 99" maskChar="-" className="form-control"/>
+            </div>
+            <Field
+              label={message.email[lang]}
+              name="email"
+              id="email"
+              type="text"
+              component={this.renderField}
+              validate={required}
+              accessType={accessType}
+              placeholder={message.email[lang]}
+            />
+          </div>
+          <div className="form-row mt-3">
+            <legend>{message.documents[lang]}</legend>
+            <ul className="list-unstyled">
+              <li>
+                <p>
+                  <a href="#">
+                    {message.ud_front[lang]}
+                  </a>
+                  <span className="">  Не отправлено</span>
+                </p>
+              </li>
+              <li>
+                <p>
+                  <a href="#">
+                    {message.ud_back[lang]}
+                  </a>
+                  <span className="">  Не отправлено</span>
+                </p>
+              </li>
+              <li>
+                <a href="#">
+                  {message.photo_3x4[lang]}
+                </a>
+                <span className="">  Не отправлено</span>
+              </li>
+            </ul>
+          </div>
+          {/*<div className="form-row mt-3">*/}
+          {/*<Field*/}
+          {/*label={message.school[lang]}*/}
+          {/*name="school"*/}
+          {/*id="school"*/}
+          {/*options={schools}*/}
+          {/*component={this.renderSelect}*/}
+          {/*placeholder={message.school[lang]}*/}
+          {/*accessType={accessType}*/}
+          {/*/>*/}
+          {/*<Field*/}
+          {/*label={message.customSchool[lang]}*/}
+          {/*id="customSchool"*/}
+          {/*name="customSchool"*/}
+          {/*type="text"*/}
+          {/*component={this.renderField}*/}
+          {/*placeholder={message.customSchool[lang]}*/}
+          {/*accessType={accessType}*/}
+          {/*/>*/}
+          {/*</div>*/}
+          <div className="form-group">
+            <label htmlFor="comment">Review Comment</label>
+            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
           </div>
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
