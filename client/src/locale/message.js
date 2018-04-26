@@ -298,5 +298,20 @@ export const message = {
     ru: 'ИКТ',
     en: 'Unkown',
     kk: 'ТЖК'
+  },
+  medical_form_86: {
+    ru: 'Медицинская форма 86',
+    en: 'Medical form 86',
+    kk: 'Медицинская форма 86'
+  },
+  medical_form_63: {
+    ru: 'Медицинская форма 63',
+    en: 'Medical form 63',
+    kk: 'Медицинская форма 63'
+  },
+  flurography: {
+    ru: 'Флюрография',
+    en: 'flurography',
+    kk: 'Флюрография'
   }
 }
