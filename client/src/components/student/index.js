@@ -6,7 +6,12 @@ import DocumentsForm from "./documents_form"
 
 import {
   FORM_GENERAL,
-  FORM_DOCUMENTS
+  FORM_DOCUMENTS,
+
+  FORM_PERSONAL_INFO,
+  FORM_EDUCATION_INFO,
+  FORM_CERTIFICATES_INFO,
+  FORM_MEDICAL_INFO
 } from "../../constants"
 
 class StudentApp extends Component {
@@ -14,7 +19,7 @@ class StudentApp extends Component {
     super(props)
 
     this.state = {
-      activeForm: FORM_GENERAL
+      activeForm: FORM_PERSONAL_INFO
     }
   }
 

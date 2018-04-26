@@ -3,7 +3,8 @@ import { Link } from 'react-router'
 import {Field, reduxForm} from "redux-form"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
-import {signIn} from "../actions";
+import {signIn} from "../actions"
+import {message} from "../locale/message"
 
 class Header extends Component {
   renderField(field) {
@@ -31,12 +32,12 @@ class Header extends Component {
   }
 
   render() {
-    const { handleSubmit, submitting, signInFailed, authenticated } = this.props;
+    const { handleSubmit, submitting, signInFailed, authenticated, lang } = this.props
 
     return (
       <nav className="navbar navbar-light bg-light justify-content-between">
-        <div className="container">
-          <a className="navbar-brand">Online registration system</a>
+        <div className="container-fluid">
+          <a className="navbar-brand">{message.header_title[lang]}</a>
 
           {!authenticated && !signInFailed &&
           <form className="form-inline" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
@@ -92,7 +93,8 @@ export default reduxForm({
   state => ({
     error: state.error,
     signInFailed: state.auth.signInFailed,
-    authenticated: state.auth.authenticated
+    authenticated: state.auth.authenticated,
+    lang: state.lang
   }),
   dispatch => ({
     signIn: bindActionCreators(signIn, dispatch)

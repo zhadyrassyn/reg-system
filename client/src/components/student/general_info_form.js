@@ -136,7 +136,7 @@ class GeneralInfoForm extends Component {
     const accessType = this.state.accessType
 
     return (
-      <div className="container">
+      <div className="container-fluid">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <div className="form-row">
             <Field
