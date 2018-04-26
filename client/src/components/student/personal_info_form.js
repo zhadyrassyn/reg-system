@@ -18,6 +18,8 @@ import {
   ACCESS_TYPE_SAVE_CANCELLABLE
 } from "../../constants"
 
+import {message} from "../../locale/message"
+
 //validations
 const required = value => (value ? undefined : 'Required')
 
@@ -119,7 +121,7 @@ class PersonalInfoForm extends Component {
 
 
   render() {
-    let { cities, schools, initialValues } = this.props
+    let { cities, schools, initialValues, lang } = this.props
 
     if(cities) {
       cities.map(city => {
@@ -138,30 +140,30 @@ class PersonalInfoForm extends Component {
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
           <div className="form-row">
             <Field
-              label="First name"
+              label={message.first_name[lang]}
               name="firstName"
               id="firstName"
               type="text"
-              placeholder="First name"
+              placeholder={message.first_name[lang]}
               component={this.renderField}
               validate={required}
               accessType={accessType}
             />
             <Field
-              label="Middle name"
+              label={message.patronymic[lang]}
               name="middleName"
               id="middleName"
               type="text"
-              placeholder="Middle name"
+              placeholder={message.patronymic[lang]}
               component={this.renderField}
               accessType={accessType}
             />
             <Field
-              label="Last name"
+              label={message.last_name[lang]}
               name="lastName"
               id="lastName"
               type="text"
-              placeholder="Last name"
+              placeholder={message.last_name[lang]}
               component={this.renderField}
               validate={required}
               accessType={accessType}
@@ -169,7 +171,7 @@ class PersonalInfoForm extends Component {
           </div>
           <div className="form-row mt-3">
             <Field
-              label="Date of birth"
+              label={message.birthDate[lang]}
               name="birthDate"
               id="birthDate"
               type="date"
@@ -180,42 +182,42 @@ class PersonalInfoForm extends Component {
           </div>
           <div className="form-row mt-3">
             <Field
-              label="City"
+              label={message.city[lang]}
               name="city"
               id="city"
               options={cities}
               component={this.renderSelect}
               onChange={this.handleCityChange}
               validate={required}
-              placeholder="Choose your city"
+              placeholder={message.city[lang]}
               accessType={accessType}
             />
           </div>
           <div className="form-row mt-3">
             <Field
-              label="School"
+              label={message.school[lang]}
               name="school"
               id="school"
               options={schools}
               component={this.renderSelect}
-              placeholder="Choose your school"
+              placeholder={message.school[lang]}
               accessType={accessType}
             />
             <Field
-              label="Not finding your school? Write down"
+              label={message.customSchool[lang]}
               id="customSchool"
               name="customSchool"
               type="text"
               component={this.renderField}
-              placeholder="..."
+              placeholder={message.customSchool[lang]}
               accessType={accessType}
             />
           </div>
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
-              <button className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')} type="submit" disabled={submitting}>Save</button>}
-            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button" onClick={this.onEditClick}>Edit</button>}
-            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button" onClick={this.onCancelClicked}>Cancel</button>}
+              <button className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')} type="submit" disabled={submitting}>{message.save[lang]}</button>}
+            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button" onClick={this.onEditClick}>{message.edit[lang]}</button>}
+            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button" onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}
           </div>
         </form>
       </div>
@@ -284,6 +286,7 @@ function refactorGeneralInfo(studentInfo) {
 
 export default connect(
   state => ({
+    lang: state.lang,
     cities: refactorCities(state.info.cities),
     schools: refactorSchools(state.info.schools),
     formValues: getFormValues('GeneralInfo')(state),

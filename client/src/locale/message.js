@@ -78,5 +78,55 @@ export const message = {
     ru: 'Сертификаты',
     en: 'Certificates',
     kk: 'Сертификаты'
+  },
+  first_name: {
+    ru: 'Имя',
+    en: 'First name',
+    kk: 'Имя'
+  },
+  last_name: {
+    ru: 'Фамилия',
+    en: 'Last name',
+    kk: 'Фамилия'
+  },
+  patronymic: {
+    ru: 'Отчество',
+    en: 'Patronymic',
+    kk: 'Отчество'
+  },
+  birthDate: {
+    ru: 'Дата рождения',
+    en: 'Date of birth',
+    kk: 'Дата рождения',
+  },
+  city: {
+    ru: 'Город',
+    en: 'City',
+    kk: 'Город'
+  },
+  school: {
+    ru: 'Школа',
+    en: 'School',
+    kk: 'Школа '
+  },
+  customSchool: {
+    ru: 'Другая школа',
+    en: 'Another school',
+    kk: 'Другая школа'
+  },
+  edit: {
+    ru: 'Редактировать',
+    en: 'Edit',
+    kk: 'Редактировать'
+  },
+  save: {
+    ru: 'Сохранить',
+    en: 'Save',
+    kk: 'Сохранить'
+  },
+  cancel: {
+    ru: 'Отменить',
+    en: 'Cancel',
+    kk: 'Отменить'
   }
 }
