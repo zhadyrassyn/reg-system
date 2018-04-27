@@ -82,29 +82,21 @@ class PersonalInfoForm extends Component {
   }
 
   renderGender(field) {
-    const {meta: {touched, error, warning}} = field;
+    const {meta: {touched, error, warning}, options} = field
     let disabled = field.accessType === ACCESS_TYPE_EDIT
 
     return (
       <div className="col">
         <label className="d-block">{field.label}</label>
-        <div className="form-check form-check-inline">
-          <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option1}
-                 value={field.option1} defaultChecked/>
-          <label className="form-check-label" htmlFor={field.option1}>{field.option1Label}</label>
-        </div>
-        <div className="form-check form-check-inline">
-          <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option2}
-                 value={field.option2}/>
-          <label className="form-check-label" htmlFor={field.option2}>{field.option2Label}</label>
-        </div>
-        <div className="form-check form-check-inline">
-          <input {...field.input} className="form-check-input" type="radio" name="gender" id={field.option3}
-                 value={field.option3}/>
-          <label className="form-check-label" htmlFor={field.option3}>{field.option3Label}</label>
-        </div>
+        {Object.keys(options).map((key, index) => (
+          <div className="form-check form-check-inline">
+            <input {...field.input} className="form-check-input" type="radio" name="gender" id={options[key].name}
+                   value={options[key].name}/>
+            <label className="form-check-label" htmlFor={options[key].name}>{options[key].label}</label>
+          </div>
+        ))}
 
-        {touched && error && <span>{error}</span>}
+        {touched && error && <span className="d-block">{error}</span>}
       </div>
     )
   }
@@ -165,7 +157,8 @@ class PersonalInfoForm extends Component {
     // const selectBoxCities = cities.m
     const {handleSubmit, submitting} = this.props
 
-    const accessType = this.state.accessType
+    let accessType = this.state.accessType
+    accessType = ACCESS_TYPE_SAVE
 
     return (
       <div className="container-fluid">
@@ -178,7 +171,7 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.first_name[lang]}
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
             <Field
@@ -197,7 +190,7 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.last_name[lang]}
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
           </div>
@@ -208,20 +201,29 @@ class PersonalInfoForm extends Component {
               id="birthDate"
               type="date"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
             <Field
               label={message.gender[lang]}
               name="gender"
-              option1="man"
-              option2="woman"
-              option3="another"
-              option1Label={message.gender_man[lang]}
-              option2Label={message.gender_woman[lang]}
-              option3Label={message.gender_another[lang]}
+              options={{
+                option1: {
+                  name: 'man',
+                  label: message.gender_man[lang]
+                },
+                option2: {
+                  name: 'woman',
+                  label: message.gender_woman[lang]
+                },
+                option3: {
+                  name: 'another',
+                  label: message.gender_another[lang]
+                }
+              }}
               component={this.renderGender}
               accessType={accessType}
+              validate={required}
             />
             <div className="col">
               <label>Группа крови</label>
@@ -238,20 +240,20 @@ class PersonalInfoForm extends Component {
               label={message.iin[lang]}
               name="iin"
               id="iin"
-              type="number"
+              type="text"
               placeholder={message.iin[lang]}
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
             <Field
               label={message.ud_number[lang]}
               name="ud_number"
               id="ud_number"
-              type="number"
+              type="text"
               placeholder={message.ud_number[lang]}
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
             <Field
@@ -261,7 +263,7 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.nationality[lang]}
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
             <Field
@@ -271,7 +273,7 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.citizenship[lang]}
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
           </div>
@@ -322,7 +324,7 @@ class PersonalInfoForm extends Component {
               id="givenDate"
               type="date"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
             />
           </div>
@@ -334,7 +336,7 @@ class PersonalInfoForm extends Component {
               id="regStreet"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.street[lang]}
             />
@@ -344,7 +346,7 @@ class PersonalInfoForm extends Component {
               id="regHouse"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.house[lang]}
             />
@@ -354,7 +356,7 @@ class PersonalInfoForm extends Component {
               id="regFraction"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.fraction[lang]}
             />
@@ -364,7 +366,7 @@ class PersonalInfoForm extends Component {
               id="regFlat"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.flat[lang]}
             />
@@ -377,7 +379,7 @@ class PersonalInfoForm extends Component {
               id="factStreet"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.street[lang]}
             />
@@ -387,7 +389,7 @@ class PersonalInfoForm extends Component {
               id="factHouse"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.house[lang]}
             />
@@ -397,7 +399,7 @@ class PersonalInfoForm extends Component {
               id="factFraction"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.fraction[lang]}
             />
@@ -407,7 +409,7 @@ class PersonalInfoForm extends Component {
               id="factFlat"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.flat[lang]}
             />
@@ -428,7 +430,7 @@ class PersonalInfoForm extends Component {
               id="email"
               type="text"
               component={this.renderField}
-              validate={required}
+              // validate={required}
               accessType={accessType}
               placeholder={message.email[lang]}
             />
@@ -485,14 +487,15 @@ class PersonalInfoForm extends Component {
             <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
           </div>
           <div className="col text-right">
-            {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
-            <button
-              className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}
-              type="submit" disabled={submitting}>{message.save[lang]}</button>}
-            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button"
-                                                        onClick={this.onEditClick}>{message.edit[lang]}</button>}
-            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"
-                                                                    onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}
+            <button className="btn btn-success" type="submit">Save</button>
+            {/*{accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&*/}
+            {/*<button*/}
+              {/*className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}*/}
+              {/*type="submit" disabled={submitting}>{message.save[lang]}</button>}*/}
+            {/*{accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button"*/}
+                                                        {/*onClick={this.onEditClick}>{message.edit[lang]}</button>}*/}
+            {/*{accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"*/}
+                                                                    {/*onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}*/}
           </div>
         </form>
       </div>
@@ -564,8 +567,8 @@ export default connect(
     lang: state.lang,
     cities: refactorCities(state.info.cities),
     schools: refactorSchools(state.info.schools),
-    formValues: getFormValues('GeneralInfo')(state),
-    initialValues: refactorGeneralInfo(state.student.studentInfo)
+    formValues: getFormValues('PersonalInfoForm')(state),
+    // initialValues: refactorGeneralInfo(state.student.studentInfo)
   }),
   dispatch => ({
     fetchCities: bindActionCreators(fetchCities, dispatch),

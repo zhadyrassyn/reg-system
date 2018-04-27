@@ -93,6 +93,13 @@ class Db {
             userStatus = UserStatus.ACTIVE
         )
 
+        val u4 = User(
+            id = longCounter.incrementAndGet(),
+            email = "test4@test.com",
+            password = "qwerty",
+            userStatus = UserStatus.ACTIVE
+        )
+
         val stubUsers = ArrayList<User>()
         for (i in 0..20) {
             val user = User(
@@ -123,6 +130,7 @@ class Db {
         users.put(u1.id, u1)
         users.put(u2.id, u2)
         users.put(u3.id, u3)
+        users.put(u4.id, u4)
 
         verificationTokens.put(u1.id, "123")
         verificationTokens.put(u2.id, "678")
@@ -130,6 +138,7 @@ class Db {
         userRoles.put(u1.id, RoleType.USER)
         userRoles.put(u2.id, RoleType.USER)
         userRoles.put(u3.id, RoleType.MODERATOR)
+        userRoles.put(u4.id, RoleType.USER)
 
     }
 
