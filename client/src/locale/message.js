@@ -318,5 +318,15 @@ export const message = {
     ru: 'Добавить сертификат',
     en: 'Add certificate',
     kk: 'Добавить сертификат'
+  },
+  blood_group: {
+    ru: 'Группа крови',
+    en: 'Blood group',
+    kk: 'Группа крови'
+  },
+  group: {
+    ru: 'группа',
+    en: 'group',
+    kk: 'группа'
   }
 }

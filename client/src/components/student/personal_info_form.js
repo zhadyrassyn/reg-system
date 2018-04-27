@@ -66,22 +66,22 @@ class PersonalInfoForm extends Component {
     )
   }
 
-  renderSelect(field) {
-    const {meta: {touched, error, warning}} = field;
+  // renderSelect(field) {
+  //   const {meta: {touched, error, warning}} = field;
+  //
+  //   const disabled = field.accessType === ACCESS_TYPE_EDIT
+  //
+  //   return (
+  //     <div className="col">
+  //       <label htmlFor={field.id}>{field.label}</label>
+  //       <MySelectComponent options={field.options} placeholder={field.placeholder}
+  //                          disabled={disabled} {...field.input}/>
+  //       {touched && error && <span>{error}</span>}
+  //     </div>
+  //   )
+  // }
 
-    const disabled = field.accessType === ACCESS_TYPE_EDIT
-
-    return (
-      <div className="col">
-        <label htmlFor={field.id}>{field.label}</label>
-        <MySelectComponent options={field.options} placeholder={field.placeholder}
-                           disabled={disabled} {...field.input}/>
-        {touched && error && <span>{error}</span>}
-      </div>
-    )
-  }
-
-  renderGender(field) {
+  renderRadioButtons(field) {
     const {meta: {touched, error, warning}, options} = field
     let disabled = field.accessType === ACCESS_TYPE_EDIT
 
@@ -90,12 +90,29 @@ class PersonalInfoForm extends Component {
         <label className="d-block">{field.label}</label>
         {Object.keys(options).map((key, index) => (
           <div className="form-check form-check-inline">
-            <input {...field.input} className="form-check-input" type="radio" name="gender" id={options[key].name}
+            <input {...field.input} className="form-check-input" type="radio" name={field.name} id={options[key].name}
                    value={options[key].name}/>
             <label className="form-check-label" htmlFor={options[key].name}>{options[key].label}</label>
           </div>
         ))}
 
+        {touched && error && <span className="d-block">{error}</span>}
+      </div>
+    )
+  }
+
+  renderSelect(field) {
+    const {meta: {touched, error, warning}, options} = field
+    let disabled = field.accessType === ACCESS_TYPE_EDIT
+
+    return (
+      <div className="col">
+        <label className="d-block">{field.label}</label>
+        <select {...field.input} className="form-control">
+          {Object.keys(options).map((key, index) => (
+            <option value={options[key].name}>{options[key].label}</option>
+          ))}
+        </select>
         {touched && error && <span className="d-block">{error}</span>}
       </div>
     )
@@ -204,6 +221,7 @@ class PersonalInfoForm extends Component {
               // validate={required}
               accessType={accessType}
             />
+
             <Field
               label={message.gender[lang]}
               name="gender"
@@ -221,19 +239,52 @@ class PersonalInfoForm extends Component {
                   label: message.gender_another[lang]
                 }
               }}
-              component={this.renderGender}
+              component={this.renderRadioButtons}
               accessType={accessType}
-              validate={required}
+              // validate={required}
             />
-            <div className="col">
-              <label>Группа крови</label>
-              <select className="custom-select">
-                <option selected>1</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </select>
-            </div>
+
+            <Field
+              label={message.blood_group[lang]}
+              name="blood_group"
+              options={{
+                option1: {
+                  name: 'first_plus',
+                  label: `1 ${message.group[lang]} +`
+                },
+                option2: {
+                  name: 'first_minus',
+                  label: `1 ${message.group[lang]} -`
+                },
+                option3: {
+                  name: 'second_plus',
+                  label: `2 ${message.group[lang]} +`
+                },
+                option4: {
+                  name: 'second_minus',
+                  label: `2 ${message.group[lang]} -`
+                },
+                option5: {
+                  name: 'third_plus',
+                  label: `3 ${message.group[lang]} +`
+                },
+                option6: {
+                  name: 'third_minus',
+                  label: `3 ${message.group[lang]} -`
+                },
+                option7: {
+                  name: 'fourth_plus',
+                  label: `4 ${message.group[lang]} +`
+                },
+                option8: {
+                  name: 'fourth_minus',
+                  label: `4 ${message.group[lang]} -`
+                }
+              }}
+              component={this.renderSelect}
+              accessType={accessType}
+              // validate={required}
+            />
           </div>
           <div className="form-row mt-3">
             <Field
