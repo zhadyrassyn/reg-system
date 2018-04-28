@@ -30,7 +30,7 @@ data class PersonalInfo(
     val regHouse: String,
     val regStreet: String,
 
-    val ud_front : Document? = null,
-    val ud_back: Document? = null,
-    val photo3x4: Document? = null
+    var ud_front : Document? = null,
+    var ud_back: Document? = null,
+    var photo3x4: Document? = null
 )

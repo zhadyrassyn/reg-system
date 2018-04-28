@@ -74,5 +74,5 @@ data class GetPersonalInfoResponse(
 )
 
 data class Document(
-    val url: String
+    val name: String
 )

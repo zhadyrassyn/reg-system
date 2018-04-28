@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.stand.impl
 
 import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.model.enums.AccessType
+import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.Area
@@ -11,17 +12,41 @@ import kz.edu.sdu.regsystem.stand.model.enums.AreaType
 import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
+import kz.edu.sdu.regsystem.stand.service.FileService
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
+import org.springframework.web.multipart.MultipartFile
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
 class StudentRegisterStandImpl(
     val db: Db,
-    val env: Environment
+    val env: Environment,
+    val fileService: FileService
 ) : StudentRegister{
+    override fun savePersonalInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType) : Document{
+        val user = db.users.values.firstOrNull { id == it.id } ?:
+        throw UserDoesNotExistsException("User does not exist")
+
+        var savedFile: kz.edu.sdu.regsystem.stand.model.Document? = null
+        try {
+            savedFile = fileService.store(file=file, documentType = documentType, id = id)
+            if(documentType == DocumentType.IDENTITY_CARD_FRONT) {
+                user.personalInfo!!.ud_front = savedFile
+            } else if(documentType == DocumentType.IDENTITY_CARD_BACK) {
+                user.personalInfo!!.ud_back = savedFile
+            } else if(documentType == DocumentType.PHOTO_3x4) {
+                user.personalInfo!!.photo3x4 = savedFile
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return Document(name = savedFile!!.path!!.fileName.toString())
+    }
+
     override fun getPersonalInfo(id: Long): GetPersonalInfoResponse {
         val user = db.users.values.firstOrNull { it -> it.id == id } ?:
         throw UserDoesNotExistsException("User does not exist")
@@ -60,9 +85,9 @@ class StudentRegisterStandImpl(
             regFraction = personalInfo.regFraction,
             regHouse = personalInfo.regHouse,
             regStreet = personalInfo.regStreet,
-            ud_front = Document(personalInfo.ud_front?.path.toString()),
-            ud_back = Document(personalInfo.ud_back?.path.toString()),
-            photo3x4 = Document(personalInfo.photo3x4?.path.toString())
+            ud_front = Document(personalInfo.ud_front?.path?.fileName.toString()),
+            ud_back = Document(personalInfo.ud_back?.path?.fileName.toString()),
+            photo3x4 = Document(personalInfo.photo3x4?.path?.fileName.toString())
         )
     }
 

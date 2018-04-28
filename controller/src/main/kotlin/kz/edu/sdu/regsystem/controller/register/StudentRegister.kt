@@ -1,9 +1,8 @@
 package kz.edu.sdu.regsystem.controller.register
 
-import kz.edu.sdu.regsystem.controller.model.GeneralInfoData
-import kz.edu.sdu.regsystem.controller.model.GetGeneralInfoResponseData
-import kz.edu.sdu.regsystem.controller.model.GetPersonalInfoResponse
-import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
+import kz.edu.sdu.regsystem.controller.model.*
+import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
+import org.springframework.web.multipart.MultipartFile
 
 interface StudentRegister {
     fun saveGeneralInfo(id: Long, generalInfoData: GeneralInfoData)
@@ -13,4 +12,6 @@ interface StudentRegister {
     fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long)
 
     fun getPersonalInfo(id: Long): GetPersonalInfoResponse
+
+    fun savePersonalInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType) : Document
 }

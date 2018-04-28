@@ -26,7 +26,7 @@ class AuthRegisterStandImpl(
     val env: Environment) : AuthRegister {
 
     override fun verifyUser(token: String): AuthResponse {
-        val id = db.verificationTokens.entries.firstOrNull { it -> it.value == token }?.key ?: throw BadRequestException("bad account verification url")
+        val id = db.verificationTokens.entries.firstOrNull { it -> it.value == token }?.key ?: throw BadRequestException("bad account verification name")
         db.users[id]?.userStatus = UserStatus.ACTIVE
 
         val user = db.users[id]

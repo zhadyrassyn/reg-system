@@ -18,7 +18,7 @@ class BeansConfig(val env: Environment) {
     val EMAIL_AUTH = "spring.mail.properties.mail.smtp.auth"
     val EMAIL_STARTTLS_ENABLED = "spring.mail.properties.mail.smtp.starttls.enabled"
 
-    val EMAIL_FRONTEND_URL="frontend.url"
+    val EMAIL_FRONTEND_URL="frontend.name"
 
     val JWT_KEY="jwt.key"
 
