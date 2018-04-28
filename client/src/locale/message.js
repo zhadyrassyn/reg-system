@@ -337,7 +337,7 @@ export const message = {
   not_send: {
     ru: 'Не отправлено',
     en: 'Not send',
-    kk: 'Ге отпавлено'
+    kk: 'Не отпавлено'
   },
   moderator_comment: {
     ru: 'Комментарий от модератора',

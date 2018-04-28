@@ -13,6 +13,7 @@ import {
   fetchSchools,
   saveStudentGeneralInfo,
   fetchStudentGeneralInfo,
+  saveDocument
 } from "../../actions"
 
 import {
@@ -72,20 +73,6 @@ class PersonalInfoForm extends Component {
       </div>
     )
   }
-
-  renderMaskedInput(field) {
-    const {meta: {touched, error, warning}} = field;
-    let disabled = field.accessType === ACCESS_TYPE_EDIT
-
-    return (
-      <div className="col">
-        <InputMask mask="+7(999) 999 99 99" maskChar="_" className="form-control" name={field.name} id={field.id} {...field.input}/>
-
-        {touched && error && <span>{error}</span>}
-      </div>
-    )
-  }
-
 
   // renderSelect(field) {
   //   const {meta: {touched, error, warning}} = field;
@@ -150,6 +137,44 @@ class PersonalInfoForm extends Component {
         console.log('error')
       })
 
+  }
+
+  renderDocuments = (lang) => {
+    const labels = [message.ud_front[lang], message.ud_back[lang], message.photo_3x4[lang]]
+
+    return labels.map(label => (
+      <li>
+        <p>
+          <a href="#" onClick={this.exportFile}>
+            {label}
+          </a>
+          <span className=""></span>
+        </p>
+      </li>
+    ))
+  }
+
+  onFileChange = (e) => {
+    const file = e.target.files[0]
+    const documentType = this.state.documentType
+
+    console.log('file ', file)
+    // const { saveDocument } = this.props
+    // saveDocument(file, documentType)
+  }
+
+  exportFile = (e) => {
+    e.preventDefault()
+
+    this.setState({documentType: e.target.name}, () => {
+      //script for opening 'choose file' dialog
+      const elem = document.getElementById("documentFile")
+      if(elem && document.createEvent) {
+        const evt = document.createEvent("MouseEvents");
+        evt.initEvent("click", true, false);
+        elem.dispatchEvent(evt);
+      }
+    })
   }
 
   onSubmit(values) {
@@ -533,29 +558,9 @@ class PersonalInfoForm extends Component {
           <div className="form-row mt-3">
             <legend>{message.documents[lang]}</legend>
             <ul className="list-unstyled">
-              <li>
-                <p>
-                  <a href="#">
-                    {message.ud_front[lang]}
-                  </a>
-                  <span className="">  {message.not_send[lang]}</span>
-                </p>
-              </li>
-              <li>
-                <p>
-                  <a href="#">
-                    {message.ud_back[lang]}
-                  </a>
-                  <span className="">  {message.not_send[lang]}</span>
-                </p>
-              </li>
-              <li>
-                <a href="#">
-                  {message.photo_3x4[lang]}
-                </a>
-                <span className="">  {message.not_send[lang]}</span>
-              </li>
+              {this.renderDocuments(lang)}
             </ul>
+            <input style={{display:'none'}} type="file" id="documentFile" onChange={this.onFileChange} onClick={e => {e.target.value = null}}/>
           </div>
           {/*<div className="form-row mt-3">*/}
           {/*<Field*/}
@@ -673,6 +678,7 @@ export default connect(
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
     saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch),
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
-    changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
+    changeFieldValue: bindActionCreators(changeFieldValue, dispatch),
+    saveDocument: bindActionCreators(saveDocument, dispatch),
   })
 )(PersonalInfoForm)

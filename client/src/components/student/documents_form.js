@@ -83,9 +83,7 @@ class DocumentsForm extends Component {
         evt.initEvent("click", true, false);
         elem.dispatchEvent(evt);
       }
-
     })
-
   }
 
   onFileChange = (e) => {
