@@ -7,7 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 class AuthController(val authRegister: AuthRegister) {
 
     @PostMapping("/signin", consumes = [MediaType.APPLICATION_JSON_VALUE])

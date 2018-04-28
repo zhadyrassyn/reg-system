@@ -49,3 +49,6 @@ export const CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE = 'change_student_document_s
 
 export const FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS = 'fetch_total_amount_of_students_success'
 export const FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE = 'fetch_total_amount_of_students_failure'
+
+export const FETCH_AREAS_SUCCESS = 'fetch_areas_success'
+export const FETCH_AREAS_FAILURE = 'fetch_areas_failure'

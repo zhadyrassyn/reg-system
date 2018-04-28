@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/api//upload")
 class ResourcesController(val resourceRegister: ResourceRegister) {
 
     @GetMapping

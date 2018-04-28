@@ -137,6 +137,30 @@ export const signOut = () => {
   }
 }
 
+export const fetchAreas = (onSucces, onError) => (dispatch) => {
+  const request = `${config.url}/areas`
+
+  axios.get(request)
+    .then(({data}) => {
+      dispatch({
+        type: FETCH_CITIES_SUCCESS,
+        data
+      })
+      if(onSucces) {
+        onSucces()
+      }
+    })
+    .catch(error => {
+      dispatch({
+        type: FETCH_CITIES_FAILURE,
+        error: error.response && error.response.message
+      })
+      if(onError) {
+        onError()
+      }
+    })
+}
+
 export const fetchCities = (onSucces, onError) => (dispatch) => {
   const request = `${config.url}/cities`
 

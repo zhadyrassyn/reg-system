@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/moderator")
+@RequestMapping("/api/moderator")
 class ModeratorController(
     val moderatorRegister: ModeratorRegister
 ) {
