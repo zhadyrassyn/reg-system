@@ -28,9 +28,5 @@ data class PersonalInfo(
     val regFlat: String? = null,
     val regFraction: String? = null,
     val regHouse: String,
-    val regStreet: String,
-
-    var ud_front : Document? = null,
-    var ud_back: Document? = null,
-    var photo3x4: Document? = null
+    val regStreet: String
 )

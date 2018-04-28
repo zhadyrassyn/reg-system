@@ -13,7 +13,6 @@ import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import kz.edu.sdu.regsystem.stand.service.FileService
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -23,7 +22,6 @@ import java.util.*
 @Service
 class StudentRegisterStandImpl(
     val db: Db,
-    val env: Environment,
     val fileService: FileService
 ) : StudentRegister{
     override fun savePersonalInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType) : Document{
@@ -34,11 +32,11 @@ class StudentRegisterStandImpl(
         try {
             savedFile = fileService.store(file=file, documentType = documentType, id = id)
             if(documentType == DocumentType.IDENTITY_CARD_FRONT) {
-                user.personalInfo!!.ud_front = savedFile
+                user.personalInfoDocuments.ud_front = savedFile
             } else if(documentType == DocumentType.IDENTITY_CARD_BACK) {
-                user.personalInfo!!.ud_back = savedFile
+                user.personalInfoDocuments.ud_back = savedFile
             } else if(documentType == DocumentType.PHOTO_3x4) {
-                user.personalInfo!!.photo3x4 = savedFile
+                user.personalInfoDocuments.photo3x4 = savedFile
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -51,11 +49,19 @@ class StudentRegisterStandImpl(
         val user = db.users.values.firstOrNull { it -> it.id == id } ?:
         throw UserDoesNotExistsException("User does not exist")
 
-        val personalInfo = user.personalInfo ?: throw BadRequestException("personal info not created")
+        if(user.personalInfo == null) {
+            return GetPersonalInfoResponse(
+                ud_front = user.personalInfoDocuments.ud_front?.path?.fileName?.toString(),
+                ud_back = user.personalInfoDocuments.ud_back?.path?.fileName?.toString(),
+                photo3x4 = user.personalInfoDocuments.photo3x4?.path?.fileName?.toString()
+            )
+        }
+
+        val personalInfo = user.personalInfo
 
         // if birth place is custom value
         val birthPlaceCustom: String? =
-            if (personalInfo.birthPlace.status == AreaType.CUSTOM)
+            if (personalInfo!!.birthPlace.status == AreaType.CUSTOM)
                 personalInfo.birthPlace.nameRu
             else
                 null
@@ -85,9 +91,9 @@ class StudentRegisterStandImpl(
             regFraction = personalInfo.regFraction,
             regHouse = personalInfo.regHouse,
             regStreet = personalInfo.regStreet,
-            ud_front = Document(personalInfo.ud_front?.path?.fileName.toString()),
-            ud_back = Document(personalInfo.ud_back?.path?.fileName.toString()),
-            photo3x4 = Document(personalInfo.photo3x4?.path?.fileName.toString())
+            ud_front = user.personalInfoDocuments.ud_front?.path?.fileName?.toString(),
+            ud_back = user.personalInfoDocuments.ud_back?.path?.fileName?.toString(),
+            photo3x4 = user.personalInfoDocuments.photo3x4?.path?.fileName?.toString()
         )
     }
 

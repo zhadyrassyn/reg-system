@@ -158,26 +158,29 @@ class PersonalInfoForm extends Component {
   }
 
   renderDocuments = (lang, showDocumentErrors, personalInfo) => {
+    console.log('personal info ', personalInfo)
     const labels = [
       {
         type: IDENTITY_CARD_FRONT,
         label: message.ud_front[lang],
-        error: personalInfo.ud_front ? "ok" : message.upload_file[lang],
+        error: message.upload_file[lang],
         imageName: personalInfo.ud_front
       },
       {
         type: IDENTITY_CARD_BACK,
         label: message.ud_back[lang],
-        error: personalInfo.ud_back ? "ok" : message.upload_file[lang],
+        error: message.upload_file[lang],
         imageName: personalInfo.ud_back
       },
       {
         type: PHOTO_3x4,
         label: message.photo_3x4[lang],
-        error: personalInfo.photo3x4 ? "ok" : message.upload_file[lang],
+        error: message.upload_file[lang],
         imageName: personalInfo.photo3x4
       }
     ]
+
+    console.log('lables ', labels)
 
     return labels.map(option => (
       <li>
@@ -185,10 +188,10 @@ class PersonalInfoForm extends Component {
           <a href="#" onClick={this.exportFile} name={option.type}>
             {option.label}
           </a>
-          {showDocumentErrors && option.error !== "ok" &&
+          {showDocumentErrors && !option.imageName &&
           <span className="text-danger ml-2">{option.error}</span>
           }
-          {option.error === "ok" &&
+          {option.imageName &&
             <a className="ml-2" target="_blank" href={`http://localhost:8081/api/upload/${option.imageName}`}><i className="fas fa-eye"></i></a>
           }
         </p>
