@@ -5,6 +5,7 @@ import kz.edu.sdu.regsystem.controller.model.CityData
 import kz.edu.sdu.regsystem.controller.model.SchoolData
 import kz.edu.sdu.regsystem.controller.register.InfoRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.model.enums.AreaType
 import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Service
 class InfoRegisterStandImpl(
     val db: Db
 ) : InfoRegister{
+    @Cacheable("areas")
     override fun getAreas(): List<AreaData> {
-        return db.areas.values.map { AreaData(it.id, it.nameRu, it.nameEn, it.nameKk) }
+        return db.areas.values
+            .filter { it.status == AreaType.SYSTEM }
+            .map { AreaData(it.id, it.nameRu, it.nameEn, it.nameKk) }
     }
 
     override fun getSchools(cityId: Long): List<SchoolData> {

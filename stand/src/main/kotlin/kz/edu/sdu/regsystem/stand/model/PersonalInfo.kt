@@ -17,8 +17,7 @@ data class PersonalInfo(
     val telPhone: String? = null,
     val nationality: String,
 
-    val birthPlace: Long,
-    val birthPlaceCustom: String? = null,
+    val birthPlace: Area,
     val blood_group: Long? = null,
     val citizenship: String,
     val factFlat: String? = null,

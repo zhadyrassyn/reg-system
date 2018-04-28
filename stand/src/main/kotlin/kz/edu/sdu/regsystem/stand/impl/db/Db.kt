@@ -24,31 +24,31 @@ class Db {
 
     init { //fill cities
         val a1 = Area(
-            id = longCounter.incrementAndGet(),
+            id = 10001,
             nameRu = "Акмолинская область",
             nameEn = "Akmolinskaya oblast",
             nameKk = "Акмолинская область"
         )
         val a2 = Area(
-            id = longCounter.incrementAndGet(),
+            id = 10002,
             nameRu = "Актюбинская область",
             nameEn = "Akubinskaya oblast",
             nameKk = "Актюбинская область"
         )
         val a3 = Area(
-            id = longCounter.incrementAndGet(),
+            id = 10003,
             nameRu = "Алматинская область",
             nameEn = "Almatinskaya oblast",
             nameKk = "Алматинская область"
         )
         val a4 = Area(
-            id = longCounter.incrementAndGet(),
+            id = 10004,
             nameRu = "Атырауская область",
             nameEn = "Atirauskaya oblast",
             nameKk = "Атырауская область"
         )
         val a5 = Area(
-            id = longCounter.incrementAndGet(),
+            id = 10005,
             nameRu = "Восточно-Казахстанская область",
             nameEn = "Vostochno-Kazakhstanskaya oblast",
             nameKk = "Восточно-Казахстанская область"

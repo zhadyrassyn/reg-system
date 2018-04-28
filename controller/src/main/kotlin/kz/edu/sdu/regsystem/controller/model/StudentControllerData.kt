@@ -22,7 +22,7 @@ data class SavePersonalInfoRequest(
     val telPhone: String? = null,
     val nationality: String,
 
-    val birthPlace: Long,
+    val birthPlace: Long? = null,
     val birthPlaceCustom: String? = null,
     val blood_group: Long? = null,
     val citizenship: String,
