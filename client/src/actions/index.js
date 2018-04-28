@@ -293,7 +293,8 @@ export const savePersonalDocument = (file, documentType) => (dispatch) => {
       'Content-type': 'multipart/form-data',
     }
   }).then(response => {
-    console.log('success ', response.data)
+    response.data.type = documentType
+
     dispatch({
       type: SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS,
       data: response.data
@@ -305,6 +306,38 @@ export const savePersonalDocument = (file, documentType) => (dispatch) => {
         message: error.response && error.response.message
       })
     )
+}
+
+export const fetchPersonalInfo = (onSuccess, onError) => (dispatch) => {
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/personal/${userId}`
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(response => {
+    dispatch({
+      type: FETCH_STUDENT_PERSONAL_INFO_SUCCESS,
+      data: response.data
+    })
+
+    if(onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_STUDENT_PERSONAL_INFO_FAILURE,
+      error: error.response && error.response.message
+    })
+
+    if(onError) {
+      onError()
+    }
+  })
 }
 
 export const fetchDocumentsStatus = () => (dispatch) => {

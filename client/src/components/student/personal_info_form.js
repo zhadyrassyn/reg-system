@@ -14,7 +14,8 @@ import {
   saveStudentPersonalInfo,
   fetchStudentGeneralInfo,
   saveDocument,
-  savePersonalDocument
+  savePersonalDocument,
+  fetchPersonalInfo
 } from "../../actions"
 
 import {
@@ -38,13 +39,23 @@ class PersonalInfoForm extends Component {
 
     this.state = {
       accessType: ACCESS_TYPE_SAVE,
-      documentType: ''
+      documentType: '',
+      showDocumentErrors: ''
     }
   }
 
   componentDidMount() {
-    const {fetchAreas, fetchStudentGeneralInfo} = this.props
+    const {fetchAreas, fetchPersonalInfo} = this.props
+    fetchPersonalInfo(
+      () => {
+        console.log('success on fetching personal info', this.props.personalInfo)
+      },
+      () => {
+        console.log('error on fetching personal info')
+      }
+    )
     fetchAreas()
+
     // fetchStudentGeneralInfo(
     //   (data) => {
     //     console.log('Data ', data)
@@ -105,8 +116,8 @@ class PersonalInfoForm extends Component {
         <label className="d-block">{field.label}</label>
         {Object.keys(options).map((key, index) => (
           <div className="form-check form-check-inline" key={key}>
-            <input {...field.input} className="form-check-input" type="radio" name={field.name} id={options[key].name}
-                   value={options[key].name}/>
+            <input className="form-check-input" type="radio" name={field.name} id={options[key].name}
+                   value={options[key].name} {...field.input} checked={field.input.value === options[key].name}/>
             <label className="form-check-label" htmlFor={options[key].name}>{options[key].label}</label>
           </div>
         ))}
@@ -146,19 +157,25 @@ class PersonalInfoForm extends Component {
 
   }
 
-  renderDocuments = (lang) => {
+  renderDocuments = (lang, showDocumentErrors, personalInfo) => {
     const labels = [
       {
         type: IDENTITY_CARD_FRONT,
-        label: message.ud_front[lang]
+        label: message.ud_front[lang],
+        error: personalInfo.ud_front ? "ok" : message.upload_file[lang],
+        imageName: personalInfo.ud_front
       },
       {
         type: IDENTITY_CARD_BACK,
-        label: message.ud_back[lang]
+        label: message.ud_back[lang],
+        error: personalInfo.ud_back ? "ok" : message.upload_file[lang],
+        imageName: personalInfo.ud_back
       },
       {
         type: PHOTO_3x4,
-        label: message.photo_3x4[lang]
+        label: message.photo_3x4[lang],
+        error: personalInfo.photo3x4 ? "ok" : message.upload_file[lang],
+        imageName: personalInfo.photo3x4
       }
     ]
 
@@ -168,7 +185,12 @@ class PersonalInfoForm extends Component {
           <a href="#" onClick={this.exportFile} name={option.type}>
             {option.label}
           </a>
-          <span className=""></span>
+          {showDocumentErrors && option.error !== "ok" &&
+          <span className="text-danger ml-2">{option.error}</span>
+          }
+          {option.error === "ok" &&
+            <a className="ml-2" target="_blank" href={`http://localhost:8081/api/upload/${option.imageName}`}><i className="fas fa-eye"></i></a>
+          }
         </p>
       </li>
     ))
@@ -197,9 +219,12 @@ class PersonalInfoForm extends Component {
   }
 
   onSubmit(values) {
-    console.log('values ', values)
-    const {saveStudentPersonalInfo} = this.props
-    saveStudentPersonalInfo(values)
+
+    const {saveStudentPersonalInfo, personalInfo, lang} = this.props
+
+    this.setState({showDocumentErrors: true})
+
+    // saveStudentPersonalInfo(values)
     // const {saveStudentPersonalInfo, initialValues} = this.props
     // console.log('Why saving?')
     // saveStudentPersonalInfo(
@@ -230,7 +255,8 @@ class PersonalInfoForm extends Component {
 
 
   render() {
-    let {areas, cities, schools, initialValues, lang} = this.props
+    let {areas, cities, schools, initialValues, lang, personalInfo} = this.props
+    const {showDocumentErrors} = this.state
 
     if (areas) {
       _.forEach(areas, (value, key) => {
@@ -560,21 +586,12 @@ class PersonalInfoForm extends Component {
               useInputMask="true"
               inputMask="+7(999) 999 99 99"
             />
-            <Field
-              label={message.email[lang]}
-              name="email"
-              id="email"
-              type="text"
-              component={this.renderField}
-              // validate={required}
-              accessType={accessType}
-              placeholder={message.email[lang]}
-            />
+            <div className="col"/>
           </div>
           <div className="form-row mt-3">
             <legend>{message.documents[lang]}</legend>
             <ul className="list-unstyled">
-              {this.renderDocuments(lang)}
+              {this.renderDocuments(lang, showDocumentErrors, personalInfo)}
             </ul>
             <input style={{display: 'none'}} type="file" id="documentFile" onChange={this.onFileChange} onClick={e => {
               e.target.value = null
@@ -661,24 +678,8 @@ function refactorSchools(schools) {
   return schools
 }
 
-function refactorGeneralInfo(studentInfo) {
-  if (studentInfo && studentInfo.city && studentInfo.school) {
-    studentInfo = {
-      ...studentInfo,
-      city: {
-        ...studentInfo.city,
-        value: studentInfo.city.id,
-        label: studentInfo.city.nameRu
-      },
-      school: {
-        ...studentInfo.school,
-        value: studentInfo.school.id,
-        label: studentInfo.school.nameRu
-      }
-    }
-  }
-  console.log('student info ', studentInfo)
-  return studentInfo
+function refactorGeneralInfo(personalInfo) {
+  return personalInfo
 }
 
 export default connect(
@@ -688,7 +689,8 @@ export default connect(
     cities: refactorCities(state.info.cities),
     schools: refactorSchools(state.info.schools),
     formValues: getFormValues('PersonalInfoForm')(state),
-    // initialValues: refactorGeneralInfo(state.student.studentInfo)
+    personalInfo: state.student.personalInfo,
+    initialValues: refactorGeneralInfo(state.student.personalInfo)
   }),
   dispatch => ({
     fetchAreas: bindActionCreators(fetchAreas, dispatch),
@@ -698,6 +700,7 @@ export default connect(
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch),
     saveDocument: bindActionCreators(saveDocument, dispatch),
-    savePersonalDocument: bindActionCreators(savePersonalDocument, dispatch)
+    savePersonalDocument: bindActionCreators(savePersonalDocument, dispatch),
+    fetchPersonalInfo: bindActionCreators(fetchPersonalInfo, dispatch)
   })
 )(PersonalInfoForm)

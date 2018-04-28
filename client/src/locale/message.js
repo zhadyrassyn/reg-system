@@ -343,5 +343,10 @@ export const message = {
     ru: 'Комментарий от модератора',
     en: 'Comment from moderator',
     kk: 'Комментарий от модератора'
+  },
+  upload_file: {
+    ru: 'Вы должны загрузить файл',
+    en: 'You should upload file',
+    kk: 'Вы должны загрузить файл'
   }
 }

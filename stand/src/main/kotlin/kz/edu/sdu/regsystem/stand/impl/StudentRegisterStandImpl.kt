@@ -47,11 +47,11 @@ class StudentRegisterStandImpl(
         return Document(name = savedFile!!.path!!.fileName.toString())
     }
 
-    override fun getPersonalInfo(id: Long): GetPersonalInfoResponse {
+    override fun getPersonalInfo(id: Long): GetPersonalInfoResponse? {
         val user = db.users.values.firstOrNull { it -> it.id == id } ?:
         throw UserDoesNotExistsException("User does not exist")
 
-        val personalInfo = user.personalInfo ?: throw Exception("Cannot find personal info for user ${user.id}")
+        val personalInfo = user.personalInfo ?: throw BadRequestException("personal info not created")
 
         // if birth place is custom value
         val birthPlaceCustom: String? =
@@ -65,8 +65,8 @@ class StudentRegisterStandImpl(
             middleName = personalInfo.middleName,
             lastName = personalInfo.lastName,
             gender = personalInfo.gender,
-            birthDate = personalInfo.birthDate,
-            givenDate = personalInfo.givenDate,
+            birthDate = toDate(personalInfo.birthDate),
+            givenDate = toDate(personalInfo.givenDate),
             givenPlace = personalInfo.givenPlace,
             iin = personalInfo.iin,
             ud_number = personalInfo.ud_number,

@@ -24,7 +24,7 @@ data class SavePersonalInfoRequest(
 
     val birthPlace: Long? = null,
     val birthPlaceCustom: String? = null,
-    val blood_group: Long? = null,
+    val blood_group: String? = null,
     val citizenship: String,
     val factFlat: String? = null,
     val factFraction: String? = null,
@@ -44,8 +44,8 @@ data class GetPersonalInfoResponse(
     val lastName: String,
     val gender: String,
 
-    val birthDate: Date,
-    val givenDate: Date,
+    val birthDate: String,
+    val givenDate: String,
     val givenPlace: String,
     val iin: String,
     val ud_number: String,
@@ -56,7 +56,7 @@ data class GetPersonalInfoResponse(
 
     val birthPlace: Long,
     val birthPlaceCustom: String? = null,
-    val blood_group: Long? = null,
+    val blood_group: String? = null,
     val citizenship: String,
     val factFlat: String? = null,
     val factFraction: String? = null,

@@ -18,7 +18,7 @@ data class PersonalInfo(
     val nationality: String,
 
     val birthPlace: Area,
-    val blood_group: Long? = null,
+    val blood_group: String? = null,
     val citizenship: String,
     val factFlat: String? = null,
     val factFraction: String? = null,
