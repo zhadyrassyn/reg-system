@@ -12,8 +12,8 @@ import {
   FETCH_CITIES_SUCCESS,
   FETCH_SCHOOLS_FAILURE,
   FETCH_SCHOOLS_SUCCESS,
-  SAVE_STUDENT_GENERAL_INFO_FAILURE,
-  SAVE_STUDENT_GENERAL_INFO_SUCCESS,
+  SAVE_STUDENT_PERSONAL_INFO_FAILURE,
+  SAVE_STUDENT_PERSONAL_INFO_SUCCESS,
   SAVE_STUDENT_DOCUMENT_FAILURE,
   SAVE_STUDENT_DOCUMENT_SUCCESS,
   FETCH_STUDENT_DOCUMENTS_STATUS_FAILURE,
@@ -211,31 +211,21 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
     })
 }
 
-export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch) => {
+export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch) => {
   const token = localStorage.getItem('token')
 
   const userId = fetchIdFromToken(token)
 
-  const request = `${config.url}/student/general/${userId}`
+  const request = `${config.url}/student/personal/${userId}`
 
-  const data = {
-    firstName: values.firstName,
-    middleName: values.middleName,
-    lastName: values.lastName,
-    birthDate: values.birthDate,
-    cityId: values.city.value,
-    schoolId: values.school.value || -1,
-    customSchool: values.customSchool
-  }
-
-  axios.post(request, data, {
+  axios.post(request, values, {
     headers: {
       "Authorization": `Bearer ${token}`
     }
   }).then(response => {
     dispatch({
-      type: SAVE_STUDENT_GENERAL_INFO_SUCCESS,
-      data
+      type: SAVE_STUDENT_PERSONAL_INFO_SUCCESS,
+      values
     })
 
     if(onSuccess) {
@@ -243,7 +233,7 @@ export const saveStudentGeneralInfo = (values, onSuccess, onError) => (dispatch)
     }
   }).catch(error => {
     dispatch({
-      type: SAVE_STUDENT_GENERAL_INFO_FAILURE,
+      type: SAVE_STUDENT_PERSONAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
 

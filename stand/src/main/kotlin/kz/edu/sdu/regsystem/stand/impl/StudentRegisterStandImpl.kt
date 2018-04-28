@@ -1,12 +1,10 @@
 package kz.edu.sdu.regsystem.stand.impl
 
-import kz.edu.sdu.regsystem.controller.model.CityData
-import kz.edu.sdu.regsystem.controller.model.GeneralInfoData
-import kz.edu.sdu.regsystem.controller.model.GetGeneralInfoResponseData
-import kz.edu.sdu.regsystem.controller.model.SchoolData
+import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.model.enums.AccessType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.model.PersonalInfo
 import kz.edu.sdu.regsystem.stand.model.School
 import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
@@ -21,6 +19,74 @@ class StudentRegisterStandImpl(
     val db: Db,
     val env: Environment
 ) : StudentRegister{
+    override fun getPersonalInfo(id: Long): GetPersonalInfoResponse {
+        val user = db.users.values.firstOrNull { it -> it.id == id } ?:
+        throw UserDoesNotExistsException("User does not exist")
+
+        val personalInfo = user.personalInfo ?: throw Exception("Cannot find personal info for user ${user.id}")
+        return GetPersonalInfoResponse(
+            id = user.id,
+            firstName = personalInfo.firstName,
+            middleName = personalInfo.middleName,
+            lastName = personalInfo.lastName,
+            gender = personalInfo.gender,
+            birthDate = personalInfo.birthDate,
+            givenDate = personalInfo.givenDate,
+            givenPlace = personalInfo.givenPlace,
+            iin = personalInfo.iin,
+            ud_number = personalInfo.ud_number,
+            mobilePhone = personalInfo.mobilePhone,
+            telPhone = personalInfo.telPhone,
+            nationality = personalInfo.nationality,
+            birthPlace = personalInfo.birthPlace,
+            birthPlaceCustom = personalInfo.birthPlaceCustom,
+            blood_group = personalInfo.blood_group,
+            citizenship = personalInfo.citizenship,
+            factFlat = personalInfo.factFlat,
+            factFraction = personalInfo.factFraction,
+            factHouse = personalInfo.factHouse,
+            factStreet = personalInfo.factStreet,
+            regFlat = personalInfo.regFlat,
+            regFraction = personalInfo.regFraction,
+            regHouse = personalInfo.regHouse,
+            regStreet = personalInfo.regStreet,
+            ud_front = Document(personalInfo.ud_front?.path.toString()),
+            ud_back = Document(personalInfo.ud_back?.path.toString()),
+            photo3x4 = Document(personalInfo.photo3x4?.path.toString())
+        )
+    }
+
+    override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
+        val user = db.users.values.firstOrNull { it -> it.id == id } ?:
+        throw UserDoesNotExistsException("User does not exist")
+
+        user.personalInfo = PersonalInfo(
+            firstName = personalInfo.firstName,
+            middleName = personalInfo.middleName,
+            lastName = personalInfo.lastName,
+            gender = personalInfo.gender,
+            birthDate = personalInfo.birthDate,
+            givenDate = personalInfo.givenDate,
+            givenPlace = personalInfo.givenPlace,
+            iin = personalInfo.iin,
+            ud_number = personalInfo.ud_number,
+            mobilePhone = personalInfo.mobilePhone,
+            telPhone = personalInfo.telPhone,
+            nationality = personalInfo.nationality,
+            birthPlace = personalInfo.birthPlace,
+            birthPlaceCustom = personalInfo.birthPlaceCustom,
+            blood_group = personalInfo.blood_group,
+            citizenship = personalInfo.citizenship,
+            factFlat = personalInfo.factFlat,
+            factFraction = personalInfo.factFraction,
+            factHouse = personalInfo.factHouse,
+            factStreet = personalInfo.factStreet,
+            regFlat = personalInfo.regFlat,
+            regFraction = personalInfo.regFraction,
+            regHouse = personalInfo.regHouse,
+            regStreet = personalInfo.regStreet
+        )
+    }
 
     override fun saveGeneralInfo(id: Long, generalInfoData: GeneralInfoData) {
         val user = db.users.values.firstOrNull { it -> it.id == id } ?:

@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.controller.controller
 
 import kz.edu.sdu.regsystem.controller.model.GeneralInfoData
+import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.DocumentRegister
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
@@ -36,5 +37,13 @@ class StudentController(
                      @RequestParam("type") documentType: DocumentType) =
         documentRegister.store(
         file = file, documentType = documentType, id = id)
+
+    @PostMapping("/personal/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun savePersonalInfo(@RequestBody personalInfo: SavePersonalInfoRequest,
+                         @PathVariable("id") id: Long) = studentRegister.savePersonalInfo(personalInfo, id)
+
+    @GetMapping("/personal/{id}")
+    fun getPersonalInfo(@PathVariable("id") id: Long) = studentRegister.getPersonalInfo(id)
 
 }

@@ -20,4 +20,5 @@ data class User(var id: Long = -1,
                 var schoolId: Long = -1,
                 var generalInfoStatusDto: GeneralInfoStatusDto = GeneralInfoStatusDto(),
                 var documentsComment: String = "",
-                var documents: HashMap<DocumentType, Document> = HashMap())
+                var documents: HashMap<DocumentType, Document> = HashMap(),
+                var personalInfo: PersonalInfo? = null)

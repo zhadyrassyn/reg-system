@@ -11,7 +11,7 @@ import {
   fetchAreas,
   fetchCities,
   fetchSchools,
-  saveStudentGeneralInfo,
+  saveStudentPersonalInfo,
   fetchStudentGeneralInfo,
   saveDocument
 } from "../../actions"
@@ -67,7 +67,7 @@ class PersonalInfoForm extends Component {
                                  disabled={disabled} {...field.input}/>
         }
         {useInputMask &&
-        <InputMask mask="+7(999) 999 99 99" maskChar="_" className="form-control" name={field.name} id={field.id} {...field.input}/>
+        <InputMask mask={field.inputMask} maskChar="_" className="form-control" name={field.name} id={field.id} {...field.input}/>
         }
         {touched && error && <span>{error}</span>}
       </div>
@@ -119,7 +119,7 @@ class PersonalInfoForm extends Component {
         <select {...field.input} className="form-control">
           <option value="">Выбрать</option>
           {options && Object.keys(options).map((key, index) => (
-            <option value={options[key].name} key={key}>{options[key].label}</option>
+            <option value={options[key].value} key={key}>{options[key].label}</option>
           ))}
         </select>
         {touched && error && <span className="d-block">{error}</span>}
@@ -179,9 +179,11 @@ class PersonalInfoForm extends Component {
 
   onSubmit(values) {
     console.log('values ', values)
-    // const {saveStudentGeneralInfo, initialValues} = this.props
+    const {saveStudentPersonalInfo} = this.props
+    saveStudentPersonalInfo(values)
+    // const {saveStudentPersonalInfo, initialValues} = this.props
     // console.log('Why saving?')
-    // saveStudentGeneralInfo(
+    // saveStudentPersonalInfo(
     //   values,
     //   () => {
     //     console.log('Saved successfully')
@@ -299,35 +301,35 @@ class PersonalInfoForm extends Component {
               name="blood_group"
               options={{
                 option1: {
-                  name: 'first_plus',
+                  value: 'first_plus',
                   label: `1 ${message.group[lang]} +`
                 },
                 option2: {
-                  name: 'first_minus',
+                  value: 'first_minus',
                   label: `1 ${message.group[lang]} -`
                 },
                 option3: {
-                  name: 'second_plus',
+                  value: 'second_plus',
                   label: `2 ${message.group[lang]} +`
                 },
                 option4: {
-                  name: 'second_minus',
+                  value: 'second_minus',
                   label: `2 ${message.group[lang]} -`
                 },
                 option5: {
-                  name: 'third_plus',
+                  value: 'third_plus',
                   label: `3 ${message.group[lang]} +`
                 },
                 option6: {
-                  name: 'third_minus',
+                  value: 'third_minus',
                   label: `3 ${message.group[lang]} -`
                 },
                 option7: {
-                  name: 'fourth_plus',
+                  value: 'fourth_plus',
                   label: `4 ${message.group[lang]} +`
                 },
                 option8: {
-                  name: 'fourth_minus',
+                  value: 'fourth_minus',
                   label: `4 ${message.group[lang]} -`
                 }
               }}
@@ -346,6 +348,8 @@ class PersonalInfoForm extends Component {
               component={this.renderField}
               // validate={required}
               accessType={accessType}
+              inputMask="99 99 99 99 99 99"
+              useInputMask="true"
             />
             <Field
               label={message.ud_number[lang]}
@@ -401,15 +405,6 @@ class PersonalInfoForm extends Component {
               component={this.renderSelect}
               accessType={accessType}
             />
-            {/*<div className="col">*/}
-              {/*<label>{message.birthPlace[lang]}</label>*/}
-              {/*<select className="form-control">*/}
-                {/*<option>Кызылординская область</option>*/}
-                {/*<option>Кызылординская область</option>*/}
-                {/*<option>Кызылординская область</option>*/}
-                {/*<option>Кызылординская область</option>*/}
-              {/*</select>*/}
-            {/*</div>*/}
             <Field
               label={message.birthPlaceCustom[lang]}
               id="birthPlaceCustom"
@@ -534,6 +529,7 @@ class PersonalInfoForm extends Component {
               component={this.renderField}
               accessType={accessType}
               useInputMask="true"
+              inputMask="+7(999) 999 99 99"
             />
             <Field
               label={message.mobile_phone[lang]}
@@ -543,6 +539,7 @@ class PersonalInfoForm extends Component {
               component={this.renderField}
               accessType={accessType}
               useInputMask="true"
+              inputMask="+7(999) 999 99 99"
             />
             <Field
               label={message.email[lang]}
@@ -676,7 +673,7 @@ export default connect(
     fetchAreas: bindActionCreators(fetchAreas, dispatch),
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
-    saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch),
+    saveStudentPersonalInfo: bindActionCreators(saveStudentPersonalInfo, dispatch),
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch),
     saveDocument: bindActionCreators(saveDocument, dispatch),

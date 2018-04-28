@@ -129,7 +129,7 @@ class Db {
         )
 
         val u4 = User(
-            id = longCounter.incrementAndGet(),
+            id = 2000,
             email = "test4@test.com",
             password = "qwerty",
             userStatus = UserStatus.ACTIVE

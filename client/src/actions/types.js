@@ -20,8 +20,8 @@ export const FETCH_CITIES_FAILURE = 'fetch_cities_failure'
 export const FETCH_SCHOOLS_SUCCESS = 'fetch_schools_success'
 export const FETCH_SCHOOLS_FAILURE = 'fetch_schools_failure'
 
-export const SAVE_STUDENT_GENERAL_INFO_SUCCESS = 'save_student_general_info_success'
-export const SAVE_STUDENT_GENERAL_INFO_FAILURE = 'save_student_general_info_failure'
+export const SAVE_STUDENT_PERSONAL_INFO_SUCCESS = 'save_student_personal_info_success'
+export const SAVE_STUDENT_PERSONAL_INFO_FAILURE = 'save_student_personal_info_failure'
 
 export const SAVE_STUDENT_DOCUMENT_SUCCESS = 'save_student_document_success'
 export const SAVE_STUDENT_DOCUMENT_FAILURE = 'save_student_document_failure'

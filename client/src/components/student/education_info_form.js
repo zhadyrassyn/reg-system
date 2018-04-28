@@ -129,7 +129,7 @@ export default connect(
   dispatch => ({
     // fetchCities: bindActionCreators(fetchCities, dispatch),
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),
-    // saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch),
+    // saveStudentPersonalInfo: bindActionCreators(saveStudentPersonalInfo, dispatch),
     // fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     // changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
   })
