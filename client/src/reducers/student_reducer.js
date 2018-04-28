@@ -6,7 +6,9 @@ import {
   FETCH_STUDENT_GENERAL_INFO_FAILURE,
   FETCH_STUDENT_GENERAL_INFO_SUCCESS,
   SAVE_STUDENT_PERSONAL_INFO_FAILURE,
-  SAVE_STUDENT_PERSONAL_INFO_SUCCESS
+  SAVE_STUDENT_PERSONAL_INFO_SUCCESS,
+  SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
+  SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS
 } from "../actions/types"
 
 import {
@@ -61,6 +63,14 @@ export default (state = initialState, action) => {
         ...state
       }
     case SAVE_STUDENT_PERSONAL_INFO_FAILURE:
+      return {
+        ...state
+      }
+    case SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS:
+      return {
+        ...state
+      }
+    case SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE:
       return {
         ...state
       }

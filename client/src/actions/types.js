@@ -52,3 +52,9 @@ export const FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE = 'fetch_total_amount_of_stu
 
 export const FETCH_AREAS_SUCCESS = 'fetch_areas_success'
 export const FETCH_AREAS_FAILURE = 'fetch_areas_failure'
+
+export const SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS = 'save_student_personal_info_document_success'
+export const SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE = 'save_student_personal_info_document_failure'
+
+export const FETCH_STUDENT_PERSONAL_INFO_SUCCESS = 'fetch_student_personal_info_success'
+export const FETCH_STUDENT_PERSONAL_INFO_FAILURE = 'fetch_student_personal_info_failure'

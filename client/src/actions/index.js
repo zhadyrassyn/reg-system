@@ -34,7 +34,11 @@ import {
   FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
   CHANGE_LANG,
   FETCH_AREAS_FAILURE,
-  FETCH_AREAS_SUCCESS
+  FETCH_AREAS_SUCCESS,
+  SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS,
+  SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
+  FETCH_STUDENT_PERSONAL_INFO_SUCCESS,
+  FETCH_STUDENT_PERSONAL_INFO_FAILURE
 } from "./types"
 
 import axios from "axios"
@@ -268,6 +272,36 @@ export const saveDocument = (file, documentType) => (dispatch) => {
     .catch(error =>
       dispatch({
         type: SAVE_STUDENT_DOCUMENT_FAILURE,
+        message: error.response && error.response.message
+      })
+    )
+}
+export const savePersonalDocument = (file, documentType) => (dispatch) => {
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/personal/${userId}/document`
+
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('type', documentType)
+
+  axios.post(request, formData, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-type': 'multipart/form-data',
+    }
+  }).then(response => {
+    console.log('success ', response.data)
+    dispatch({
+      type: SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS,
+      data: response.data
+    })
+  })
+    .catch(error =>
+      dispatch({
+        type: SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
         message: error.response && error.response.message
       })
     )

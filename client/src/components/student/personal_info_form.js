@@ -13,13 +13,18 @@ import {
   fetchSchools,
   saveStudentPersonalInfo,
   fetchStudentGeneralInfo,
-  saveDocument
+  saveDocument,
+  savePersonalDocument
 } from "../../actions"
 
 import {
   ACCESS_TYPE_SAVE,
   ACCESS_TYPE_EDIT,
-  ACCESS_TYPE_SAVE_CANCELLABLE
+  ACCESS_TYPE_SAVE_CANCELLABLE,
+
+  IDENTITY_CARD_FRONT,
+  IDENTITY_CARD_BACK,
+  PHOTO_3x4,
 } from "../../constants"
 
 import {message} from "../../locale/message"
@@ -32,7 +37,8 @@ class PersonalInfoForm extends Component {
     super(props)
 
     this.state = {
-      accessType: ACCESS_TYPE_SAVE
+      accessType: ACCESS_TYPE_SAVE,
+      documentType: ''
     }
   }
 
@@ -63,11 +69,12 @@ class PersonalInfoForm extends Component {
         <label htmlFor={field.id}>{field.label}</label>
         {!useInputMask &&
         <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}
-                                 id={field.id}
-                                 disabled={disabled} {...field.input}/>
+               id={field.id}
+               disabled={disabled} {...field.input}/>
         }
         {useInputMask &&
-        <InputMask mask={field.inputMask} maskChar="_" className="form-control" name={field.name} id={field.id} {...field.input}/>
+        <InputMask mask={field.inputMask} maskChar="_" className="form-control" name={field.name}
+                   id={field.id} {...field.input}/>
         }
         {touched && error && <span>{error}</span>}
       </div>
@@ -140,13 +147,26 @@ class PersonalInfoForm extends Component {
   }
 
   renderDocuments = (lang) => {
-    const labels = [message.ud_front[lang], message.ud_back[lang], message.photo_3x4[lang]]
+    const labels = [
+      {
+        type: IDENTITY_CARD_FRONT,
+        label: message.ud_front[lang]
+      },
+      {
+        type: IDENTITY_CARD_BACK,
+        label: message.ud_back[lang]
+      },
+      {
+        type: PHOTO_3x4,
+        label: message.photo_3x4[lang]
+      }
+    ]
 
-    return labels.map(label => (
+    return labels.map(option => (
       <li>
         <p>
-          <a href="#" onClick={this.exportFile}>
-            {label}
+          <a href="#" onClick={this.exportFile} name={option.type}>
+            {option.label}
           </a>
           <span className=""></span>
         </p>
@@ -158,9 +178,8 @@ class PersonalInfoForm extends Component {
     const file = e.target.files[0]
     const documentType = this.state.documentType
 
-    console.log('file ', file)
-    // const { saveDocument } = this.props
-    // saveDocument(file, documentType)
+    const { savePersonalDocument } = this.props
+    savePersonalDocument(file, documentType)
   }
 
   exportFile = (e) => {
@@ -169,7 +188,7 @@ class PersonalInfoForm extends Component {
     this.setState({documentType: e.target.name}, () => {
       //script for opening 'choose file' dialog
       const elem = document.getElementById("documentFile")
-      if(elem && document.createEvent) {
+      if (elem && document.createEvent) {
         const evt = document.createEvent("MouseEvents");
         evt.initEvent("click", true, false);
         elem.dispatchEvent(evt);
@@ -213,7 +232,7 @@ class PersonalInfoForm extends Component {
   render() {
     let {areas, cities, schools, initialValues, lang} = this.props
 
-    if(areas) {
+    if (areas) {
       _.forEach(areas, (value, key) => {
         const label = lang === 'ru' ? areas[key].nameRu : lang === 'en' ? areas[key].nameEn : areas[key].nameKkk
         areas[key].value = key
@@ -557,7 +576,9 @@ class PersonalInfoForm extends Component {
             <ul className="list-unstyled">
               {this.renderDocuments(lang)}
             </ul>
-            <input style={{display:'none'}} type="file" id="documentFile" onChange={this.onFileChange} onClick={e => {e.target.value = null}}/>
+            <input style={{display: 'none'}} type="file" id="documentFile" onChange={this.onFileChange} onClick={e => {
+              e.target.value = null
+            }}/>
           </div>
           {/*<div className="form-row mt-3">*/}
           {/*<Field*/}
@@ -584,12 +605,12 @@ class PersonalInfoForm extends Component {
             <button className="btn btn-success" type="submit">{message.send[lang]}</button>
             {/*{accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&*/}
             {/*<button*/}
-              {/*className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}*/}
-              {/*type="submit" disabled={submitting}>{message.save[lang]}</button>}*/}
+            {/*className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}*/}
+            {/*type="submit" disabled={submitting}>{message.save[lang]}</button>}*/}
             {/*{accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button"*/}
-                                                        {/*onClick={this.onEditClick}>{message.edit[lang]}</button>}*/}
+            {/*onClick={this.onEditClick}>{message.edit[lang]}</button>}*/}
             {/*{accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"*/}
-                                                                    {/*onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}*/}
+            {/*onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}*/}
           </div>
           <div className="form-group">
             <label htmlFor="comment">{message.moderator_comment[lang]}</label>
@@ -677,5 +698,6 @@ export default connect(
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch),
     saveDocument: bindActionCreators(saveDocument, dispatch),
+    savePersonalDocument: bindActionCreators(savePersonalDocument, dispatch)
   })
 )(PersonalInfoForm)
