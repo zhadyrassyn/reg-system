@@ -5,12 +5,14 @@ import {bindActionCreators} from "redux"
 import {Field, reduxForm, actionCreators, getFormValues, change as changeFieldValue} from "redux-form"
 import MySelectComponent from "../my_select_component"
 import InputMask from 'react-input-mask'
+import _ from "lodash"
 
 import {
+  fetchAreas,
   fetchCities,
   fetchSchools,
   saveStudentGeneralInfo,
-  fetchStudentGeneralInfo
+  fetchStudentGeneralInfo,
 } from "../../actions"
 
 import {
@@ -34,37 +36,56 @@ class PersonalInfoForm extends Component {
   }
 
   componentDidMount() {
-    const {fetchCities, fetchStudentGeneralInfo} = this.props
-    fetchStudentGeneralInfo(
-      (data) => {
-        console.log('Data ', data)
-        if (data.accessType === ACCESS_TYPE_SAVE) {
-          fetchCities()
-        } else if (data.accessType === ACCESS_TYPE_EDIT) {
-          this.setState({accessType: ACCESS_TYPE_EDIT})
-        }
-      },
-      () => {
-        console.log('fetchStudentGeneralInfo error')
-      }
-    )
+    const {fetchAreas, fetchStudentGeneralInfo} = this.props
+    fetchAreas()
+    // fetchStudentGeneralInfo(
+    //   (data) => {
+    //     console.log('Data ', data)
+    //     if (data.accessType === ACCESS_TYPE_SAVE) {
+    //       fetchCities()
+    //     } else if (data.accessType === ACCESS_TYPE_EDIT) {
+    //       this.setState({accessType: ACCESS_TYPE_EDIT})
+    //     }
+    //   },
+    //   () => {
+    //     console.log('fetchStudentGeneralInfo error')
+    //   }
+    // )
   }
 
   renderField(field) {
-    const {meta: {touched, error, warning}} = field;
+    const {meta: {touched, error, warning}, useInputMask} = field;
     let disabled = field.accessType === ACCESS_TYPE_EDIT
 
     return (
       <div className="col">
         <label htmlFor={field.id}>{field.label}</label>
+        {!useInputMask &&
         <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}
-               id={field.id}
-               disabled={disabled} {...field.input}
-        />
+                                 id={field.id}
+                                 disabled={disabled} {...field.input}/>
+        }
+        {useInputMask &&
+        <InputMask mask="+7(999) 999 99 99" maskChar="_" className="form-control" name={field.name} id={field.id} {...field.input}/>
+        }
         {touched && error && <span>{error}</span>}
       </div>
     )
   }
+
+  renderMaskedInput(field) {
+    const {meta: {touched, error, warning}} = field;
+    let disabled = field.accessType === ACCESS_TYPE_EDIT
+
+    return (
+      <div className="col">
+        <InputMask mask="+7(999) 999 99 99" maskChar="_" className="form-control" name={field.name} id={field.id} {...field.input}/>
+
+        {touched && error && <span>{error}</span>}
+      </div>
+    )
+  }
+
 
   // renderSelect(field) {
   //   const {meta: {touched, error, warning}} = field;
@@ -89,7 +110,7 @@ class PersonalInfoForm extends Component {
       <div className="col">
         <label className="d-block">{field.label}</label>
         {Object.keys(options).map((key, index) => (
-          <div className="form-check form-check-inline">
+          <div className="form-check form-check-inline" key={key}>
             <input {...field.input} className="form-check-input" type="radio" name={field.name} id={options[key].name}
                    value={options[key].name}/>
             <label className="form-check-label" htmlFor={options[key].name}>{options[key].label}</label>
@@ -110,8 +131,8 @@ class PersonalInfoForm extends Component {
         <label className="d-block">{field.label}</label>
         <select {...field.input} className="form-control">
           <option value="">Выбрать</option>
-          {Object.keys(options).map((key, index) => (
-            <option value={options[key].name}>{options[key].label}</option>
+          {options && Object.keys(options).map((key, index) => (
+            <option value={options[key].name} key={key}>{options[key].label}</option>
           ))}
         </select>
         {touched && error && <span className="d-block">{error}</span>}
@@ -163,13 +184,16 @@ class PersonalInfoForm extends Component {
 
 
   render() {
-    let {cities, schools, initialValues, lang} = this.props
+    let {areas, cities, schools, initialValues, lang} = this.props
 
-    if (cities) {
-      cities.map(city => {
-        return {}
+    if(areas) {
+      _.forEach(areas, (value, key) => {
+        const label = lang === 'ru' ? areas[key].nameRu : lang === 'en' ? areas[key].nameEn : areas[key].nameKkk
+        areas[key].value = key
+        areas[key].label = label
       })
     }
+    console.log('areas ', areas)
 
     console.log('cities ', cities)
     // const selectBoxCities = cities.m
@@ -343,15 +367,24 @@ class PersonalInfoForm extends Component {
           {/*/>*/}
           {/*</div>*/}
           <div className="form-row mt-3">
-            <div className="col">
-              <label>{message.birthPlace[lang]}</label>
-              <select className="form-control">
-                <option>Кызылординская область</option>
-                <option>Кызылординская область</option>
-                <option>Кызылординская область</option>
-                <option>Кызылординская область</option>
-              </select>
-            </div>
+            <Field
+              label={message.birthPlace[lang]}
+              id="birthPlace"
+              name="birthPlace"
+              options={areas}
+              lang={lang}
+              component={this.renderSelect}
+              accessType={accessType}
+            />
+            {/*<div className="col">*/}
+              {/*<label>{message.birthPlace[lang]}</label>*/}
+              {/*<select className="form-control">*/}
+                {/*<option>Кызылординская область</option>*/}
+                {/*<option>Кызылординская область</option>*/}
+                {/*<option>Кызылординская область</option>*/}
+                {/*<option>Кызылординская область</option>*/}
+              {/*</select>*/}
+            {/*</div>*/}
             <Field
               label={message.birthPlaceCustom[lang]}
               id="birthPlaceCustom"
@@ -468,14 +501,24 @@ class PersonalInfoForm extends Component {
           </div>
           <div className="form-row mt-3">
             <legend>{message.contact_info[lang]}</legend>
-            <div className="col">
-              <label>{message.tel_phone[lang]}</label>
-              <InputMask {...this.props} mask="+7(999) 999 99 99" maskChar="-" className="form-control"/>
-            </div>
-            <div className="col">
-              <label>{message.mobile_phone[lang]}</label>
-              <InputMask {...this.props} mask="+7(999) 999 99 99" maskChar="-" className="form-control"/>
-            </div>
+            <Field
+              label={message.tel_phone[lang]}
+              name="telPhone"
+              id="telPhone"
+              type="text"
+              component={this.renderField}
+              accessType={accessType}
+              useInputMask="true"
+            />
+            <Field
+              label={message.mobile_phone[lang]}
+              name="mobilePhone"
+              id="mobilePhone"
+              type="text"
+              component={this.renderField}
+              accessType={accessType}
+              useInputMask="true"
+            />
             <Field
               label={message.email[lang]}
               name="email"
@@ -495,7 +538,7 @@ class PersonalInfoForm extends Component {
                   <a href="#">
                     {message.ud_front[lang]}
                   </a>
-                  <span className="">  Не отправлено</span>
+                  <span className="">  {message.not_send[lang]}</span>
                 </p>
               </li>
               <li>
@@ -503,14 +546,14 @@ class PersonalInfoForm extends Component {
                   <a href="#">
                     {message.ud_back[lang]}
                   </a>
-                  <span className="">  Не отправлено</span>
+                  <span className="">  {message.not_send[lang]}</span>
                 </p>
               </li>
               <li>
                 <a href="#">
                   {message.photo_3x4[lang]}
                 </a>
-                <span className="">  Не отправлено</span>
+                <span className="">  {message.not_send[lang]}</span>
               </li>
             </ul>
           </div>
@@ -534,12 +577,9 @@ class PersonalInfoForm extends Component {
           {/*accessType={accessType}*/}
           {/*/>*/}
           {/*</div>*/}
-          <div className="form-group">
-            <label htmlFor="comment">Review Comment</label>
-            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
-          </div>
+
           <div className="col text-right">
-            <button className="btn btn-success" type="submit">Save</button>
+            <button className="btn btn-success" type="submit">{message.send[lang]}</button>
             {/*{accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&*/}
             {/*<button*/}
               {/*className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}*/}
@@ -548,6 +588,10 @@ class PersonalInfoForm extends Component {
                                                         {/*onClick={this.onEditClick}>{message.edit[lang]}</button>}*/}
             {/*{accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"*/}
                                                                     {/*onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}*/}
+          </div>
+          <div className="form-group">
+            <label htmlFor="comment">{message.moderator_comment[lang]}</label>
+            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
           </div>
         </form>
       </div>
@@ -617,12 +661,14 @@ function refactorGeneralInfo(studentInfo) {
 export default connect(
   state => ({
     lang: state.lang,
+    areas: state.info.areas,
     cities: refactorCities(state.info.cities),
     schools: refactorSchools(state.info.schools),
     formValues: getFormValues('PersonalInfoForm')(state),
     // initialValues: refactorGeneralInfo(state.student.studentInfo)
   }),
   dispatch => ({
+    fetchAreas: bindActionCreators(fetchAreas, dispatch),
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
     saveStudentGeneralInfo: bindActionCreators(saveStudentGeneralInfo, dispatch),

@@ -171,12 +171,12 @@ export const message = {
   },
   birthPlace: {
     ru: 'Место рождения',
-    en: 'Date of birth',
+    en: 'Birth place',
     kk: 'Гражданство'
   },
   birthPlaceCustom: {
     ru: 'Другое место рождения',
-    en: 'Custom date of birth',
+    en: 'Custom birth place',
     kk: 'Другое место рождения'
   },
   givenPlace: {
@@ -328,5 +328,20 @@ export const message = {
     ru: 'группа',
     en: 'group',
     kk: 'группа'
+  },
+  send: {
+    ru: 'Отправить',
+    en: 'Send',
+    kk: 'Отправить'
+  },
+  not_send: {
+    ru: 'Не отправлено',
+    en: 'Not send',
+    kk: 'Ге отпавлено'
+  },
+  moderator_comment: {
+    ru: 'Комментарий от модератора',
+    en: 'Comment from moderator',
+    kk: 'Комментарий от модератора'
   }
 }

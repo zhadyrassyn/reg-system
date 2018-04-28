@@ -32,7 +32,9 @@ import {
   CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
   FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
   FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
-  CHANGE_LANG
+  CHANGE_LANG,
+  FETCH_AREAS_FAILURE,
+  FETCH_AREAS_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -143,7 +145,7 @@ export const fetchAreas = (onSucces, onError) => (dispatch) => {
   axios.get(request)
     .then(({data}) => {
       dispatch({
-        type: FETCH_CITIES_SUCCESS,
+        type: FETCH_AREAS_SUCCESS,
         data
       })
       if(onSucces) {
@@ -152,7 +154,7 @@ export const fetchAreas = (onSucces, onError) => (dispatch) => {
     })
     .catch(error => {
       dispatch({
-        type: FETCH_CITIES_FAILURE,
+        type: FETCH_AREAS_FAILURE,
         error: error.response && error.response.message
       })
       if(onError) {
