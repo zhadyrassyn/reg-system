@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/cities")
+@RequestMapping("/api")
 class InfoController(val infoRegister: InfoRegister) {
 
-    @GetMapping
+    @GetMapping("/cities")
     fun getCities() = infoRegister.getCities()
 
-    @GetMapping("{id}/schools")
+    @GetMapping("/cities/{id}/schools")
     fun getSchoolsByCity(@PathVariable("id") cityId: Long) = infoRegister.getSchools(cityId)
+
+    @GetMapping("/areas")
+    fun getAreas() = infoRegister.getAreas()
 }

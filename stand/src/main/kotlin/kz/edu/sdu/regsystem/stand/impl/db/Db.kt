@@ -1,10 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl.db
 
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
-import kz.edu.sdu.regsystem.stand.model.City
-import kz.edu.sdu.regsystem.stand.model.Document
-import kz.edu.sdu.regsystem.stand.model.School
-import kz.edu.sdu.regsystem.stand.model.User
+import kz.edu.sdu.regsystem.stand.model.*
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
@@ -13,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 @Component
@@ -22,8 +20,45 @@ class Db {
     val verificationTokens = HashMap<Long, String>()
     val userRoles = HashMap<Long, RoleType>()
     val cities = HashMap<Long, City>()
+    val areas = HashMap<Long, Area>()
 
     init { //fill cities
+        val a1 = Area(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Акмолинская область",
+            nameEn = "Akmolinskaya oblast",
+            nameKk = "Акмолинская область"
+        )
+        val a2 = Area(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Актюбинская область",
+            nameEn = "Akubinskaya oblast",
+            nameKk = "Актюбинская область"
+        )
+        val a3 = Area(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Алматинская область",
+            nameEn = "Almatinskaya oblast",
+            nameKk = "Алматинская область"
+        )
+        val a4 = Area(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Атырауская область",
+            nameEn = "Atirauskaya oblast",
+            nameKk = "Атырауская область"
+        )
+        val a5 = Area(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Восточно-Казахстанская область",
+            nameEn = "Vostochno-Kazakhstanskaya oblast",
+            nameKk = "Восточно-Казахстанская область"
+        )
+
+        areas.put(a1.id, a1)
+        areas.put(a2.id, a2)
+        areas.put(a3.id, a3)
+        areas.put(a4.id, a4)
+        areas.put(a5.id, a5)
 
         val documentEnums =
             arrayOf(DocumentType.DIPLOMA_CERTIFICATE,

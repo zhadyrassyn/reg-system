@@ -109,6 +109,7 @@ class PersonalInfoForm extends Component {
       <div className="col">
         <label className="d-block">{field.label}</label>
         <select {...field.input} className="form-control">
+          <option value="">Выбрать</option>
           {Object.keys(options).map((key, index) => (
             <option value={options[key].name}>{options[key].label}</option>
           ))}
