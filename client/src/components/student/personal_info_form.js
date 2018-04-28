@@ -40,15 +40,18 @@ class PersonalInfoForm extends Component {
     this.state = {
       accessType: ACCESS_TYPE_SAVE,
       documentType: '',
-      showDocumentErrors: ''
+      showDocumentErrors: '',
+      isSaving: false
     }
   }
 
   componentDidMount() {
     const {fetchAreas, fetchPersonalInfo} = this.props
     fetchPersonalInfo(
-      () => {
-        console.log('success on fetching personal info', this.props.personalInfo)
+      (data) => {
+        if(data.id) {
+          this.setState({accessType: ACCESS_TYPE_EDIT})
+        }
       },
       () => {
         console.log('error on fetching personal info')
@@ -84,7 +87,7 @@ class PersonalInfoForm extends Component {
                disabled={disabled} {...field.input}/>
         }
         {useInputMask &&
-        <InputMask mask={field.inputMask} maskChar="_" className="form-control" name={field.name}
+        <InputMask mask={field.inputMask} maskChar="_" className="form-control" name={field.name} disabled={disabled}
                    id={field.id} {...field.input}/>
         }
         {touched && error && <span>{error}</span>}
@@ -116,8 +119,8 @@ class PersonalInfoForm extends Component {
         <label className="d-block">{field.label}</label>
         {Object.keys(options).map((key, index) => (
           <div className="form-check form-check-inline" key={key}>
-            <input className="form-check-input" type="radio" name={field.name} id={options[key].name}
-                   value={options[key].name} {...field.input} checked={field.input.value === options[key].name}/>
+            <input {...field.input} className="form-check-input" type="radio" name={field.name} id={options[key].name}
+                   value={options[key].name} checked={field.input.value === options[key].name} disabled={disabled}/>
             <label className="form-check-label" htmlFor={options[key].name}>{options[key].label}</label>
           </div>
         ))}
@@ -134,7 +137,7 @@ class PersonalInfoForm extends Component {
     return (
       <div className="col">
         <label className="d-block">{field.label}</label>
-        <select {...field.input} className="form-control">
+        <select {...field.input} className="form-control" disabled={disabled}>
           <option value="">Выбрать</option>
           {options && Object.keys(options).map((key, index) => (
             <option value={options[key].value} key={key}>{options[key].label}</option>
@@ -192,7 +195,8 @@ class PersonalInfoForm extends Component {
           <span className="text-danger ml-2">{option.error}</span>
           }
           {option.imageName &&
-            <a className="ml-2" target="_blank" href={`http://localhost:8081/api/upload/${option.imageName}`}><i className="fas fa-eye"></i></a>
+          <a className="ml-2" target="_blank" href={`http://localhost:8081/api/upload/${option.imageName}`}><i
+            className="fas fa-eye"></i></a>
           }
         </p>
       </li>
@@ -203,7 +207,7 @@ class PersonalInfoForm extends Component {
     const file = e.target.files[0]
     const documentType = this.state.documentType
 
-    const { savePersonalDocument } = this.props
+    const {savePersonalDocument} = this.props
     savePersonalDocument(file, documentType)
   }
 
@@ -225,7 +229,20 @@ class PersonalInfoForm extends Component {
 
     const {saveStudentPersonalInfo, personalInfo, lang} = this.props
 
-    this.setState({showDocumentErrors: true})
+    this.setState({showDocumentErrors: true}, () => {
+      if (personalInfo.ud_front && personalInfo.ud_front && personalInfo.photo3x4) {
+        this.setState({isSaving: true}, () => {
+          saveStudentPersonalInfo(values,
+            () => {
+              this.setState({isSaving: false, accessType: ACCESS_TYPE_EDIT})
+            },
+            () => {
+              this.setState({isSaving: false})
+            }
+          )
+        })
+      }
+    })
 
     // saveStudentPersonalInfo(values)
     // const {saveStudentPersonalInfo, initialValues} = this.props
@@ -256,10 +273,14 @@ class PersonalInfoForm extends Component {
     this.setState({accessType: ACCESS_TYPE_EDIT})
   }
 
+  handleEditBtn = () => {
+    this.setState({accessType: ACCESS_TYPE_SAVE})
+  }
+
 
   render() {
     let {areas, cities, schools, initialValues, lang, personalInfo} = this.props
-    const {showDocumentErrors} = this.state
+    const {showDocumentErrors, accessType} = this.state
 
     if (areas) {
       _.forEach(areas, (value, key) => {
@@ -274,8 +295,6 @@ class PersonalInfoForm extends Component {
     // const selectBoxCities = cities.m
     const {handleSubmit, submitting} = this.props
 
-    let accessType = this.state.accessType
-    accessType = ACCESS_TYPE_SAVE
 
     return (
       <div className="container-fluid">
@@ -622,7 +641,12 @@ class PersonalInfoForm extends Component {
           {/*</div>*/}
 
           <div className="col text-right">
-            <button className="btn btn-success" type="submit">{message.send[lang]}</button>
+            {accessType === ACCESS_TYPE_SAVE &&
+            <button className="btn btn-success" type="submit">{message.send[lang]}</button>}
+            {accessType === ACCESS_TYPE_EDIT &&
+            <button className="btn btn-warning" type="button" onClick={this.handleEditBtn.bind(this)}>{message.edit[lang]}</button>}
+
+
             {/*{accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&*/}
             {/*<button*/}
             {/*className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}*/}

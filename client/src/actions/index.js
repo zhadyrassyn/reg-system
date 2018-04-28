@@ -222,9 +222,11 @@ export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch
 
   const request = `${config.url}/student/personal/${userId}`
 
+  console.log('values', values)
   axios.post(request, values, {
     headers: {
-      "Authorization": `Bearer ${token}`
+      "Authorization": `Bearer ${token}`,
+      "Content-Type" : "application/json"
     }
   }).then(response => {
     dispatch({
@@ -326,7 +328,7 @@ export const fetchPersonalInfo = (onSuccess, onError) => (dispatch) => {
     })
 
     if(onSuccess) {
-      onSuccess()
+      onSuccess(response.data)
     }
   }).catch(error => {
     dispatch({

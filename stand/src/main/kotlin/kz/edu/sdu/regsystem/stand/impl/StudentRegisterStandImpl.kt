@@ -98,22 +98,28 @@ class StudentRegisterStandImpl(
     }
 
     override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
+        println("Data $personalInfo")
         val user = db.users.values.firstOrNull { it -> it.id == id } ?:
         throw UserDoesNotExistsException("User does not exist")
 
         //save new are if birthPlaceCustom field is not null
         var areaId = personalInfo.birthPlace
-        if(Objects.isNull(personalInfo.birthPlaceCustom) && !StringUtils.isEmpty(personalInfo.birthPlaceCustom)) {
-            val area = Area(
-                id = db.longCounter.incrementAndGet(),
-                nameKk = personalInfo.birthPlaceCustom!!,
-                nameEn = personalInfo.birthPlaceCustom!!,
-                nameRu = personalInfo.birthPlaceCustom!!,
-                status = AreaType.CUSTOM
-            )
 
-            db.areas.put(area.id, area)
-            areaId = area.id
+        try {
+            if(Objects.isNull(personalInfo.birthPlace) && !StringUtils.isEmpty(personalInfo.birthPlaceCustom)) {
+                val area = Area(
+                    id = db.longCounter.incrementAndGet(),
+                    nameKk = personalInfo.birthPlaceCustom!!,
+                    nameEn = personalInfo.birthPlaceCustom!!,
+                    nameRu = personalInfo.birthPlaceCustom!!,
+                    status = AreaType.CUSTOM
+                )
+
+                db.areas.put(area.id, area)
+                areaId = area.id
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
         user.personalInfo = PersonalInfo(
