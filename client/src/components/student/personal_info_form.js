@@ -3,7 +3,6 @@ import "./overview_menu"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {Field, reduxForm, actionCreators, getFormValues, change as changeFieldValue} from "redux-form"
-import MySelectComponent from "../my_select_component"
 import InputMask from 'react-input-mask'
 import _ from "lodash"
 
@@ -442,19 +441,6 @@ class PersonalInfoForm extends Component {
               accessType={accessType}
             />
           </div>
-          {/*<div className="form-row mt-3">*/}
-          {/*<Field*/}
-          {/*label={message.city[lang]}*/}
-          {/*name="city"*/}
-          {/*id="city"*/}
-          {/*options={cities}*/}
-          {/*component={this.renderSelect}*/}
-          {/*onChange={this.handleCityChange}*/}
-          {/*validate={required}*/}
-          {/*placeholder={message.city[lang]}*/}
-          {/*accessType={accessType}*/}
-          {/*/>*/}
-          {/*</div>*/}
           <div className="form-row mt-3">
             <Field
               label={message.birthPlace[lang]}

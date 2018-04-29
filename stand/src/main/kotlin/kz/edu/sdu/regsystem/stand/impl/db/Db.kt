@@ -31,36 +31,74 @@ class Db {
             nameEn = "Akmolinskaya oblast",
             nameKk = "Акмолинская область"
         )
+
+        val a1c1 = UserCity(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Акколь",
+            nameEn = "Akkol",
+            nameKk = "Акколь"
+        )
+
+        val a1c2 = UserCity(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Коргалжын",
+            nameRu = "Коргалжын",
+            nameEn = "Korgalzhyn"
+        )
+
+        a1.cities[a1c1.id] = a1c1
+        a1.cities[a1c2.id] = a1c2
+
         val a2 = Area(
             id = 10002,
             nameRu = "Актюбинская область",
             nameEn = "Akubinskaya oblast",
             nameKk = "Актюбинская область"
         )
-        val a3 = Area(
-            id = 10003,
-            nameRu = "Алматинская область",
-            nameEn = "Almatinskaya oblast",
-            nameKk = "Алматинская область"
+
+        val a2c1 = UserCity(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Комсомольское",
+            nameEn = "Komsomolskoe",
+            nameKk = "Комсомольское"
         )
-        val a4 = Area(
-            id = 10004,
-            nameRu = "Атырауская область",
-            nameEn = "Atirauskaya oblast",
-            nameKk = "Атырауская область"
+
+        val a2c2 = UserCity(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Шалкар",
+            nameRu = "Шалкар",
+            nameEn = "Shalkar"
         )
-        val a5 = Area(
-            id = 10005,
-            nameRu = "Восточно-Казахстанская область",
-            nameEn = "Vostochno-Kazakhstanskaya oblast",
-            nameKk = "Восточно-Казахстанская область"
-        )
+
+        a2.cities[a1c1.id] = a2c1
+        a2.cities[a1c2.id] = a2c2
+//
+//        val a3 = Area(
+//            id = 10003,
+//            nameRu = "Алматинская область",
+//            nameEn = "Almatinskaya oblast",
+//            nameKk = "Алматинская область"
+//        )
+//        val a4 = Area(
+//            id = 10004,
+//            nameRu = "Атырауская область",
+//            nameEn = "Atirauskaya oblast",
+//            nameKk = "Атырауская область"
+//        )
+//        val a5 = Area(
+//            id = 10005,
+//            nameRu = "Восточно-Казахстанская область",
+//            nameEn = "Vostochno-Kazakhstanskaya oblast",
+//            nameKk = "Восточно-Казахстанская область"
+//        )
+
+
 
         areas.put(a1.id, a1)
         areas.put(a2.id, a2)
-        areas.put(a3.id, a3)
-        areas.put(a4.id, a4)
-        areas.put(a5.id, a5)
+//        areas.put(a3.id, a3)
+//        areas.put(a4.id, a4)
+//        areas.put(a5.id, a5)
 
         val documentEnums =
             arrayOf(DocumentType.DIPLOMA_CERTIFICATE,

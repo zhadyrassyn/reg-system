@@ -5,6 +5,7 @@ import kz.edu.sdu.regsystem.controller.register.InfoRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.enums.AreaType
 import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
+import kz.edu.sdu.regsystem.stand.model.enums.UserCityStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -13,8 +14,26 @@ import org.springframework.stereotype.Service
 class InfoRegisterStandImpl(
     val db: Db
 ) : InfoRegister {
+
+    @Cacheable("cities")
+    override fun getCitiesAndVillages(areaId: Long): List<GetCitiesAndVillagesResponseData> {
+        val area = db.areas.values.firstOrNull { it.id == areaId }
+            ?: throw BadRequestException("Area with id $areaId does not exist")
+
+        return area.cities.values
+            .filter { it.status == UserCityStatus.SYSTEM }
+            .map {
+                GetCitiesAndVillagesResponseData(
+                    id = it.id,
+                    nameRu = it.nameRu,
+                    nameEn = it.nameEn,
+                    nameKk = it.nameKk
+                )
+            }
+    }
+
     @Cacheable("specializagions")
-    override fun getSpecializations(facultyId: Long): List<GetSpecializationsResponseData> {
+    override fun getSpecialities(facultyId: Long): List<GetSpecializationsResponseData> {
         val faculty = db.faculties.values.firstOrNull { it.id == facultyId }
             ?: throw BadRequestException("Faculty with id $facultyId does not exist")
 

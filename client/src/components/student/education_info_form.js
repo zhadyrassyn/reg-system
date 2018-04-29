@@ -6,6 +6,7 @@ import {bindActionCreators} from "redux"
 import {Field, reduxForm, actionCreators, getFormValues, change as changeFieldValue} from "redux-form"
 
 import _ from "lodash"
+import MySelectComponent from "./my_select_component"
 
 import {
   ACCESS_TYPE_EDIT,
@@ -67,30 +68,32 @@ class EducationInfoForm extends Component {
     )
   }
 
-  // renderSelect(field) {
-  //   const {meta: {touched, error, warning}} = field;
-  //
-  //   const disabled = field.accessType === ACCESS_TYPE_EDIT
-  //
-  //   return (
-  //     <div className="col">
-  //       <label htmlFor={field.id}>{field.label}</label>
-  //       <MySelectComponent options={field.options} placeholder={field.placeholder}
-  //                          disabled={disabled} {...field.input}/>
-  //       {touched && error && <span>{error}</span>}
-  //     </div>
-  //   )
-  // }
+  renderSelect(field) {
+    const {meta: {touched, error, warning}} = field;
 
-  handleCityChange = (city) => {
-    const {fetchSchools, initialValues} = this.props
-    fetchSchools(city.value,
-      () => {
-        this.props.changeFieldValue('GeneralInfo', 'school', null)
-      },
-      () => {
-        console.log('error')
-      })
+    const disabled = field.accessType === ACCESS_TYPE_EDIT
+
+    return (
+      <div className="col">
+        <label htmlFor={field.id}>{field.label}</label>
+        <MySelectComponent options={field.options} placeholder={field.placeholder}
+                           disabled={disabled} {...field.input}/>
+        {touched && error && <span>{error}</span>}
+      </div>
+    )
+  }
+
+  handleAreaChange = (item) => {
+    console.log('onChange ', city)
+    
+    // const {fetchSchools, initialValues} = this.props
+    // fetchSchools(city.value,
+    //   () => {
+    //     this.props.changeFieldValue('GeneralInfo', 'school', null)
+    //   },
+    //   () => {
+    //     console.log('error')
+    //   })
   }
 
   onSubmit(values) {
@@ -98,36 +101,35 @@ class EducationInfoForm extends Component {
   }
 
   render() {
-    const {lang, areas, handleSubmit, submitting} = this.props
+    let {lang, areas, handleSubmit, submitting} = this.props
     const {accessType} = this.state
 
     if (areas) {
-      _.forEach(areas, (value, key) => {
-        const label = lang === 'ru' ? areas[key].nameRu : lang === 'en' ? areas[key].nameEn : areas[key].nameKkk
-        areas[key].value = key
-        areas[key].label = label
+      areas = _.map(areas).map(item => {
+        const label = lang === 'ru' ? item.nameRu : lang === 'en' ? item.nameEn : item.nameKkk
+        return {
+          ...item,
+          value: item.id,
+          label
+        }
       })
     }
+
     return (
       <div className="container-fluid">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="my-2">
           <div className="form-row">
-            <div className="col">
-              <label>{message.area[lang]}</label>
-              <select className="form-control">
-                <option>Кызылордиская область</option>
-                <option>Кызылордиская область</option>
-                <option>Кызылордиская область</option>
-              </select>
-            </div>
-            <div className="col">
-              <label>{message.region[lang]}</label>
-              <select className="form-control">
-                <option>Кызылординский район</option>
-                <option>Кызылординский район</option>
-                <option>Кызылординский район</option>
-              </select>
-            </div>
+            <Field
+              label={message.area[lang]}
+              name="educationArea"
+              id="educationArea"
+              options={areas}
+              component={this.renderSelect}
+              onChange={this.handleAreaChange}
+              // validate={required}
+              placeholder={message.area[lang]}
+              accessType={accessType}
+            />
             <div className="col">
               <label>{message.city[lang]}/{message.village[lang]}</label>
               <select className="form-control">
@@ -136,6 +138,17 @@ class EducationInfoForm extends Component {
                 <option>Жанакорган</option>
               </select>
             </div>
+
+            <Field
+              label={message.another_cityVillage[lang]}
+              name="another_cityVillage"
+              id="another_cityVillage"
+              type="text"
+              placeholder={message.another_cityVillage[lang]}
+              component={this.renderField}
+              // validate={required}
+              accessType={accessType}
+            />
           </div>
 
           <div className="form-row mt-3">
@@ -191,10 +204,21 @@ class EducationInfoForm extends Component {
           </div>
 
           <div className="form-row mt-3">
-            <label>Факультет поступления</label>
-            <select className="form-control">
-              <option></option>
-            </select>
+            <div className="col">
+              <label>{message.choose_faculty[lang]}</label>
+              <select className="form-control">
+                <option>Faculty 1</option>
+                <option>Faculty 2</option>
+              </select>
+            </div>
+
+            <div className="col">
+              <label>{message.choose_speciality[lang]}</label>
+              <select className="form-control">
+                <option>Speciality 1</option>
+                <option>Speciality 2</option>
+              </select>
+            </div>
           </div>
 
           <div className="form-row mt-3">

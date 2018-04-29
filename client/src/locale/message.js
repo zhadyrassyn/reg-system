@@ -373,5 +373,15 @@ export const message = {
     ru: 'Факультет инженерии и естественных наук',
     en: 'Faculty of Engineering and Natural sciences',
     kk: 'Инженерлік және жаратылыстану ғылымдары факультеті'
+  },
+  choose_speciality: {
+    ru: 'Желаемая специальность',
+    en: 'Desirable speciality',
+    kk: 'Желаемая специальность'
+  },
+  another_cityVillage: {
+    ru: 'Другой город/село',
+    en: 'Another city/village',
+    kk: 'Другой город/село'
   }
 }

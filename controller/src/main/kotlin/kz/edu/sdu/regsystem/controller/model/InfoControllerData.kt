@@ -20,3 +20,10 @@ data class GetSpecializationsResponseData(
     val nameEn: String,
     val nameKk: String
 )
+
+data class GetCitiesAndVillagesResponseData(
+    val id: Long,
+    val nameRu: String,
+    val nameEn: String,
+    val nameKk: String
+)

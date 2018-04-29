@@ -7,5 +7,6 @@ data class Area(
     val nameRu: String,
     val nameEn: String,
     val nameKk: String,
-    val status: AreaType = AreaType.SYSTEM
+    val status: AreaType = AreaType.SYSTEM,
+    val cities: HashMap<Long, UserCity> = HashMap()
 )
