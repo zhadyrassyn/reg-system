@@ -14,6 +14,23 @@ import org.springframework.stereotype.Service
 class InfoRegisterStandImpl(
     val db: Db
 ) : InfoRegister {
+    @Cacheable("schools")
+    override fun getSchools(areaId: Long, cityId: Long): List<SchoolData> {
+        val area = db.areas[areaId] ?: throw BadRequestException("Cannot find area with id $areaId")
+        val city = area.cities[cityId] ?: throw BadRequestException("Cannot find city/village with id $cityId")
+
+        return city.schools.values
+            .filter { it.schoolStatus == SchoolStatus.SYSTEM }
+            .map {
+                SchoolData(
+                    id = it.id,
+                    nameEn = it.nameEn,
+                    nameRu = it.nameRu,
+                    nameKk = it.nameKk,
+                    cityId = city.id
+                )
+            }
+    }
 
     @Cacheable("cities")
     override fun getCitiesAndVillages(areaId: Long): List<GetCitiesAndVillagesResponseData> {
@@ -27,7 +44,8 @@ class InfoRegisterStandImpl(
                     id = it.id,
                     nameRu = it.nameRu,
                     nameEn = it.nameEn,
-                    nameKk = it.nameKk
+                    nameKk = it.nameKk,
+                    areaId = area.id
                 )
             }
     }
@@ -64,16 +82,5 @@ class InfoRegisterStandImpl(
         return db.areas.values
             .filter { it.status == AreaType.SYSTEM }
             .map { AreaData(it.id, it.nameRu, it.nameEn, it.nameKk) }
-    }
-
-    override fun getSchools(cityId: Long): List<SchoolData> {
-        return db.cities[cityId]!!.schools
-            .filter { it.schoolStatus == SchoolStatus.ACTIVE }
-            .map { SchoolData(it.id, it.name, it.name, it.name) }
-    }
-
-    @Cacheable("cities")
-    override fun getCities(): List<CityData> {
-        return db.cities.values.map { CityData(it.id, it.name, it.name, it.name) }
     }
 }

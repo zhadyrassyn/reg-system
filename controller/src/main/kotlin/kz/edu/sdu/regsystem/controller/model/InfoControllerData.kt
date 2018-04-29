@@ -25,5 +25,6 @@ data class GetCitiesAndVillagesResponseData(
     val id: Long,
     val nameRu: String,
     val nameEn: String,
-    val nameKk: String
+    val nameKk: String,
+    val areaId: Long
 )

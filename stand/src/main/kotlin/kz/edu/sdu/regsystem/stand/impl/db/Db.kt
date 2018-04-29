@@ -39,12 +39,42 @@ class Db {
             nameKk = "Акколь"
         )
 
+        val a1c1s1 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Акколь НУ",
+            nameEn = "Akkol NU",
+            nameKk = "Акколь НУ"
+        )
+
+        val a1c1s2 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Акколь БИЛ",
+            nameEn = "Akkol BIL",
+            nameKk = "Акколь БИЛ"
+        )
+        a1c1.schools[a1c1s1.id] = a1c1s1
+        a1c1.schools[a1c1s2.id] = a1c1s2
+
         val a1c2 = UserCity(
             id = longCounter.incrementAndGet(),
             nameKk = "Коргалжын",
             nameRu = "Коргалжын",
             nameEn = "Korgalzhyn"
         )
+        val a1c2s1 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Коргалжын НУ",
+            nameKk = "Коргалжын НУ",
+            nameEn = "Korgalzhyn NU"
+        )
+        val a1c2s2 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Коргалжын БИЛ",
+            nameKk = "Коргалжын БИЛ",
+            nameEn = "Korgalzhyn BIL"
+        )
+        a1c2.schools[a1c2s1.id] = a1c2s1
+        a1c2.schools[a1c2s2.id] = a1c2s2
 
         a1.cities[a1c1.id] = a1c1
         a1.cities[a1c2.id] = a1c2
@@ -63,6 +93,23 @@ class Db {
             nameKk = "Комсомольское"
         )
 
+        val a2c1s1 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Комсомольское НУ",
+            nameEn = "Komsomolskoe NU",
+            nameKk = "Комсомольское НУ"
+        )
+
+        val a2c1s2 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Комсомольское БИЛ",
+            nameEn = "Komsomolskoe BIL",
+            nameKk = "Комсомольское БИЛ"
+        )
+
+        a2c1.schools[a2c1s1.id] = a2c1s1
+        a2c1.schools[a2c1s2.id] = a2c1s2
+
         val a2c2 = UserCity(
             id = longCounter.incrementAndGet(),
             nameKk = "Шалкар",
@@ -70,8 +117,25 @@ class Db {
             nameEn = "Shalkar"
         )
 
-        a2.cities[a1c1.id] = a2c1
-        a2.cities[a1c2.id] = a2c2
+        val a2c2s1 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Шалкар НУ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар НУ"
+        )
+
+        val a2c2s2 = School(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Шалкар БИЛ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар БИЛ"
+        )
+        a2c2.schools[a2c2s1.id] = a2c2s1
+        a2c2.schools[a2c2s2.id] = a2c2s2
+
+
+        a2.cities[a2c1.id] = a2c1
+        a2.cities[a2c2.id] = a2c2
 //
 //        val a3 = Area(
 //            id = 10003,
@@ -91,7 +155,6 @@ class Db {
 //            nameEn = "Vostochno-Kazakhstanskaya oblast",
 //            nameKk = "Восточно-Казахстанская область"
 //        )
-
 
 
         areas.put(a1.id, a1)
@@ -129,8 +192,10 @@ class Db {
                 it.schools.add(
                     School(
                         id = longCounter.incrementAndGet(),
-                        name = "${it.name} school $i",
-                        schoolStatus = SchoolStatus.ACTIVE))
+                        nameRu = "${it.name} school $i",
+                        nameEn = "${it.name} school $i",
+                        nameKk = "${it.name} school $i",
+                        schoolStatus = SchoolStatus.SYSTEM))
             }
         }
         val u1 = User(

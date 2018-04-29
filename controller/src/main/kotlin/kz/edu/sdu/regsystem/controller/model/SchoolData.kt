@@ -4,4 +4,4 @@ data class SchoolData(val id: Long,
                       val nameRu: String?,
                       val nameEn: String?,
                       val nameKk: String?,
-                      val schoolStatus: String = "")
+                      val cityId: Long? = 0)

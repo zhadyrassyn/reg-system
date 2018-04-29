@@ -7,5 +7,6 @@ data class UserCity(
     val nameRu: String,
     val nameEn: String,
     val nameKk: String,
-    val status: UserCityStatus = UserCityStatus.SYSTEM
+    val status: UserCityStatus = UserCityStatus.SYSTEM,
+    val schools: HashMap<Long, School> = HashMap()
 )

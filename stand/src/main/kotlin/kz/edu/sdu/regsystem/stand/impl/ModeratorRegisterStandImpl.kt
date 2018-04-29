@@ -36,7 +36,7 @@ class ModeratorRegisterStandImpl(
                             || it.middleName.contains(text, ignoreCase = true)
                             || it.lastName.contains(text, ignoreCase = true)
                             || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.nameRu.contains(text, ignoreCase = true)
                             || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
                         )
 
@@ -101,7 +101,7 @@ class ModeratorRegisterStandImpl(
         response.lastName = user.lastName
         response.email = user.email
         response.city = city.name
-        response.school = school.name
+        response.school = school.nameRu
         response.birthDate = dateToStringForm(user.birthDate)
         response.generalInfoStatus = user.generalInfoStatusDto.status.name
         response.generalInfoComment = user.generalInfoStatusDto.comment!!
@@ -126,7 +126,7 @@ class ModeratorRegisterStandImpl(
                             || it.middleName.contains(text, ignoreCase = true)
                             || it.lastName.contains(text, ignoreCase = true)
                             || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.name.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.nameRu.contains(text, ignoreCase = true)
                             || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
                         )
 
@@ -151,7 +151,7 @@ class ModeratorRegisterStandImpl(
                     lastName = it.lastName,
                     email = it.email,
                     city = city.name,
-                    school = school.name,
+                    school = school.nameRu,
                     userStatus = it.userStatus.toString(),
                     birthDate = dateToStringForm(it.birthDate)
                 )

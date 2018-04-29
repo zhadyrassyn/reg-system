@@ -10,21 +10,20 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
 class InfoController(val infoRegister: InfoRegister) {
 
-    @GetMapping("/cities")
-    fun getCities() = infoRegister.getCities()
-
-    @GetMapping("/cities/{id}/schools")
-    fun getSchoolsByCity(@PathVariable("id") cityId: Long) = infoRegister.getSchools(cityId)
-
     @GetMapping("/areas")
     fun getAreas() = infoRegister.getAreas()
 
     @GetMapping("/areas/{id}/cities")
     fun getCitiesAndVillages(@PathVariable("id") areaId: Long) = infoRegister.getCitiesAndVillages(areaId)
 
+    @GetMapping("/areas/{id}/cities/{cityId}/schools")
+    fun getSchools(@PathVariable("id")areaId: Long,
+                   @PathVariable("cityId")cityId: Long) = infoRegister.getSchools(areaId, cityId)
+
     @GetMapping("/faculties")
     fun getFaculties() = infoRegister.getFaculties()
 
     @GetMapping("/faculties/{id}/specialities")
     fun getSpecializations(@PathVariable("id") facultyId: Long) = infoRegister.getSpecialities(facultyId)
+
 }

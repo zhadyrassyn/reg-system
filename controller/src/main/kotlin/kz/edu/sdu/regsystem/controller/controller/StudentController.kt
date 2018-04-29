@@ -15,17 +15,6 @@ class StudentController(
     val studentRegister: StudentRegister,
     val documentRegister: DocumentRegister
 ) {
-    @PostMapping("/general/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun saveGeneralInfo(@RequestBody generalInfoData: GeneralInfoData,
-                        @PathVariable("id") id: Long) =
-        studentRegister.saveGeneralInfo(
-            id = id, generalInfoData = generalInfoData)
-
-    @GetMapping("/general/{id}")
-    fun getGeneralInfo(@PathVariable("id") id: Long) =
-        studentRegister.getGeneralInfo(id)
-
     @GetMapping("/document/{id}")
     fun getDocumentsStatus(@PathVariable("id") id: Long) =
         documentRegister.fetchDocumentsStatus(id)
