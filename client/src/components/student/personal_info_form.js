@@ -58,20 +58,6 @@ class PersonalInfoForm extends Component {
       }
     )
     fetchAreas()
-
-    // fetchStudentGeneralInfo(
-    //   (data) => {
-    //     console.log('Data ', data)
-    //     if (data.accessType === ACCESS_TYPE_SAVE) {
-    //       fetchCities()
-    //     } else if (data.accessType === ACCESS_TYPE_EDIT) {
-    //       this.setState({accessType: ACCESS_TYPE_EDIT})
-    //     }
-    //   },
-    //   () => {
-    //     console.log('fetchStudentGeneralInfo error')
-    //   }
-    // )
   }
 
   renderField(field) {
@@ -160,33 +146,30 @@ class PersonalInfoForm extends Component {
 
   }
 
-  renderDocuments = (lang, showDocumentErrors, personalInfo) => {
-    console.log('personal info ', personalInfo)
+  renderDocuments = (lang, showDocumentErrors, personalInfoDocuments) => {
     const labels = [
       {
         type: IDENTITY_CARD_FRONT,
         label: message.ud_front[lang],
         error: message.upload_file[lang],
-        imageName: personalInfo.ud_front
+        imageName: personalInfoDocuments.ud_front
       },
       {
         type: IDENTITY_CARD_BACK,
         label: message.ud_back[lang],
         error: message.upload_file[lang],
-        imageName: personalInfo.ud_back
+        imageName: personalInfoDocuments.ud_back
       },
       {
         type: PHOTO_3x4,
         label: message.photo_3x4[lang],
         error: message.upload_file[lang],
-        imageName: personalInfo.photo3x4
+        imageName: personalInfoDocuments.photo3x4
       }
     ]
 
-    console.log('lables ', labels)
-
     return labels.map(option => (
-      <li>
+      <li key={option.type}>
         <p>
           <a href="#" onClick={this.exportFile} name={option.type}>
             {option.label}
@@ -279,7 +262,7 @@ class PersonalInfoForm extends Component {
 
 
   render() {
-    let {areas, cities, schools, initialValues, lang, personalInfo} = this.props
+    let {areas, cities, schools, initialValues, lang, personalInfo, personalInfoDocuments} = this.props
     const {showDocumentErrors, accessType} = this.state
 
     if (areas) {
@@ -289,12 +272,8 @@ class PersonalInfoForm extends Component {
         areas[key].label = label
       })
     }
-    console.log('areas ', areas)
 
-    console.log('cities ', cities)
-    // const selectBoxCities = cities.m
     const {handleSubmit, submitting} = this.props
-
 
     return (
       <div className="container-fluid">
@@ -613,7 +592,7 @@ class PersonalInfoForm extends Component {
           <div className="form-row mt-3">
             <legend>{message.documents[lang]}</legend>
             <ul className="list-unstyled">
-              {this.renderDocuments(lang, showDocumentErrors, personalInfo)}
+              {this.renderDocuments(lang, showDocumentErrors, personalInfoDocuments)}
             </ul>
             <input style={{display: 'none'}} type="file" id="documentFile" onChange={this.onFileChange} onClick={e => {
               e.target.value = null
@@ -717,6 +696,7 @@ export default connect(
     schools: refactorSchools(state.info.schools),
     formValues: getFormValues('PersonalInfoForm')(state),
     personalInfo: state.student.personalInfo,
+    personalInfoDocuments: state.student.personalInfoDocuments,
     initialValues: refactorGeneralInfo(state.student.personalInfo)
   }),
   dispatch => ({

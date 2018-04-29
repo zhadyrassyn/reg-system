@@ -26,7 +26,8 @@ import {
 const initialState = {
   documentsStatus: {},
   studentInfo: {},
-  personalInfo: {}
+  personalInfo: {},
+  personalInfoDocuments:{}
 }
 
 export default (state = initialState, action) => {
@@ -78,24 +79,24 @@ export default (state = initialState, action) => {
       if(type === PHOTO_3x4) {
         return {
           ...state,
-          personalInfo: {
-            ...state.personalInfo,
+          personalInfoDocuments: {
+            ...state.personalInfoDocuments,
             photo3x4: name
           }
         }
       } else if(type === IDENTITY_CARD_FRONT) {
         return {
           ...state,
-          personalInfo: {
-            ...state.personalInfo,
+          personalInfoDocuments: {
+            ...state.personalInfoDocuments,
             ud_front: name
           }
         }
       } else if(type === IDENTITY_CARD_BACK) {
         return {
           ...state,
-          personalInfo: {
-            ...state.personalInfo,
+          personalInfoDocuments: {
+            ...state.personalInfoDocuments,
             ud_back: name
           }
         }
@@ -111,7 +112,13 @@ export default (state = initialState, action) => {
     case FETCH_STUDENT_PERSONAL_INFO_SUCCESS:
       return {
         ...state,
-        personalInfo: action.data
+        personalInfo: action.data,
+        personalInfoDocuments: {
+          ...state.personalInfoDocuments,
+          photo3x4: action.data.photo3x4,
+          ud_front: action.data.ud_front,
+          ud_back: action.data.ud_back
+        }
       }
     case FETCH_STUDENT_PERSONAL_INFO_FAILURE:
       return {
