@@ -191,8 +191,8 @@ export const fetchCities = (areaId, onSucces, onError) => (dispatch) => {
     })
 }
 
-export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
-  const request = `${config.url}/cities/${id}/schools`
+export const fetchSchools = (areaId, cityId, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/areas/${areaId}/cities/${cityId}/schools`
 
   axios.get(request)
     .then(({data}) => {

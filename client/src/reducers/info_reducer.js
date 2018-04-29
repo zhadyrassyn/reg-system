@@ -13,8 +13,7 @@ import {
 const initialState = {
   areas: {},
   cities: {},
-  schools: [],
-
+  schools: {},
 }
 
 export default (state = {}, action) => {
@@ -42,7 +41,7 @@ export default (state = {}, action) => {
     case FETCH_SCHOOLS_SUCCESS:
       return {
         ...state,
-        schools: action.data
+        schools: _.mapKeys(action.data, "id")
       }
     case FETCH_SCHOOLS_FAILURE:
       return {

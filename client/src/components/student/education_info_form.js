@@ -87,7 +87,7 @@ class EducationInfoForm extends Component {
     const {fetchCities, initialValues, changeFieldValue} = this.props
     fetchCities(item.id,
       () => {
-      console.log('success on fetching cities')
+        console.log('success on fetching cities')
         changeFieldValue('EducationInfoForm', 'city', null)
       },
       () => {
@@ -96,7 +96,15 @@ class EducationInfoForm extends Component {
   }
 
   handleCityChange = (item) => {
-    console.log('on city change ', item)
+    const {fetchSchools, changeFieldValue} = this.props
+    fetchSchools(item.areaId, item.id,
+      () => {
+        console.log('success on fetching schools')
+        changeFieldValue('EducationInfoForm', 'school', null)
+      },
+      () => {
+        console.log('error on fetching schools')
+      })
   }
 
   onSubmit(values) {
@@ -115,15 +123,19 @@ class EducationInfoForm extends Component {
   }
 
   render() {
-    let {lang, areas, cities, handleSubmit, submitting} = this.props
+    let {lang, areas, cities, schools, handleSubmit, submitting} = this.props
     const {accessType} = this.state
 
     if (areas) {
       areas = this.refactor(areas, lang)
     }
 
-    if(cities) {
+    if (cities) {
       cities = this.refactor(cities, lang)
+    }
+
+    if (schools) {
+      schools = this.refactor(schools, lang)
     }
 
     return (
@@ -166,22 +178,38 @@ class EducationInfoForm extends Component {
           </div>
 
           <div className="form-row mt-3">
-            <div className="col">
-              <label>{message.school[lang]}</label>
-              <select className="form-control">
-                <option>БИЛ</option>
-                <option>НУ</option>
-                <option>3</option>
-              </select>
-            </div>
-            <div className="col">
-              <label>{message.customSchool[lang]}</label>
-              <input type="text" className="form-control" placeholder={message.customSchool[lang]}/>
-            </div>
-            <div className="col">
-              <label>{message.school_finish[lang]}</label>
-              <input type="date" className="form-control"/>
-            </div>
+            <Field
+              label={message.school[lang]}
+              name="school"
+              id="school"
+              options={schools}
+              component={this.renderSelect}
+              // validate={required}
+              placeholder={message.school[lang]}
+              accessType={accessType}
+            />
+
+            <Field
+              label={message.customSchool[lang]}
+              name="customSchool"
+              id="customSchool"
+              type="text"
+              placeholder={message.customSchool[lang]}
+              component={this.renderField}
+              // validate={required}
+              accessType={accessType}
+            />
+
+            <Field
+              label={message.school_finish[lang]}
+              name="school_finish"
+              id="school_finish"
+              type="date"
+              placeholder={message.school_finish[lang]}
+              component={this.renderField}
+              // validate={required}
+              accessType={accessType}
+            />
           </div>
 
           <div className="form-row mt-3">
