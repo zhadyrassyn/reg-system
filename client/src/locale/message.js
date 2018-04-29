@@ -383,5 +383,10 @@ export const message = {
     ru: 'Другой город/село',
     en: 'Another city/village',
     kk: 'Другой город/село'
+  },
+  city_village: {
+    ru: "Город/cело",
+    en: "City/village",
+    kk: "Город/село"
   }
 }

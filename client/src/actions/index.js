@@ -167,8 +167,8 @@ export const fetchAreas = (onSucces, onError) => (dispatch) => {
     })
 }
 
-export const fetchCities = (onSucces, onError) => (dispatch) => {
-  const request = `${config.url}/cities`
+export const fetchCities = (areaId, onSucces, onError) => (dispatch) => {
+  const request = `${config.url}/areas/${areaId}/cities`
 
   axios.get(request)
     .then(({data}) => {

@@ -84,35 +84,46 @@ class EducationInfoForm extends Component {
   }
 
   handleAreaChange = (item) => {
-    console.log('onChange ', city)
-    
-    // const {fetchSchools, initialValues} = this.props
-    // fetchSchools(city.value,
-    //   () => {
-    //     this.props.changeFieldValue('GeneralInfo', 'school', null)
-    //   },
-    //   () => {
-    //     console.log('error')
-    //   })
+    const {fetchCities, initialValues, changeFieldValue} = this.props
+    fetchCities(item.id,
+      () => {
+      console.log('success on fetching cities')
+        changeFieldValue('EducationInfoForm', 'city', null)
+      },
+      () => {
+        console.log('error on fetching cities')
+      })
+  }
+
+  handleCityChange = (item) => {
+    console.log('on city change ', item)
   }
 
   onSubmit(values) {
     console.log('values ', values)
   }
 
+  refactor = (collection, lang) => {
+    return _.map(collection).map(item => {
+      const label = lang === 'ru' ? item.nameRu : lang === 'en' ? item.nameEn : item.nameKkk
+      return {
+        ...item,
+        value: item.id,
+        label
+      }
+    })
+  }
+
   render() {
-    let {lang, areas, handleSubmit, submitting} = this.props
+    let {lang, areas, cities, handleSubmit, submitting} = this.props
     const {accessType} = this.state
 
     if (areas) {
-      areas = _.map(areas).map(item => {
-        const label = lang === 'ru' ? item.nameRu : lang === 'en' ? item.nameEn : item.nameKkk
-        return {
-          ...item,
-          value: item.id,
-          label
-        }
-      })
+      areas = this.refactor(areas, lang)
+    }
+
+    if(cities) {
+      cities = this.refactor(cities, lang)
     }
 
     return (
@@ -130,14 +141,17 @@ class EducationInfoForm extends Component {
               placeholder={message.area[lang]}
               accessType={accessType}
             />
-            <div className="col">
-              <label>{message.city[lang]}/{message.village[lang]}</label>
-              <select className="form-control">
-                <option>Кызылорда</option>
-                <option>Арал</option>
-                <option>Жанакорган</option>
-              </select>
-            </div>
+            <Field
+              label={message.city_village[lang]}
+              name="city"
+              id="city"
+              options={cities}
+              component={this.renderSelect}
+              onChange={this.handleCityChange}
+              // validate={required}
+              placeholder={message.city_village[lang]}
+              accessType={accessType}
+            />
 
             <Field
               label={message.another_cityVillage[lang]}
@@ -294,11 +308,11 @@ export default connect(
     fetchAreas: bindActionCreators(fetchAreas, dispatch),
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
+    changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
 
-    // fetchCities: bindActionCreators(fetchCities, dispatch),
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),
     // saveStudentPersonalInfo: bindActionCreators(saveStudentPersonalInfo, dispatch),
     // fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
-    // changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
+
   })
 )(EducationInfoForm)
