@@ -22,6 +22,8 @@ class Db {
     val cities = HashMap<Long, City>()
     val areas = HashMap<Long, Area>()
 
+    val faculties = HashMap<Long, UserFaculty>()
+
     init { //fill cities
         val a1 = Area(
             id = 10001,
@@ -62,18 +64,18 @@ class Db {
 
         val documentEnums =
             arrayOf(DocumentType.DIPLOMA_CERTIFICATE,
-            DocumentType.FLUOROGRAPHY, DocumentType.HEALTH_063, DocumentType.HEALTH_086,
-            DocumentType.IDENTITY_CARD_BACK, DocumentType.IDENTITY_CARD_FRONT, DocumentType.PHOTO_3x4,
-            DocumentType.UNT_CT_CERTIFICATE
-        )
+                DocumentType.FLUOROGRAPHY, DocumentType.HEALTH_063, DocumentType.HEALTH_086,
+                DocumentType.IDENTITY_CARD_BACK, DocumentType.IDENTITY_CARD_FRONT, DocumentType.PHOTO_3x4,
+                DocumentType.UNT_CT_CERTIFICATE
+            )
 
         val c1 = City(id = longCounter.incrementAndGet(), name = "Almaty")
         val c2 = City(id = longCounter.incrementAndGet(), name = "Astana")
-        val c3 = City(id = longCounter.incrementAndGet(), name ="Qyzylorda")
-        val c4 = City(id = longCounter.incrementAndGet(), name ="Shymkent")
-        val c5 = City(id = longCounter.incrementAndGet(), name ="Aktobe")
-        val c6 = City(id = longCounter.incrementAndGet(), name ="Taldykorgan")
-        val c7 = City(id = longCounter.incrementAndGet(), name ="Pavlodar")
+        val c3 = City(id = longCounter.incrementAndGet(), name = "Qyzylorda")
+        val c4 = City(id = longCounter.incrementAndGet(), name = "Shymkent")
+        val c5 = City(id = longCounter.incrementAndGet(), name = "Aktobe")
+        val c6 = City(id = longCounter.incrementAndGet(), name = "Taldykorgan")
+        val c7 = City(id = longCounter.incrementAndGet(), name = "Pavlodar")
 
         cities[c1.id] = c1
         cities[c2.id] = c2
@@ -104,7 +106,7 @@ class Db {
             birthDate = toDate("1997/06/11"),
             cityId = c2.id,
             schoolId = c2.schools[0].id
-            )
+        )
 
         documentEnums.forEach {
             u1.documents.put(it, Document(
@@ -117,9 +119,9 @@ class Db {
 
         val u2 = User(
             id = longCounter.incrementAndGet(),
-                email = "notActive@gmail.com",
-                password = "qwerty",
-                userStatus = UserStatus.NONACTIVE)
+            email = "notActive@gmail.com",
+            password = "qwerty",
+            userStatus = UserStatus.NONACTIVE)
 
         val u3 = User(
             id = longCounter.incrementAndGet(),
@@ -146,7 +148,7 @@ class Db {
                 lastName = "User$i last name",
                 birthDate = toDate("1996/11/12"),
                 cityId = c1.id,
-                schoolId = c1.schools[i%10].id,
+                schoolId = c1.schools[i % 10].id,
                 userStatus = UserStatus.ACTIVE
             )
 
@@ -175,9 +177,51 @@ class Db {
         userRoles.put(u3.id, RoleType.MODERATOR)
         userRoles.put(u4.id, RoleType.USER)
 
+        val f1 = UserFaculty(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Бизнес школа СДУ",
+            nameEn = "SDU Business school",
+            nameKk = "СДУ Бизнес мектебі"
+        )
+
+        val f1s1 = Specialization(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Есеп және аудит",
+            nameRu = "Учет и аудит",
+            nameEn = "Accounting and auditing"
+        )
+
+        val f1s2 = Specialization(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Маркетинг",
+            nameRu = "Маркетинг",
+            nameEn = "Marketing"
+        )
+
+        f1.specializations[f1s1.id] = f1s1
+        f1.specializations[f1s2.id] = f1s2
+
+        faculties[f1.id] = f1
+
+        val f2 = UserFaculty(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Факультет юриспруденции и социальнo-гуманитарных наук",
+            nameEn = "Faculty of Law and Social sciences",
+            nameKk = "Құқық және әлеуметтік-гуманитарлық ғылымдар факультеті"
+        )
+
+        val f2s1 = Specialization(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Құқықтану",
+            nameEn = "Jurisprudence",
+            nameRu = "Юриспруденция"
+        )
+        f2.specializations[f2s1.id] = f2s1
+
+        faculties[f2.id] = f2
     }
 
-    private fun toDate(birthDate: String) : Date {
+    private fun toDate(birthDate: String): Date {
         val pattern = "yyyy/MM/dd"
         val format = SimpleDateFormat(pattern)
 

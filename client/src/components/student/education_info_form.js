@@ -2,19 +2,115 @@ import React, {Component} from "react"
 import {connect} from "react-redux"
 import {message} from "../../locale/message"
 
+import {bindActionCreators} from "redux"
+import {Field, reduxForm, actionCreators, getFormValues, change as changeFieldValue} from "redux-form"
+
+import _ from "lodash"
+
 import {
   ACCESS_TYPE_EDIT,
   ACCESS_TYPE_SAVE_CANCELLABLE,
   ACCESS_TYPE_SAVE
-} from "../../constants/index";
+} from "../../constants"
+
+import {
+  fetchAreas,
+  fetchCities,
+  fetchSchools
+} from "../../actions";
 
 class EducationInfoForm extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      accessType: ACCESS_TYPE_SAVE
+    }
+  }
+
+  componentDidMount() {
+    const {fetchAreas} = this.props
+    fetchAreas()
+  }
+
+  renderField(field) {
+    const {meta: {touched, error, warning}} = field;
+    let disabled = field.accessType === ACCESS_TYPE_EDIT
+
+    return (
+      <div className="col">
+        <label htmlFor={field.id}>{field.label}</label>
+        <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}
+               id={field.id} disabled={disabled} {...field.input}/>
+
+        {touched && error && <span>{error}</span>}
+      </div>
+    )
+  }
+
+  renderSelect(field) {
+    const {meta: {touched, error, warning}, options} = field
+    let disabled = field.accessType === ACCESS_TYPE_EDIT
+
+    return (
+      <div className="col">
+        <label className="d-block">{field.label}</label>
+        <select {...field.input} className="form-control" disabled={disabled}>
+          <option value="">Выбрать</option>
+          {options && Object.keys(options).map((key, index) => (
+            <option value={options[key].value} key={key}>{options[key].label}</option>
+          ))}
+        </select>
+        {touched && error && <span className="d-block">{error}</span>}
+      </div>
+    )
+  }
+
+  // renderSelect(field) {
+  //   const {meta: {touched, error, warning}} = field;
+  //
+  //   const disabled = field.accessType === ACCESS_TYPE_EDIT
+  //
+  //   return (
+  //     <div className="col">
+  //       <label htmlFor={field.id}>{field.label}</label>
+  //       <MySelectComponent options={field.options} placeholder={field.placeholder}
+  //                          disabled={disabled} {...field.input}/>
+  //       {touched && error && <span>{error}</span>}
+  //     </div>
+  //   )
+  // }
+
+  handleCityChange = (city) => {
+    const {fetchSchools, initialValues} = this.props
+    fetchSchools(city.value,
+      () => {
+        this.props.changeFieldValue('GeneralInfo', 'school', null)
+      },
+      () => {
+        console.log('error')
+      })
+  }
+
+  onSubmit(values) {
+    console.log('values ', values)
+  }
+
   render() {
-    const {lang} = this.props
-    const accessType = ACCESS_TYPE_SAVE
+    const {lang, areas, handleSubmit, submitting} = this.props
+    const {accessType} = this.state
+
+    if (areas) {
+      _.forEach(areas, (value, key) => {
+        const label = lang === 'ru' ? areas[key].nameRu : lang === 'en' ? areas[key].nameEn : areas[key].nameKkk
+        areas[key].value = key
+        areas[key].label = label
+      })
+    }
     return (
       <div className="container-fluid">
-        <form>
+        <form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="my-2">
           <div className="form-row">
             <div className="col">
               <label>{message.area[lang]}</label>
@@ -62,18 +158,43 @@ class EducationInfoForm extends Component {
           </div>
 
           <div className="form-row mt-3">
-            <div className="col">
-              <label>{message.ent_certificate_number[lang]}</label>
-              <input type="text" className="form-control" placeholder={message.ent_certificate_number[lang]}/>
-            </div>
-            <div className="col">
-              <label>{message.ent_amount[lang]}</label>
-              <input type="text" className="form-control" placeholder={message.ent_amount[lang]}/>
-            </div>
-            <div className="col">
-              <label>{message.ikt[lang]}</label>
-              <input type="text" className="form-control" placeholder={message.ikt[lang]}/>
-            </div>
+            <Field
+              label={message.ent_certificate_number[lang]}
+              name="ent_certificate_number"
+              id="ent_certificate_number"
+              type="text"
+              placeholder={message.ent_certificate_number[lang]}
+              component={this.renderField}
+              // validate={required}
+              accessType={accessType}
+            />
+            <Field
+              label={message.ent_amount[lang]}
+              name="ent_amount"
+              id="ent_amount"
+              type="text"
+              placeholder={message.ent_amount[lang]}
+              component={this.renderField}
+              // validate={required}
+              accessType={accessType}
+            />
+            <Field
+              label={message.ikt[lang]}
+              name="ikt"
+              id="ikt"
+              type="text"
+              placeholder={message.ikt[lang]}
+              component={this.renderField}
+              // validate={required}
+              accessType={accessType}
+            />
+          </div>
+
+          <div className="form-row mt-3">
+            <label>Факультет поступления</label>
+            <select className="form-control">
+              <option></option>
+            </select>
           </div>
 
           <div className="form-row mt-3">
@@ -118,15 +239,38 @@ class EducationInfoForm extends Component {
   }
 }
 
+const validate = (values) => {
+  const errors = {}
+
+  // if (!values.school && !values.customSchool) {
+  //   errors.school = "Required"
+  // }
+  return errors
+}
+
+EducationInfoForm = reduxForm({
+  form: 'EducationInfoForm',
+  validate,
+  enableReinitialize: true,
+})(EducationInfoForm)
+
 export default connect(
   state => ({
-    lang: state.lang
+    lang: state.lang,
+    areas: state.info.areas,
+    cities: state.info.cities,
+    schools: state.info.schools,
+
     // cities: refactorCities(state.info.cities),
     // schools: refactorSchools(state.info.schools),
     // formValues: getFormValues('GeneralInfo')(state),
     // initialValues: refactorGeneralInfo(state.student.studentInfo)
   }),
   dispatch => ({
+    fetchAreas: bindActionCreators(fetchAreas, dispatch),
+    fetchCities: bindActionCreators(fetchCities, dispatch),
+    fetchSchools: bindActionCreators(fetchSchools, dispatch),
+
     // fetchCities: bindActionCreators(fetchCities, dispatch),
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),
     // saveStudentPersonalInfo: bindActionCreators(saveStudentPersonalInfo, dispatch),

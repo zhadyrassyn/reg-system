@@ -18,4 +18,10 @@ class InfoController(val infoRegister: InfoRegister) {
 
     @GetMapping("/areas")
     fun getAreas() = infoRegister.getAreas()
+
+    @GetMapping("/faculties")
+    fun getFaculties() = infoRegister.getFaculties()
+
+    @GetMapping("/faculties/{id}/specializations")
+    fun getSpecializations(@PathVariable("id") facultyId: Long) = infoRegister.getSpecializations(facultyId)
 }

@@ -85,21 +85,6 @@ class PersonalInfoForm extends Component {
     )
   }
 
-  // renderSelect(field) {
-  //   const {meta: {touched, error, warning}} = field;
-  //
-  //   const disabled = field.accessType === ACCESS_TYPE_EDIT
-  //
-  //   return (
-  //     <div className="col">
-  //       <label htmlFor={field.id}>{field.label}</label>
-  //       <MySelectComponent options={field.options} placeholder={field.placeholder}
-  //                          disabled={disabled} {...field.input}/>
-  //       {touched && error && <span>{error}</span>}
-  //     </div>
-  //   )
-  // }
-
   renderRadioButtons(field) {
     const {meta: {touched, error, warning}, options} = field
     let disabled = field.accessType === ACCESS_TYPE_EDIT
@@ -253,7 +238,6 @@ class PersonalInfoForm extends Component {
   }
 
   onSubmit(values) {
-
     const {saveStudentPersonalInfo, personalInfo, lang} = this.props
 
     this.setState({showDocumentErrors: true}, () => {
@@ -270,20 +254,6 @@ class PersonalInfoForm extends Component {
         })
       }
     })
-
-    // saveStudentPersonalInfo(values)
-    // const {saveStudentPersonalInfo, initialValues} = this.props
-    // console.log('Why saving?')
-    // saveStudentPersonalInfo(
-    //   values,
-    //   () => {
-    //     console.log('Saved successfully')
-    //     this.setState({accessType: ACCESS_TYPE_EDIT})
-    //   },
-    //   () => {
-    //     console.log('error')
-    //   }
-    // )
   }
 
   onEditClick = () => {
@@ -316,8 +286,6 @@ class PersonalInfoForm extends Component {
         areas[key].label = label
       })
     }
-
-    console.log('isSaving ', isSaving)
 
     const {handleSubmit, submitting} = this.props
 
@@ -698,18 +666,9 @@ class PersonalInfoForm extends Component {
   }
 }
 
-const validate = (values) => {
-  const errors = {}
-
-  if (!values.school && !values.customSchool) {
-    errors.school = "Required"
-  }
-  return errors
-}
-
 PersonalInfoForm = reduxForm({
   form: 'GeneralInfo',
-  validate,
+  // validate,
   enableReinitialize: true,
 })(PersonalInfoForm)
 

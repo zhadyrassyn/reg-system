@@ -348,5 +348,30 @@ export const message = {
     ru: 'Вы должны загрузить файл',
     en: 'You should upload file',
     kk: 'Вы должны загрузить файл'
+  },
+  choose_faculty: {
+    ru: 'Факультет поступления',
+    en: 'Faculty to enroll',
+    kk: 'Факультет поступления'
+  },
+  faculty_business: {
+    ru: 'Бизнес школа СДУ',
+    en: 'SDU Business school',
+    kk: 'СДУ Бизнес мектебі'
+  },
+  faculty_law: {
+    ru: 'Факультет юриспруденции и социальнo-гуманитарных наук',
+    en: 'Faculty of Law and Social sciences',
+    kk: 'Құқық және әлеуметтік-гуманитарлық ғылымдар факультеті'
+  },
+  faculty_philology: {
+    ru: 'Факультет педагогических и гуманитарных наук',
+    en: 'Faculty of Education and Humanities',
+    kk: 'Педагогикалық және гуманитарлық ғылымдар факультеті'
+  },
+  faculty_engineering: {
+    ru: 'Факультет инженерии и естественных наук',
+    en: 'Faculty of Engineering and Natural sciences',
+    kk: 'Инженерлік және жаратылыстану ғылымдары факультеті'
   }
 }

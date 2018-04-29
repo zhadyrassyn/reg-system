@@ -1,8 +1,6 @@
 package kz.edu.sdu.regsystem.controller.register
 
-import kz.edu.sdu.regsystem.controller.model.AreaData
-import kz.edu.sdu.regsystem.controller.model.CityData
-import kz.edu.sdu.regsystem.controller.model.SchoolData
+import kz.edu.sdu.regsystem.controller.model.*
 
 interface InfoRegister {
     fun getCities(): List<CityData>
@@ -10,4 +8,8 @@ interface InfoRegister {
     fun getSchools(cityId: Long): List<SchoolData>
 
     fun getAreas(): List<AreaData>
+
+    fun getFaculties(): List<GetFacultiesResponseData>
+
+    fun getSpecializations(facultyId: Long): List<GetSpecializationsResponseData>
 }

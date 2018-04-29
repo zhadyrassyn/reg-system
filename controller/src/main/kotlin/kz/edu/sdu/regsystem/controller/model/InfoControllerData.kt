@@ -6,3 +6,17 @@ data class AreaData(
     val nameEn: String,
     val nameKk: String
 )
+
+data class GetFacultiesResponseData(
+    val id: Long,
+    val nameRu: String,
+    val nameEn: String,
+    val nameKk: String
+)
+
+data class GetSpecializationsResponseData(
+    val id: Long,
+    val nameRu: String,
+    val nameEn: String,
+    val nameKk: String
+)
