@@ -59,4 +59,8 @@ export const SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE = 'save_student_persona
 export const FETCH_STUDENT_PERSONAL_INFO_SUCCESS = 'fetch_student_personal_info_success'
 export const FETCH_STUDENT_PERSONAL_INFO_FAILURE = 'fetch_student_personal_info_failure'
 
+export const FETCH_FACULTIES_SUCCESS = 'fetch_faculties_success'
+export const FETCH_FACULTIES_FAILURE = 'fetch_faculties_failure'
 
+export const FETCH_SPECIALITIES_SUCCESS = 'fetch_specialities_success'
+export const FETCH_SPECIALITIES_FAILURE = 'fetch_specialities_failure'

@@ -38,7 +38,11 @@ import {
   SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS,
   SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
   FETCH_STUDENT_PERSONAL_INFO_SUCCESS,
-  FETCH_STUDENT_PERSONAL_INFO_FAILURE
+  FETCH_STUDENT_PERSONAL_INFO_FAILURE,
+  FETCH_FACULTIES_FAILURE,
+  FETCH_FACULTIES_SUCCESS,
+  FETCH_SPECIALITIES_SUCCESS,
+  FETCH_SPECIALITIES_FAILURE
 } from "./types"
 
 import axios from "axios"
@@ -166,6 +170,55 @@ export const fetchAreas = (onSucces, onError) => (dispatch) => {
       }
     })
 }
+
+export const fetchFaculties = (onSucces, onError) => (dispatch) => {
+  const request = `${config.url}/faculties`
+
+  axios.get(request)
+    .then(({data}) => {
+      dispatch({
+        type: FETCH_FACULTIES_SUCCESS,
+        data
+      })
+      if (onSucces) {
+        onSucces()
+      }
+    })
+    .catch(error => {
+      dispatch({
+        type: FETCH_FACULTIES_FAILURE,
+        error: error.response && error.response.message
+      })
+      if (onError) {
+        onError()
+      }
+    })
+}
+
+export const fetchSpecialities = (facultyId, onSucces, onError) => (dispatch) => {
+  const request = `${config.url}/faculties/${facultyId}/specialities`
+
+  axios.get(request)
+    .then(({data}) => {
+      dispatch({
+        type: FETCH_SPECIALITIES_SUCCESS,
+        data
+      })
+      if (onSucces) {
+        onSucces()
+      }
+    })
+    .catch(error => {
+      dispatch({
+        type: FETCH_FACULTIES_FAILURE,
+        error: error.response && error.response.message
+      })
+      if (onError) {
+        onError()
+      }
+    })
+}
+
 
 export const fetchCities = (areaId, onSucces, onError) => (dispatch) => {
   const request = `${config.url}/areas/${areaId}/cities`

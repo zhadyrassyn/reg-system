@@ -17,8 +17,10 @@ import {
 import {
   fetchAreas,
   fetchCities,
-  fetchSchools
-} from "../../actions";
+  fetchSchools,
+  fetchFaculties,
+  fetchSpecialities
+} from "../../actions"
 
 class EducationInfoForm extends Component {
 
@@ -31,8 +33,16 @@ class EducationInfoForm extends Component {
   }
 
   componentDidMount() {
-    const {fetchAreas} = this.props
+    const {fetchAreas, fetchFaculties} = this.props
     fetchAreas()
+    fetchFaculties(
+      () => {
+        console.log('success on fetching faculties')
+      },
+      () => {
+        console.log('fail on fetching faculties')
+      }
+    )
   }
 
   renderField(field) {
@@ -84,27 +94,46 @@ class EducationInfoForm extends Component {
   }
 
   handleAreaChange = (item) => {
-    const {fetchCities, initialValues, changeFieldValue} = this.props
-    fetchCities(item.id,
-      () => {
-        console.log('success on fetching cities')
-        changeFieldValue('EducationInfoForm', 'city', null)
-      },
-      () => {
-        console.log('error on fetching cities')
-      })
+    if (item && item.id) {
+      const {fetchCities, initialValues, changeFieldValue} = this.props
+      fetchCities(item.id,
+        () => {
+          console.log('success on fetching cities')
+          changeFieldValue('EducationInfoForm', 'city', null)
+        },
+        () => {
+          console.log('error on fetching cities')
+        })
+    }
   }
 
   handleCityChange = (item) => {
-    const {fetchSchools, changeFieldValue} = this.props
-    fetchSchools(item.areaId, item.id,
-      () => {
-        console.log('success on fetching schools')
-        changeFieldValue('EducationInfoForm', 'school', null)
-      },
-      () => {
-        console.log('error on fetching schools')
-      })
+    if (item && item.id) {
+      const {fetchSchools, changeFieldValue} = this.props
+      fetchSchools(item.areaId, item.id,
+        () => {
+          console.log('success on fetching schools')
+          changeFieldValue('EducationInfoForm', 'school', null)
+        },
+        () => {
+          console.log('error on fetching schools')
+        })
+    }
+  }
+
+  handleFacultyChange = (item) => {
+    if (item && item.id) {
+      const {fetchSpecialities, changeFieldValue} = this.props
+      fetchSpecialities(item.id,
+        () => {
+          console.log('success on fetching specialities')
+          changeFieldValue('EducationInfoForm', 'speciality', null)
+        },
+        () => {
+          console.log('error on fetching specialities')
+        })
+    }
+
   }
 
   onSubmit(values) {
@@ -123,7 +152,7 @@ class EducationInfoForm extends Component {
   }
 
   render() {
-    let {lang, areas, cities, schools, handleSubmit, submitting} = this.props
+    let {lang, areas, cities, schools, handleSubmit, submitting, faculties, specialities} = this.props
     const {accessType} = this.state
 
     if (areas) {
@@ -137,6 +166,16 @@ class EducationInfoForm extends Component {
     if (schools) {
       schools = this.refactor(schools, lang)
     }
+
+    if (faculties) {
+      faculties = this.refactor(faculties, lang)
+    }
+
+    if (specialities) {
+      specialities = this.refactor(specialities, lang)
+    }
+
+    console.log('faculties ', faculties)
 
     return (
       <div className="container-fluid">
@@ -246,21 +285,28 @@ class EducationInfoForm extends Component {
           </div>
 
           <div className="form-row mt-3">
-            <div className="col">
-              <label>{message.choose_faculty[lang]}</label>
-              <select className="form-control">
-                <option>Faculty 1</option>
-                <option>Faculty 2</option>
-              </select>
-            </div>
+            <Field
+              label={message.choose_faculty[lang]}
+              name="faculty"
+              id="faculty"
+              options={faculties}
+              component={this.renderSelect}
+              onChange={this.handleFacultyChange}
+              // validate={required}
+              placeholder={message.choose_faculty[lang]}
+              accessType={accessType}
+            />
 
-            <div className="col">
-              <label>{message.choose_speciality[lang]}</label>
-              <select className="form-control">
-                <option>Speciality 1</option>
-                <option>Speciality 2</option>
-              </select>
-            </div>
+            <Field
+              label={message.choose_speciality[lang]}
+              name="speciality"
+              id="speciality"
+              options={specialities}
+              component={this.renderSelect}
+              // validate={required}
+              placeholder={message.choose_speciality[lang]}
+              accessType={accessType}
+            />
           </div>
 
           <div className="form-row mt-3">
@@ -326,6 +372,8 @@ export default connect(
     areas: state.info.areas,
     cities: state.info.cities,
     schools: state.info.schools,
+    faculties: state.info.faculties,
+    specialities: state.info.specialities
 
     // cities: refactorCities(state.info.cities),
     // schools: refactorSchools(state.info.schools),
@@ -336,6 +384,8 @@ export default connect(
     fetchAreas: bindActionCreators(fetchAreas, dispatch),
     fetchCities: bindActionCreators(fetchCities, dispatch),
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
+    fetchFaculties: bindActionCreators(fetchFaculties, dispatch),
+    fetchSpecialities: bindActionCreators(fetchSpecialities, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
 
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),
