@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.controller.controller
 
 import kz.edu.sdu.regsystem.controller.model.GeneralInfoData
+import kz.edu.sdu.regsystem.controller.model.SaveEducationInfoRequestData
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.DocumentRegister
@@ -41,6 +42,12 @@ class StudentController(
                                  @RequestParam("file")file: MultipartFile,
                                  @RequestParam("type") documentType: DocumentType) =
         studentRegister.savePersonalInfoDocument(id, file, documentType)
+
+    @PostMapping("/education/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun saveEducationInfo(@RequestBody educationInfo: SaveEducationInfoRequestData,
+                          @PathVariable("id")id: Long) =
+        studentRegister.saveEducationInfo(educationInfo, id)
 
 
 }

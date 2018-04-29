@@ -10,7 +10,9 @@ import {
   SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
   SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS,
   FETCH_STUDENT_PERSONAL_INFO_FAILURE,
-  FETCH_STUDENT_PERSONAL_INFO_SUCCESS
+  FETCH_STUDENT_PERSONAL_INFO_SUCCESS,
+  SAVE_EDUCATION_INFO_SUCCESS,
+  SAVE_EDUCATION_INFO_FAILURE
 } from "../actions/types"
 
 import {
@@ -27,7 +29,8 @@ const initialState = {
   documentsStatus: {},
   studentInfo: {},
   personalInfo: {},
-  personalInfoDocuments:{}
+  personalInfoDocuments:{},
+  educationInfo: {}
 }
 
 export default (state = initialState, action) => {
@@ -121,6 +124,16 @@ export default (state = initialState, action) => {
         }
       }
     case FETCH_STUDENT_PERSONAL_INFO_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+    case SAVE_EDUCATION_INFO_SUCCESS:
+      return {
+        ...state,
+        educationInfo: action.data
+      }
+    case SAVE_EDUCATION_INFO_FAILURE:
       return {
         ...state,
         error: action.error

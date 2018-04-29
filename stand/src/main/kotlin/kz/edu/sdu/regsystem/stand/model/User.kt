@@ -22,4 +22,5 @@ data class User(var id: Long = -1,
                 var documentsComment: String = "",
                 var documents: HashMap<DocumentType, Document> = HashMap(),
                 var personalInfo: PersonalInfo? = null,
-                val personalInfoDocuments: PersonalInfoDocuments = PersonalInfoDocuments())
+                val personalInfoDocuments: PersonalInfoDocuments = PersonalInfoDocuments(),
+                var educationInfo: EducationInfo? = null)

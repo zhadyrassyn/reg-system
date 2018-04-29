@@ -42,7 +42,9 @@ import {
   FETCH_FACULTIES_FAILURE,
   FETCH_FACULTIES_SUCCESS,
   FETCH_SPECIALITIES_SUCCESS,
-  FETCH_SPECIALITIES_FAILURE
+  FETCH_SPECIALITIES_FAILURE,
+  SAVE_EDUCATION_INFO_SUCCESS,
+  SAVE_EDUCATION_INFO_FAILURE
 } from "./types"
 
 import axios from "axios"
@@ -210,7 +212,7 @@ export const fetchSpecialities = (facultyId, onSucces, onError) => (dispatch) =>
     })
     .catch(error => {
       dispatch({
-        type: FETCH_FACULTIES_FAILURE,
+        type: FETCH_SPECIALITIES_FAILURE,
         error: error.response && error.response.message
       })
       if (onError) {
@@ -284,7 +286,7 @@ export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch
   }).then(response => {
     dispatch({
       type: SAVE_STUDENT_PERSONAL_INFO_SUCCESS,
-      values
+      data: values
     })
 
     if (onSuccess) {
@@ -293,6 +295,39 @@ export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch
   }).catch(error => {
     dispatch({
       type: SAVE_STUDENT_PERSONAL_INFO_FAILURE,
+      error: error.response && error.response.message
+    })
+
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const saveStudentEducationInfo = (values, onSuccess, onError) => (dispatch) => {
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/education/${userId}`
+
+  axios.post(request, values, {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  }).then(response => {
+    dispatch({
+      type: SAVE_EDUCATION_INFO_SUCCESS,
+      data: values
+    })
+
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: SAVE_EDUCATION_INFO_FAILURE,
       error: error.response && error.response.message
     })
 

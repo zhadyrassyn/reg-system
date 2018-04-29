@@ -76,3 +76,20 @@ data class GetPersonalInfoResponse(
 data class Document(
     val name: String
 )
+
+data class SaveEducationInfoRequestData(
+    val id: Long? = null,
+    val educationArea: Long? = null,
+    val another_cityVillage: String? = null,
+    val city: Long? = null,
+    val school: Long? = null,
+    val customSchool: String? = null,
+    val ent_amount: Long,
+    val ent_certificate_number: String,
+    val faculty: Long,
+    val ikt: String,
+    val speciality: Long,
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    val school_finish: Date? = null
+)

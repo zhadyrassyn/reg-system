@@ -42,7 +42,7 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
     }
 
     fun saveSchool(school: School): Long {
-        val query = "INSERT INTO SCHOOL(name_ru, name_en, name_kk, status, city_id) VALUES (?, ?, ?, ?, ?)"
+        val query = "INSERT INTO SCHOOL(name_ru, name_en, name_kk, status, city) VALUES (?, ?, ?, ?, ?)"
 
         val keyHolder = GeneratedKeyHolder()
 
@@ -62,7 +62,7 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
     }
 
     fun getSchoolsByCity(cityId: Long): List<School> {
-        val query = "SELECT * FROM SCHOOL WHERE city_id=?"
+        val query = "SELECT * FROM SCHOOL WHERE city=?"
 
         return jdbcTemplate.query(query, RowMapper { rs, _ ->
             School(
@@ -71,13 +71,13 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 nameEn = rs.getString("name_en"),
                 nameKk = rs.getString("name_kk"),
                 status = SchoolStatusEnum.valueOf(rs.getString("status")),
-                cityId = rs.getLong("city_id")
+                cityId = rs.getLong("city")
             )
         }, cityId)
     }
 
     fun getSchoolsByCityAndStatus(cityId: Long, status: String): List<School> {
-        val query = "SELECT * FROM SCHOOL WHERE city_id=? AND status=?"
+        val query = "SELECT * FROM SCHOOL WHERE city=? AND status=?"
 
         return jdbcTemplate.query(query, RowMapper { rs, _ ->
             School(
@@ -86,7 +86,7 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 nameEn = rs.getString("name_en"),
                 nameKk = rs.getString("name_kk"),
                 status = SchoolStatusEnum.valueOf(rs.getString("status")),
-                cityId = rs.getLong("city_id")
+                cityId = rs.getLong("city")
             )
         },
             cityId,

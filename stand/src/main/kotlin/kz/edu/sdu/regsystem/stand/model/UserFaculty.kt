@@ -6,5 +6,5 @@ data class UserFaculty(
     val nameEn: String,
     val nameKk: String,
 
-    var specializations: HashMap<Long, Specialization> = HashMap()
+    var specializations: HashMap<Long, Speciality> = HashMap()
 )

@@ -287,14 +287,14 @@ class Db {
             nameKk = "СДУ Бизнес мектебі"
         )
 
-        val f1s1 = Specialization(
+        val f1s1 = Speciality(
             id = longCounter.incrementAndGet(),
             nameKk = "Есеп және аудит",
             nameRu = "Учет и аудит",
             nameEn = "Accounting and auditing"
         )
 
-        val f1s2 = Specialization(
+        val f1s2 = Speciality(
             id = longCounter.incrementAndGet(),
             nameKk = "Маркетинг",
             nameRu = "Маркетинг",
@@ -313,7 +313,7 @@ class Db {
             nameKk = "Құқық және әлеуметтік-гуманитарлық ғылымдар факультеті"
         )
 
-        val f2s1 = Specialization(
+        val f2s1 = Speciality(
             id = longCounter.incrementAndGet(),
             nameKk = "Құқықтану",
             nameEn = "Jurisprudence",

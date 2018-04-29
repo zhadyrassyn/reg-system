@@ -19,7 +19,8 @@ import {
   fetchCities,
   fetchSchools,
   fetchFaculties,
-  fetchSpecialities
+  fetchSpecialities,
+  saveStudentEducationInfo
 } from "../../actions"
 
 class EducationInfoForm extends Component {
@@ -28,7 +29,13 @@ class EducationInfoForm extends Component {
     super(props)
 
     this.state = {
-      accessType: ACCESS_TYPE_SAVE
+      accessType: ACCESS_TYPE_SAVE,
+      documentType: '',
+      showDocumentErrors: '',
+      isSaving: false,
+
+      isDiplomaSaving: false,
+      isEntCertificateSaving: false,
     }
   }
 
@@ -56,24 +63,6 @@ class EducationInfoForm extends Component {
                id={field.id} disabled={disabled} {...field.input}/>
 
         {touched && error && <span>{error}</span>}
-      </div>
-    )
-  }
-
-  renderSelect(field) {
-    const {meta: {touched, error, warning}, options} = field
-    let disabled = field.accessType === ACCESS_TYPE_EDIT
-
-    return (
-      <div className="col">
-        <label className="d-block">{field.label}</label>
-        <select {...field.input} className="form-control" disabled={disabled}>
-          <option value="">Выбрать</option>
-          {options && Object.keys(options).map((key, index) => (
-            <option value={options[key].value} key={key}>{options[key].label}</option>
-          ))}
-        </select>
-        {touched && error && <span className="d-block">{error}</span>}
       </div>
     )
   }
@@ -137,7 +126,36 @@ class EducationInfoForm extends Component {
   }
 
   onSubmit(values) {
+    const {saveStudentEducationInfo, educationInfo} = this.props
     console.log('values ', values)
+
+    const saveData = {
+      ...values,
+      city: (values.city && values.city.id) || null,
+      educationArea: values.educationArea.id,
+      school: (values.school && values.school.id) || null,
+      faculty: values.faculty.id,
+      speciality: values.speciality.id
+    }
+
+    this.setState({showDocumentErrors: true}, () => {
+      // if (personalInfo.ud_front && personalInfo.ud_front && personalInfo.photo3x4) {
+        this.setState({isSaving: true}, () => {
+          saveStudentEducationInfo(saveData,
+            () => {
+              this.setState({isSaving: false, accessType: ACCESS_TYPE_EDIT})
+            },
+            () => {
+              this.setState({isSaving: false})
+            }
+          )
+        })
+      // }
+    })
+  }
+
+  handleEditBtn = () => {
+    this.setState({accessType: ACCESS_TYPE_SAVE})
   }
 
   refactor = (collection, lang) => {
@@ -152,8 +170,9 @@ class EducationInfoForm extends Component {
   }
 
   render() {
-    let {lang, areas, cities, schools, handleSubmit, submitting, faculties, specialities} = this.props
-    const {accessType} = this.state
+    let {lang, areas, cities, schools, handleSubmit, submitting, faculties, specialities, educationInfo} = this.props
+    console.log('educationInfo ', educationInfo)
+    const {accessType, documentType, showDocumentErrors, isSaving, isDiplomaSaving, isEntCertificateSaving} = this.state
 
     if (areas) {
       areas = this.refactor(areas, lang)
@@ -174,8 +193,6 @@ class EducationInfoForm extends Component {
     if (specialities) {
       specialities = this.refactor(specialities, lang)
     }
-
-    console.log('faculties ', faculties)
 
     return (
       <div className="container-fluid">
@@ -330,20 +347,33 @@ class EducationInfoForm extends Component {
               </li>
             </ul>
           </div>
-          <div className="form-group">
-            <label htmlFor="comment">Review Comment</label>
-            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
-          </div>
+
           <div className="col text-right">
-            <button className="btn btn-success">{message.save[lang]}</button>
-            {accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&
-            <button
-              className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}
-              type="submit" disabled={submitting}>{message.save[lang]}</button>}
-            {accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button"
-                                                        onClick={this.onEditClick}>{message.edit[lang]}</button>}
-            {accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"
-                                                                    onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}
+            {accessType === ACCESS_TYPE_SAVE &&
+            <button className="btn btn-success btn-lg" type="submit" disabled={isSaving}>
+              {message.send[lang]}
+              {isSaving && <span className="spinner-white ml-2"><i className="fa fa-spinner fa-spin fa-1x"/></span>}
+            </button>
+            }
+
+
+            {accessType === ACCESS_TYPE_EDIT &&
+            <button className="btn btn-warning btn-lg" type="button"
+                    onClick={this.handleEditBtn.bind(this)}>{message.edit[lang]}</button>}
+
+
+            {/*{accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&*/}
+            {/*<button*/}
+            {/*className={"btn mt-3 " + (accessType === ACCESS_TYPE_SAVE_CANCELLABLE ? 'btn-danger' : 'btn-success')}*/}
+            {/*type="submit" disabled={submitting}>{message.save[lang]}</button>}*/}
+            {/*{accessType === ACCESS_TYPE_EDIT && <button className="btn mt-3 btn-warning" type="button"*/}
+            {/*onClick={this.onEditClick}>{message.edit[lang]}</button>}*/}
+            {/*{accessType === ACCESS_TYPE_SAVE_CANCELLABLE && <button className="btn mt-3 ml-3 btn-success" type="button"*/}
+            {/*onClick={this.onCancelClicked}>{message.cancel[lang]}</button>}*/}
+          </div>
+          <div className="form-group">
+            <label htmlFor="comment">{message.moderator_comment[lang]}</label>
+            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
           </div>
         </form>
       </div>
@@ -373,7 +403,8 @@ export default connect(
     cities: state.info.cities,
     schools: state.info.schools,
     faculties: state.info.faculties,
-    specialities: state.info.specialities
+    specialities: state.info.specialities,
+    educationInfo: state.student.educationInfo
 
     // cities: refactorCities(state.info.cities),
     // schools: refactorSchools(state.info.schools),
@@ -386,6 +417,7 @@ export default connect(
     fetchSchools: bindActionCreators(fetchSchools, dispatch),
     fetchFaculties: bindActionCreators(fetchFaculties, dispatch),
     fetchSpecialities: bindActionCreators(fetchSpecialities, dispatch),
+    saveStudentEducationInfo: bindActionCreators(saveStudentEducationInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
 
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),
