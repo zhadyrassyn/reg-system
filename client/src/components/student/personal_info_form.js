@@ -41,7 +41,11 @@ class PersonalInfoForm extends Component {
       accessType: ACCESS_TYPE_SAVE,
       documentType: '',
       showDocumentErrors: '',
-      isSaving: false
+      isSaving: false,
+
+      isPhoto3x4Saving: false,
+      isUdBackSaving: false,
+      isUdFrontSaving: false
     }
   }
 
@@ -49,7 +53,7 @@ class PersonalInfoForm extends Component {
     const {fetchAreas, fetchPersonalInfo} = this.props
     fetchPersonalInfo(
       (data) => {
-        if(data.id) {
+        if (data.id) {
           this.setState({accessType: ACCESS_TYPE_EDIT})
         }
       },
@@ -146,25 +150,28 @@ class PersonalInfoForm extends Component {
 
   }
 
-  renderDocuments = (lang, showDocumentErrors, personalInfoDocuments) => {
+  renderDocuments = (lang, showDocumentErrors, personalInfoDocuments, isPhoto3x4Saving, isUdFrontSaving, isUdBackSaving) => {
     const labels = [
       {
         type: IDENTITY_CARD_FRONT,
         label: message.ud_front[lang],
         error: message.upload_file[lang],
-        imageName: personalInfoDocuments.ud_front
+        imageName: personalInfoDocuments.ud_front,
+        loading: isUdFrontSaving
       },
       {
         type: IDENTITY_CARD_BACK,
         label: message.ud_back[lang],
         error: message.upload_file[lang],
-        imageName: personalInfoDocuments.ud_back
+        imageName: personalInfoDocuments.ud_back,
+        loading: isUdBackSaving
       },
       {
         type: PHOTO_3x4,
         label: message.photo_3x4[lang],
         error: message.upload_file[lang],
-        imageName: personalInfoDocuments.photo3x4
+        imageName: personalInfoDocuments.photo3x4,
+        loading: isPhoto3x4Saving
       }
     ]
 
@@ -174,10 +181,14 @@ class PersonalInfoForm extends Component {
           <a href="#" onClick={this.exportFile} name={option.type}>
             {option.label}
           </a>
+
+          {option.loading && <span className="spinner ml-3"><i className="fa fa-spinner fa-spin fa-1x"/></span>}
+
           {showDocumentErrors && !option.imageName &&
           <span className="text-danger ml-2">{option.error}</span>
           }
-          {option.imageName &&
+
+          {!option.loading && option.imageName &&
           <a className="ml-2" target="_blank" href={`http://localhost:8081/api/upload/${option.imageName}`}><i
             className="fas fa-eye"></i></a>
           }
@@ -187,11 +198,44 @@ class PersonalInfoForm extends Component {
   }
 
   onFileChange = (e) => {
+    const {savePersonalDocument} = this.props
+
     const file = e.target.files[0]
     const documentType = this.state.documentType
 
-    const {savePersonalDocument} = this.props
-    savePersonalDocument(file, documentType)
+    if (documentType === PHOTO_3x4) {
+      this.setState({isPhoto3x4Saving: true}, () => {
+        savePersonalDocument(file, documentType,
+          () => {
+            this.setState({isPhoto3x4Saving: false})
+          },
+          () => {
+            this.setState({isPhoto3x4Saving: false})
+          }
+        )
+      })
+    } else if (documentType === IDENTITY_CARD_BACK) {
+      this.setState({isUdBackSaving: true}, () => {
+        savePersonalDocument(file, documentType,
+          () => {
+            this.setState({isUdBackSaving: false})
+          },
+          () => {
+            this.setState({isUdBackSaving: false})
+          })
+      })
+    } else if (documentType === IDENTITY_CARD_FRONT) {
+      this.setState({isUdFrontSaving: true}, () => {
+        savePersonalDocument(file, documentType,
+          () => {
+            this.setState({isUdFrontSaving: false})
+          },
+          () => {
+            this.setState({isUdFrontSaving: false})
+          })
+      })
+    }
+
   }
 
   exportFile = (e) => {
@@ -263,7 +307,7 @@ class PersonalInfoForm extends Component {
 
   render() {
     let {areas, cities, schools, initialValues, lang, personalInfo, personalInfoDocuments} = this.props
-    const {showDocumentErrors, accessType} = this.state
+    const {showDocumentErrors, accessType, isSaving, isPhoto3x4Saving, isUdFrontSaving, isUdBackSaving} = this.state
 
     if (areas) {
       _.forEach(areas, (value, key) => {
@@ -272,6 +316,8 @@ class PersonalInfoForm extends Component {
         areas[key].label = label
       })
     }
+
+    console.log('isSaving ', isSaving)
 
     const {handleSubmit, submitting} = this.props
 
@@ -592,7 +638,7 @@ class PersonalInfoForm extends Component {
           <div className="form-row mt-3">
             <legend>{message.documents[lang]}</legend>
             <ul className="list-unstyled">
-              {this.renderDocuments(lang, showDocumentErrors, personalInfoDocuments)}
+              {this.renderDocuments(lang, showDocumentErrors, personalInfoDocuments, isPhoto3x4Saving, isUdFrontSaving, isUdBackSaving)}
             </ul>
             <input style={{display: 'none'}} type="file" id="documentFile" onChange={this.onFileChange} onClick={e => {
               e.target.value = null
@@ -621,9 +667,16 @@ class PersonalInfoForm extends Component {
 
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE &&
-            <button className="btn btn-success" type="submit">{message.send[lang]}</button>}
+            <button className="btn btn-success btn-lg" type="submit" disabled={isSaving}>
+              {message.send[lang]}
+              {isSaving && <span className="spinner-white ml-2"><i className="fa fa-spinner fa-spin fa-1x"/></span>}
+            </button>
+            }
+
+
             {accessType === ACCESS_TYPE_EDIT &&
-            <button className="btn btn-warning" type="button" onClick={this.handleEditBtn.bind(this)}>{message.edit[lang]}</button>}
+            <button className="btn btn-warning btn-lg" type="button"
+                    onClick={this.handleEditBtn.bind(this)}>{message.edit[lang]}</button>}
 
 
             {/*{accessType === ACCESS_TYPE_SAVE || accessType === ACCESS_TYPE_SAVE_CANCELLABLE &&*/}

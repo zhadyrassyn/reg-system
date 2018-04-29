@@ -16,8 +16,8 @@ spring:
     username: dandibobo537@gmail.com
   servlet:
     multipart:
-      max-file-size: 128KB
-      max-request-size: 128KB
+      max-file-size: 1024KB
+      max-request-size: 1024KB
 
 
 server:

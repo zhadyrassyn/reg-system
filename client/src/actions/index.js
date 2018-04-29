@@ -43,10 +43,10 @@ import {
 
 import axios from "axios"
 import config from "../config"
-import { browserHistory } from "react-router"
-import { fetchIdFromToken } from "../utils"
+import {browserHistory} from "react-router"
+import {fetchIdFromToken} from "../utils"
 
-export const changeLang = lang => ({ type: CHANGE_LANG, lang })
+export const changeLang = lang => ({type: CHANGE_LANG, lang})
 
 export const singUp = ({email, password}, onSuccess, onError) => (dispatch) => {
   const request = `${config.url}/auth/signup`
@@ -117,7 +117,7 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
 
       browserHistory.push('/')
 
-      if(onSuccess) {
+      if (onSuccess) {
         onSuccess()
       }
     })
@@ -128,7 +128,7 @@ export const signIn = (values, onSuccess, onError) => (dispatch) => {
         message
       })
 
-      if(onError) {
+      if (onError) {
         onError(message)
       }
 
@@ -152,7 +152,7 @@ export const fetchAreas = (onSucces, onError) => (dispatch) => {
         type: FETCH_AREAS_SUCCESS,
         data
       })
-      if(onSucces) {
+      if (onSucces) {
         onSucces()
       }
     })
@@ -161,7 +161,7 @@ export const fetchAreas = (onSucces, onError) => (dispatch) => {
         type: FETCH_AREAS_FAILURE,
         error: error.response && error.response.message
       })
-      if(onError) {
+      if (onError) {
         onError()
       }
     })
@@ -176,16 +176,16 @@ export const fetchCities = (onSucces, onError) => (dispatch) => {
         type: FETCH_CITIES_SUCCESS,
         data
       })
-      if(onSucces) {
+      if (onSucces) {
         onSucces()
       }
-  })
+    })
     .catch(error => {
       dispatch({
         type: FETCH_CITIES_FAILURE,
         error: error.response && error.response.message
       })
-      if(onError) {
+      if (onError) {
         onError()
       }
     })
@@ -200,7 +200,7 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
         type: FETCH_SCHOOLS_SUCCESS,
         data
       })
-      if(onSuccess) {
+      if (onSuccess) {
         onSuccess()
       }
     })
@@ -209,7 +209,7 @@ export const fetchSchools = (id, onSuccess, onError) => (dispatch) => {
         type: FETCH_SCHOOLS_FAILURE,
         error: error.response && error.response.message
       })
-      if(onError) {
+      if (onError) {
         onError()
       }
     })
@@ -226,7 +226,7 @@ export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch
   axios.post(request, values, {
     headers: {
       "Authorization": `Bearer ${token}`,
-      "Content-Type" : "application/json"
+      "Content-Type": "application/json"
     }
   }).then(response => {
     dispatch({
@@ -234,7 +234,7 @@ export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch
       values
     })
 
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess()
     }
   }).catch(error => {
@@ -243,7 +243,7 @@ export const saveStudentPersonalInfo = (values, onSuccess, onError) => (dispatch
       error: error.response && error.response.message
     })
 
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -278,7 +278,7 @@ export const saveDocument = (file, documentType) => (dispatch) => {
       })
     )
 }
-export const savePersonalDocument = (file, documentType) => (dispatch) => {
+export const savePersonalDocument = (file, documentType, onSuccess, onError) => (dispatch) => {
   const token = localStorage.getItem('token')
 
   const userId = fetchIdFromToken(token)
@@ -301,12 +301,21 @@ export const savePersonalDocument = (file, documentType) => (dispatch) => {
       type: SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_SUCCESS,
       data: response.data
     })
+
+    if (onSuccess) {
+      onSuccess()
+    }
   })
-    .catch(error =>
-      dispatch({
-        type: SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
-        message: error.response && error.response.message
-      })
+    .catch(error => {
+        dispatch({
+          type: SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE,
+          message: error.response && error.response.message
+        })
+
+        if (onError) {
+          onError()
+        }
+      }
     )
 }
 
@@ -327,7 +336,7 @@ export const fetchPersonalInfo = (onSuccess, onError) => (dispatch) => {
       data: response.data
     })
 
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess(response.data)
     }
   }).catch(error => {
@@ -336,7 +345,7 @@ export const fetchPersonalInfo = (onSuccess, onError) => (dispatch) => {
       error: error.response && error.response.message
     })
 
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -377,13 +386,13 @@ export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
     headers: {
       'Authorization': `Bearer ${token}`,
     }
-  }).then(({ data }) => {
+  }).then(({data}) => {
     dispatch({
       type: FETCH_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
 
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess(data)
     }
   }).catch(error => {
@@ -392,7 +401,7 @@ export const fetchStudentGeneralInfo = (onSuccess, onError) => (dispatch) => {
       error: error.response && error.response.message
     })
 
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -407,12 +416,12 @@ export const fetchStudents = (text, currentPage, perPage, onSuccess, onError) =>
     headers: {
       'Authorization': `Bearer ${token}`,
     }
-  }).then(({ data }) => {
+  }).then(({data}) => {
     dispatch({
       type: FETCH_STUDENTS_SUCCESS,
       data
     })
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess(data)
     }
   }).catch(error => {
@@ -420,7 +429,7 @@ export const fetchStudents = (text, currentPage, perPage, onSuccess, onError) =>
       type: FETCH_STUDENTS_FAILURE,
       error: error.response && error.response.message
     })
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -434,12 +443,12 @@ export const fetchStudentFullInfo = (id, onSuccess, onError) => (dispatch) => {
     headers: {
       'Authorization': `Bearer ${token}`
     }
-  }).then(({ data }) => {
+  }).then(({data}) => {
     dispatch({
       type: FETCH_STUDENT_FULL_INFO_SUCCESS,
       data
     })
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess(data)
     }
   }).catch(error => {
@@ -447,7 +456,7 @@ export const fetchStudentFullInfo = (id, onSuccess, onError) => (dispatch) => {
       type: FETCH_STUDENT_FULL_INFO_FAILURE,
       error: error.response && error.response.message
     })
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -470,7 +479,7 @@ export const editGeneralInfo = (id, generalInfoComment, generalInfoStatus, onSuc
       type: EDIT_STUDENT_GENERAL_INFO_SUCCESS,
       data
     })
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess()
     }
   }).catch(error => {
@@ -478,7 +487,7 @@ export const editGeneralInfo = (id, generalInfoComment, generalInfoStatus, onSuc
       type: EDIT_STUDENT_GENERAL_INFO_FAILURE,
       error: error.response && error.response.message
     })
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -488,7 +497,7 @@ export const saveDocumentsComment = (id, comment, onSuccess, onError) => (dispat
   const request = `${config.url}/moderator/students/${id}/documents/comment`
 
   const token = localStorage.getItem('token')
-  const data = { comment }
+  const data = {comment}
   axios.post(request, data, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -498,7 +507,7 @@ export const saveDocumentsComment = (id, comment, onSuccess, onError) => (dispat
       type: SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS,
       data
     })
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess()
     }
   }).catch(error => {
@@ -506,7 +515,7 @@ export const saveDocumentsComment = (id, comment, onSuccess, onError) => (dispat
       type: SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE,
       error: error.response && error.response.message
     })
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
@@ -556,7 +565,7 @@ export const fetchTotalAmountOfStudents = (text, onSuccess, onError) => (dispatc
       type: FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
       data
     })
-    if(onSuccess) {
+    if (onSuccess) {
       onSuccess()
     }
   }).catch(error => {
@@ -564,7 +573,7 @@ export const fetchTotalAmountOfStudents = (text, onSuccess, onError) => (dispatc
       type: FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
       error: error.response && error.response.message
     })
-    if(onError) {
+    if (onError) {
       onError()
     }
   })
