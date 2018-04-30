@@ -76,3 +76,6 @@ export const SAVE_EDUCATION_DOCUMENT_FAILURE = 'save_education_document_failure'
 
 export const SAVE_MEDICAL_DOCUMENT_SUCCESS = 'save_medical_document_success'
 export const SAVE_MEDICAL_DOCUMENT_FAILURE = 'save_medical_document_failure'
+
+export const FETCH_MEDICAL_INFO_SUCCESS = 'fetch_medical_info_success'
+export const FETCH_MEDICAL_INFO_FAILURE = 'fetch_medical_info_failure'

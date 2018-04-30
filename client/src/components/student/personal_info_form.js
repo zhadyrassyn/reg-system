@@ -234,10 +234,10 @@ class PersonalInfoForm extends Component {
   }
 
   onSubmit(values) {
-    const {saveStudentPersonalInfo, personalInfo, lang} = this.props
+    const {saveStudentPersonalInfo, personalInfoDocuments, lang} = this.props
 
     this.setState({showDocumentErrors: true}, () => {
-      if (personalInfo.ud_front && personalInfo.ud_front && personalInfo.photo3x4) {
+      if (personalInfoDocuments.ud_front && personalInfoDocuments.ud_front && personalInfoDocuments.photo3x4) {
         this.setState({isSaving: true}, () => {
           saveStudentPersonalInfo(values,
             () => {

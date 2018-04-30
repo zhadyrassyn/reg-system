@@ -8,14 +8,12 @@ import {
   FORM_PERSONAL_INFO,
   FORM_EDUCATION_INFO,
   FORM_MEDICAL_INFO,
-  FORM_CERTIFICATES_INFO
 } from "../../constants"
 
 const FORMS = [
   FORM_PERSONAL_INFO,
   FORM_EDUCATION_INFO,
   FORM_MEDICAL_INFO,
-  FORM_CERTIFICATES_INFO
 ]
 
 export default class OverviewMenu extends Component{

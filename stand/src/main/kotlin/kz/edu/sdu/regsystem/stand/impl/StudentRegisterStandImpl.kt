@@ -23,6 +23,18 @@ class StudentRegisterStandImpl(
     val db: Db,
     val fileService: FileService
 ) : StudentRegister {
+    override fun getMedicalInfo(id: Long): GetMedicalInfoResponseData {
+        val user = db.users.values.firstOrNull { id == it.id }
+            ?: throw UserDoesNotExistsException("User does not exist")
+
+        val medicalInfoDocuments = user.medicalInfoDocuments
+        return GetMedicalInfoResponseData(
+            form63 = medicalInfoDocuments.form63?.path?.fileName?.toString(),
+            form86 = medicalInfoDocuments.form86?.path?.fileName?.toString(),
+            flurography = medicalInfoDocuments.flurography?.path?.fileName?.toString()
+        )
+    }
+
     override fun saveMedicalDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
         val user = db.users.values.firstOrNull { id == it.id }
             ?: throw UserDoesNotExistsException("User does not exist")
@@ -192,6 +204,7 @@ class StudentRegisterStandImpl(
             customSchool = customSchool,
             ent_amount = educationInfo.ent_amount,
             ent_certificate_number = educationInfo.ent_certificate_number,
+            ikt = educationInfo.ikt,
             faculty = GetFacultiesResponseData(
                 id = educationInfo.faculty.id,
                 nameRu = educationInfo.faculty.nameRu,
@@ -205,8 +218,8 @@ class StudentRegisterStandImpl(
                 nameKk = educationInfo.speciality.nameKk
             ),
             school_finish = toDate(educationInfo.school_finish),
-            schoolDiploma = user.educationInfoDocuments.schoolDiploma?.path?.toString(),
-            entCertificate = user.educationInfoDocuments.entCertificate?.path?.toString()
+            schoolDiploma = user.educationInfoDocuments.schoolDiploma?.path?.fileName?.toString(),
+            entCertificate = user.educationInfoDocuments.entCertificate?.path?.fileName?.toString()
         )
     }
 

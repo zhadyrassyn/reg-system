@@ -8,7 +8,11 @@ import {
   FLUOROGRAPHY
 } from "../../constants"
 
-import { saveMedicalDocument} from "../../actions"
+import {
+  saveMedicalDocument,
+  fetchMedicalInfo
+} from "../../actions"
+
 import {bindActionCreators} from "redux"
 
 class MedicalInfoForm extends Component {
@@ -21,6 +25,18 @@ class MedicalInfoForm extends Component {
       isForm63Saving: false,
       isFlurographySaving: false
     }
+  }
+
+  componentDidMount() {
+    const {fetchMedicalInfo} = this.props
+    fetchMedicalInfo(
+      () => {
+        console.log('success on fetching medical info')
+      },
+      () => {
+        console.log('error on fetching medical info')
+      }
+    )
   }
 
   exportFile = (e) => {
@@ -128,8 +144,6 @@ class MedicalInfoForm extends Component {
     const {lang, medicalInfoDocuments} = this.props
     const {isForm86Saving, isForm63Saving, isFlurographySaving} = this.state
 
-    console.log('medicalInfoDocs ', medicalInfoDocuments)
-
     return (
       <div className="container-fluid">
         <div className="form-row mt-3">
@@ -157,6 +171,7 @@ export default connect(
     medicalInfoDocuments: state.student.medicalInfoDocuments
   }),
   dispatch => ({
-    saveMedicalDocument: bindActionCreators(saveMedicalDocument, dispatch)
+    saveMedicalDocument: bindActionCreators(saveMedicalDocument, dispatch),
+    fetchMedicalInfo: bindActionCreators(fetchMedicalInfo, dispatch)
   })
 )(MedicalInfoForm)

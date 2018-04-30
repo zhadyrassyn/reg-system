@@ -65,4 +65,7 @@ class StudentController(
                                 @RequestParam("file")file: MultipartFile,
                                 @RequestParam("type") documentType: DocumentType) =
         studentRegister.saveMedicalDocument(id, file, documentType)
+
+    @GetMapping("/medical/{id}")
+    fun getMedicalInfo(@PathVariable("id") id: Long) = studentRegister.getMedicalInfo(id)
 }

@@ -18,7 +18,9 @@ import {
   SAVE_EDUCATION_DOCUMENT_SUCCESS,
   SAVE_EDUCATION_DOCUMENT_FAILURE,
   SAVE_MEDICAL_DOCUMENT_FAILURE,
-  SAVE_MEDICAL_DOCUMENT_SUCCESS
+  SAVE_MEDICAL_DOCUMENT_SUCCESS,
+  FETCH_MEDICAL_INFO_SUCCESS,
+  FETCH_MEDICAL_INFO_FAILURE
 } from "../actions/types"
 
 import {
@@ -159,6 +161,17 @@ export default (state = initialState, action) => {
         }
       }
     case SAVE_MEDICAL_DOCUMENT_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+
+    case FETCH_MEDICAL_INFO_SUCCESS:
+      return {
+        ...state,
+        medicalInfoDocuments: action.data
+      }
+    case FETCH_MEDICAL_INFO_FAILURE:
       return {
         ...state,
         error: action.error

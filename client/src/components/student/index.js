@@ -4,17 +4,11 @@ import OverviewMenu from "./overview_menu"
 import PersonalInfoForm from "./personal_info_form"
 import EducationInfoForm from "./education_info_form"
 import MedicalInfoForm from "./medical_info_form"
-import CertificatesInfoForm from "./certificates_info_form"
-import DocumentsForm from "./documents_form"
 import {connect} from "react-redux"
 
 import {
-  FORM_GENERAL,
-  FORM_DOCUMENTS,
-
   FORM_PERSONAL_INFO,
   FORM_EDUCATION_INFO,
-  FORM_CERTIFICATES_INFO,
   FORM_MEDICAL_INFO
 } from "../../constants"
 
@@ -30,7 +24,7 @@ class StudentApp extends Component {
   changeForm = (form) => {
     this.setState({ activeForm: form })
   }
-
+f
   render() {
     const activeForm = this.state.activeForm
     const {lang} = this.props
@@ -41,7 +35,6 @@ class StudentApp extends Component {
         { activeForm === FORM_PERSONAL_INFO && <PersonalInfoForm /> }
         { activeForm === FORM_EDUCATION_INFO && <EducationInfoForm /> }
         { activeForm === FORM_MEDICAL_INFO && <MedicalInfoForm /> }
-        { activeForm === FORM_CERTIFICATES_INFO && <CertificatesInfoForm /> }
       </div>
     )
   }

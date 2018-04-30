@@ -146,11 +146,11 @@ class EducationInfoForm extends Component {
 
     const saveData = {
       ...values,
-      city: (values.city && values.city.id) || null,
-      educationArea: (values.educationArea && values.educationArea.id) || null,
-      school: (values.school && values.school.id) || null,
-      faculty: (values.faculty && values.faculty.id) || null,
-      speciality: (values.speciality && values.speciality.id) || null
+      city: values.city.id || null,
+      educationArea: values.educationArea.id || null,
+      school: values.school.id || null,
+      faculty: values.faculty.id || null,
+      speciality: values.speciality.id || null
     }
 
     this.setState({showDocumentErrors: true}, () => {
@@ -162,7 +162,8 @@ class EducationInfoForm extends Component {
             },
             () => {
               this.setState({isSaving: false})
-            }
+            },
+            values
           )
         })
       }

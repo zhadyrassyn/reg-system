@@ -103,10 +103,17 @@ data class GetEducationInfoResponseData(
     val customSchool: String? = null,
     val ent_amount: Long? = null,
     val ent_certificate_number: String? = null,
+    val ikt: String? = null,
     val faculty: GetFacultiesResponseData? = null,
     val speciality: GetSpecializationsResponseData? = null,
     val school_finish: String? = null,
 
     val schoolDiploma: String? = null,
     val entCertificate: String? = null
+)
+
+data class GetMedicalInfoResponseData(
+    val form63: String? = null,
+    val form86: String? = null,
+    val flurography: String? = null
 )
