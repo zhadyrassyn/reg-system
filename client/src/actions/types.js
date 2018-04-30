@@ -67,3 +67,6 @@ export const FETCH_SPECIALITIES_FAILURE = 'fetch_specialities_failure'
 
 export const SAVE_EDUCATION_INFO_SUCCESS = 'save_education_info_success'
 export const SAVE_EDUCATION_INFO_FAILURE = 'save_education_info_failure'
+
+export const FETCH_EDUCATION_INFO_SUCCESS = 'fetch_education_info_success'
+export const FETCH_EDUCATION_INFO_FAILURE = 'fetch_education_info_failure'

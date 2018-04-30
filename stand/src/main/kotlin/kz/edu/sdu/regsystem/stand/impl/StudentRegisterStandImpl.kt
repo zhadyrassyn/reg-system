@@ -131,19 +131,25 @@ class StudentRegisterStandImpl(
                 nameKk = educationInfo.area.nameKk,
                 nameEn = educationInfo.area.nameEn
             ),
-            city = CityData(
-                id = educationInfo.city.id,
-                nameEn = educationInfo.city.nameEn,
-                nameRu = educationInfo.city.nameRu,
-                nameKk = educationInfo.city.nameKk
-            ),
+            city = if (educationInfo.city.status !== UserCityStatus.CUSTOM)
+                CityData(
+                    id = educationInfo.city.id,
+                    nameEn = educationInfo.city.nameEn,
+                    nameRu = educationInfo.city.nameRu,
+                    nameKk = educationInfo.city.nameKk
+                )
+            else
+                null,
             another_cityVillage = customCity,
-            school = SchoolData(
-                id = educationInfo.school.id,
-                nameEn = educationInfo.school.nameEn,
-                nameKk = educationInfo.school.nameKk,
-                nameRu = educationInfo.school.nameRu
-            ),
+            school = if (educationInfo.school.schoolStatus != SchoolStatus.CUSTOM)
+                SchoolData(
+                    id = educationInfo.school.id,
+                    nameEn = educationInfo.school.nameEn,
+                    nameKk = educationInfo.school.nameKk,
+                    nameRu = educationInfo.school.nameRu
+                )
+            else
+                null,
             customSchool = customSchool,
             ent_amount = educationInfo.ent_amount,
             ent_certificate_number = educationInfo.ent_certificate_number,

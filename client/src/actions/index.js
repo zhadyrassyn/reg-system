@@ -44,7 +44,9 @@ import {
   FETCH_SPECIALITIES_SUCCESS,
   FETCH_SPECIALITIES_FAILURE,
   SAVE_EDUCATION_INFO_SUCCESS,
-  SAVE_EDUCATION_INFO_FAILURE
+  SAVE_EDUCATION_INFO_FAILURE,
+  FETCH_EDUCATION_INFO_SUCCESS,
+  FETCH_EDUCATION_INFO_FAILURE
 } from "./types"
 
 import axios from "axios"
@@ -430,6 +432,38 @@ export const fetchPersonalInfo = (onSuccess, onError) => (dispatch) => {
   }).catch(error => {
     dispatch({
       type: FETCH_STUDENT_PERSONAL_INFO_FAILURE,
+      error: error.response && error.response.message
+    })
+
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const fetchEducationInfo = (onSuccess, onError) => (dispatch) => {
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/education/${userId}`
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(response => {
+    dispatch({
+      type: FETCH_EDUCATION_INFO_SUCCESS,
+      data: response.data
+    })
+
+    if (onSuccess) {
+      onSuccess(response.data)
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_SPECIALITIES_FAILURE,
       error: error.response && error.response.message
     })
 

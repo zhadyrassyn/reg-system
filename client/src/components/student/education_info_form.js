@@ -20,7 +20,8 @@ import {
   fetchSchools,
   fetchFaculties,
   fetchSpecialities,
-  saveStudentEducationInfo
+  saveStudentEducationInfo,
+  fetchEducationInfo
 } from "../../actions"
 
 class EducationInfoForm extends Component {
@@ -40,14 +41,21 @@ class EducationInfoForm extends Component {
   }
 
   componentDidMount() {
-    const {fetchAreas, fetchFaculties} = this.props
-    fetchAreas()
-    fetchFaculties(
+    const {fetchAreas, fetchFaculties, fetchEducationInfo} = this.props
+    fetchEducationInfo(
       () => {
-        console.log('success on fetching faculties')
+        fetchAreas()
+        fetchFaculties(
+          () => {
+            console.log('success on fetching faculties')
+          },
+          () => {
+            console.log('fail on fetching faculties')
+          }
+        )
       },
       () => {
-        console.log('fail on fetching faculties')
+
       }
     )
   }
@@ -169,6 +177,15 @@ class EducationInfoForm extends Component {
     })
   }
 
+  refactorDefaultOption = (item, lang) => {
+    const label = lang === 'ru' ? item.nameRu : lang === 'en' ? item.nameEn : item.nameKkk
+    return {
+      ...item,
+      value: item.id,
+      label
+    }
+  }
+
   render() {
     let {lang, areas, cities, schools, handleSubmit, submitting, faculties, specialities, educationInfo} = this.props
     console.log('educationInfo ', educationInfo)
@@ -192,6 +209,26 @@ class EducationInfoForm extends Component {
 
     if (specialities) {
       specialities = this.refactor(specialities, lang)
+    }
+
+    if(educationInfo.educationArea) {
+      educationInfo.educationArea = this.refactorDefaultOption(educationInfo.educationArea, lang)
+    }
+
+    if(educationInfo.city) {
+      educationInfo.city = this.refactorDefaultOption(educationInfo.city, lang)
+    }
+
+    if(educationInfo.school) {
+      educationInfo.school = this.refactorDefaultOption(educationInfo.school, lang)
+    }
+
+    if(educationInfo.faculty) {
+      educationInfo.faculty = this.refactorDefaultOption(educationInfo.faculty, lang)
+    }
+
+    if(educationInfo.speciality) {
+      educationInfo.speciality = this.refactorDefaultOption(educationInfo.speciality, lang)
     }
 
     return (
@@ -404,12 +441,13 @@ export default connect(
     schools: state.info.schools,
     faculties: state.info.faculties,
     specialities: state.info.specialities,
-    educationInfo: state.student.educationInfo
-
+    educationInfo: state.student.educationInfo,
+    educationInfoDocuments: state.student.educationInfoDocuments,
+    initialValues: state.student.educationInfo
     // cities: refactorCities(state.info.cities),
     // schools: refactorSchools(state.info.schools),
     // formValues: getFormValues('GeneralInfo')(state),
-    // initialValues: refactorGeneralInfo(state.student.studentInfo)
+
   }),
   dispatch => ({
     fetchAreas: bindActionCreators(fetchAreas, dispatch),
@@ -418,6 +456,7 @@ export default connect(
     fetchFaculties: bindActionCreators(fetchFaculties, dispatch),
     fetchSpecialities: bindActionCreators(fetchSpecialities, dispatch),
     saveStudentEducationInfo: bindActionCreators(saveStudentEducationInfo, dispatch),
+    fetchEducationInfo: bindActionCreators(fetchEducationInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
 
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),
