@@ -12,4 +12,6 @@ interface StudentRegister {
     fun savePersonalInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType) : Document
 
     fun saveEducationInfo(educationInfo: SaveEducationInfoRequestData, id: Long)
+
+    fun getEducationInfo(id: Long): GetEducationInfoResponseData
 }

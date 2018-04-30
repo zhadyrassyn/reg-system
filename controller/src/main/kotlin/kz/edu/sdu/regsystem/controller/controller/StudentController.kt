@@ -49,5 +49,8 @@ class StudentController(
                           @PathVariable("id")id: Long) =
         studentRegister.saveEducationInfo(educationInfo, id)
 
+    @GetMapping("/education/{id}")
+    fun getEducationInfo(@PathVariable("id") id: Long) = studentRegister.getEducationInfo(id)
+
 
 }

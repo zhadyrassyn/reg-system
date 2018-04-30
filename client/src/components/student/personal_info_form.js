@@ -8,8 +8,6 @@ import _ from "lodash"
 
 import {
   fetchAreas,
-  fetchCities,
-  fetchSchools,
   saveStudentPersonalInfo,
   fetchStudentGeneralInfo,
   saveDocument,
@@ -658,17 +656,6 @@ PersonalInfoForm = reduxForm({
   enableReinitialize: true,
 })(PersonalInfoForm)
 
-function refactorCities(cities) {
-  if (cities) {
-    cities = cities.map(city => ({
-      ...city,
-      value: city.id,
-      label: city.nameRu
-    }))
-  }
-
-  return cities
-}
 
 function refactorSchools(schools) {
   if (schools) {
@@ -690,8 +677,6 @@ export default connect(
   state => ({
     lang: state.lang,
     areas: state.info.areas,
-    cities: refactorCities(state.info.cities),
-    schools: refactorSchools(state.info.schools),
     formValues: getFormValues('PersonalInfoForm')(state),
     personalInfo: state.student.personalInfo,
     personalInfoDocuments: state.student.personalInfoDocuments,
@@ -699,8 +684,6 @@ export default connect(
   }),
   dispatch => ({
     fetchAreas: bindActionCreators(fetchAreas, dispatch),
-    fetchCities: bindActionCreators(fetchCities, dispatch),
-    fetchSchools: bindActionCreators(fetchSchools, dispatch),
     saveStudentPersonalInfo: bindActionCreators(saveStudentPersonalInfo, dispatch),
     fetchStudentGeneralInfo: bindActionCreators(fetchStudentGeneralInfo, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch),

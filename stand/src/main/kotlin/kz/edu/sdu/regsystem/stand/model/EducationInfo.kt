@@ -1,5 +1,7 @@
 package kz.edu.sdu.regsystem.stand.model
 
+import java.util.*
+
 data class EducationInfo(
     val id: Long,
     val area: Area,
@@ -9,5 +11,6 @@ data class EducationInfo(
     val ent_certificate_number: String,
     val ikt: String,
     val faculty: UserFaculty,
-    val speciality: Speciality
+    val speciality: Speciality,
+    val school_finish: Date
 )

@@ -91,5 +91,22 @@ data class SaveEducationInfoRequestData(
     val speciality: Long,
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    val school_finish: Date? = null
+    val school_finish: Date
+)
+
+data class GetEducationInfoResponseData(
+    val id: Long? = null,
+    val educationArea: AreaData? = null,
+    val city: CityData? = null,
+    val another_cityVillage: String? = null,
+    val school: SchoolData? = null,
+    val customSchool: String? = null,
+    val ent_amount: Long? = null,
+    val ent_certificate_number: String? = null,
+    val faculty: GetFacultiesResponseData? = null,
+    val speciality: GetSpecializationsResponseData? = null,
+    val school_finish: String? = null,
+
+    val schoolDiploma: String? = null,
+    val entCertificate: String? = null
 )

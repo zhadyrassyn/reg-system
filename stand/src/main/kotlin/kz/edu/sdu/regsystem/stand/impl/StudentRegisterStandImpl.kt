@@ -1,9 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl
 
+import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.model.Document
-import kz.edu.sdu.regsystem.controller.model.GetPersonalInfoResponse
-import kz.edu.sdu.regsystem.controller.model.SaveEducationInfoRequestData
-import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
@@ -25,6 +23,7 @@ class StudentRegisterStandImpl(
     val db: Db,
     val fileService: FileService
 ) : StudentRegister {
+
     override fun savePersonalInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
         val user = db.users.values.firstOrNull { id == it.id }
             ?: throw UserDoesNotExistsException("User does not exist")
@@ -98,12 +97,80 @@ class StudentRegisterStandImpl(
         )
     }
 
+    override fun getEducationInfo(id: Long): GetEducationInfoResponseData {
+        val user = db.users.values.firstOrNull { it -> it.id == id }
+            ?: throw UserDoesNotExistsException("User does not exist")
+
+        if (user.educationInfo == null) {
+            return GetEducationInfoResponseData(
+                schoolDiploma = user.educationInfoDocuments.schoolDiploma?.path?.fileName?.toString(),
+                entCertificate = user.educationInfoDocuments.entCertificate?.path?.fileName?.toString()
+            )
+        }
+
+        val educationInfo = user.educationInfo
+        // if city is custom value
+        val customCity: String? =
+            if (educationInfo!!.city.status == UserCityStatus.CUSTOM)
+                educationInfo.city.nameRu
+            else
+                null
+
+        // if school is custom value
+        val customSchool: String? =
+            if (educationInfo.school.schoolStatus == SchoolStatus.CUSTOM) {
+                educationInfo.school.nameRu
+            } else
+                null
+
+        return GetEducationInfoResponseData(
+            id = user.id,
+            educationArea = AreaData(
+                id = educationInfo.area.id,
+                nameRu = educationInfo.area.nameRu,
+                nameKk = educationInfo.area.nameKk,
+                nameEn = educationInfo.area.nameEn
+            ),
+            city = CityData(
+                id = educationInfo.city.id,
+                nameEn = educationInfo.city.nameEn,
+                nameRu = educationInfo.city.nameRu,
+                nameKk = educationInfo.city.nameKk
+            ),
+            another_cityVillage = customCity,
+            school = SchoolData(
+                id = educationInfo.school.id,
+                nameEn = educationInfo.school.nameEn,
+                nameKk = educationInfo.school.nameKk,
+                nameRu = educationInfo.school.nameRu
+            ),
+            customSchool = customSchool,
+            ent_amount = educationInfo.ent_amount,
+            ent_certificate_number = educationInfo.ent_certificate_number,
+            faculty = GetFacultiesResponseData(
+                id = educationInfo.faculty.id,
+                nameRu = educationInfo.faculty.nameRu,
+                nameKk = educationInfo.faculty.nameKk,
+                nameEn = educationInfo.faculty.nameEn
+            ),
+            speciality = GetSpecializationsResponseData(
+                id = educationInfo.speciality.id,
+                nameRu = educationInfo.speciality.nameRu,
+                nameEn = educationInfo.speciality.nameEn,
+                nameKk = educationInfo.speciality.nameKk
+            ),
+            school_finish = toDate(educationInfo.school_finish),
+            schoolDiploma = user.educationInfoDocuments.schoolDiploma?.path?.toString(),
+            entCertificate = user.educationInfoDocuments.entCertificate?.path?.toString()
+        )
+    }
+
     override fun saveEducationInfo(educationInfo: SaveEducationInfoRequestData, id: Long) {
         println(educationInfo)
         val user = db.users.values.firstOrNull { id == it.id }
             ?: throw UserDoesNotExistsException("User does not exist")
 
-        val area : Area = db.areas[educationInfo.educationArea]
+        val area: Area = db.areas[educationInfo.educationArea]
             ?: throw BadRequestException("Cannot find area with id ${educationInfo.educationArea}")
 
         var cityId = educationInfo.city
@@ -126,7 +193,7 @@ class StudentRegisterStandImpl(
 
         val city = area.cities[cityId] ?: throw BadRequestException("Cannot find city with id $cityId")
         var schoolId = educationInfo.school
-        if(Objects.isNull(educationInfo.school) && !StringUtils.isEmpty(educationInfo.customSchool)) {
+        if (Objects.isNull(educationInfo.school) && !StringUtils.isEmpty(educationInfo.customSchool)) {
             try {
                 val newSchool = School(
                     id = db.longCounter.incrementAndGet(),
@@ -138,15 +205,17 @@ class StudentRegisterStandImpl(
 
                 city.schools[newSchool.id] = newSchool
                 schoolId = newSchool.id
-            } catch (e : Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
 
         val school = city.schools[schoolId] ?: throw BadRequestException("Cannot find school with school id $schoolId")
 
-        val faculty = db.faculties[educationInfo.faculty] ?: throw BadRequestException("Cannot find faculty with id ${educationInfo.faculty}")
-        val speciality = faculty.specializations[educationInfo.speciality] ?: throw BadRequestException("Cannot find speciality with id ${educationInfo.speciality}")
+        val faculty = db.faculties[educationInfo.faculty]
+            ?: throw BadRequestException("Cannot find faculty with id ${educationInfo.faculty}")
+        val speciality = faculty.specializations[educationInfo.speciality]
+            ?: throw BadRequestException("Cannot find speciality with id ${educationInfo.speciality}")
 
         user.educationInfo = EducationInfo(
             id = db.longCounter.incrementAndGet(),
@@ -157,7 +226,8 @@ class StudentRegisterStandImpl(
             ent_certificate_number = educationInfo.ent_certificate_number,
             ikt = educationInfo.ikt,
             faculty = faculty,
-            speciality = speciality
+            speciality = speciality,
+            school_finish = educationInfo.school_finish
         )
     }
 
