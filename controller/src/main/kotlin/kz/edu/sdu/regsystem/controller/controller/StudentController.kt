@@ -59,4 +59,10 @@ class StudentController(
                                   @RequestParam("type") documentType: DocumentType) =
         studentRegister.saveEducationInfoDocument(id, file, documentType)
 
+    @PostMapping("/medical/{id}/document")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun saveMedicalInfoDocument(@PathVariable("id")id: Long,
+                                @RequestParam("file")file: MultipartFile,
+                                @RequestParam("type") documentType: DocumentType) =
+        studentRegister.saveMedicalDocument(id, file, documentType)
 }

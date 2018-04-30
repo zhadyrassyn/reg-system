@@ -463,28 +463,6 @@ class EducationInfoForm extends Component {
             }}/>
           </div>
 
-          {/*<div className="form-row mt-3">*/}
-            {/*<legend>{message.documents[lang]}</legend>*/}
-            {/*<ul className="list-unstyled">*/}
-              {/*<li>*/}
-                {/*<p>*/}
-                  {/*<a href="#">*/}
-                    {/*{message.diploma_certificate[lang]}*/}
-                  {/*</a>*/}
-                  {/*<span className="">  Не отправлено</span>*/}
-                {/*</p>*/}
-              {/*</li>*/}
-              {/*<li>*/}
-                {/*<p>*/}
-                  {/*<a href="#">*/}
-                    {/*{message.ent_certificate[lang]}*/}
-                  {/*</a>*/}
-                  {/*<span className="">  Не отправлено</span>*/}
-                {/*</p>*/}
-              {/*</li>*/}
-            {/*</ul>*/}
-          {/*</div>*/}
-
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE &&
             <button className="btn btn-success btn-lg" type="submit" disabled={isSaving}>
@@ -492,7 +470,6 @@ class EducationInfoForm extends Component {
               {isSaving && <span className="spinner-white ml-2"><i className="fa fa-spinner fa-spin fa-1x"/></span>}
             </button>
             }
-
 
             {accessType === ACCESS_TYPE_EDIT &&
             <button className="btn btn-warning btn-lg" type="button"

@@ -24,4 +24,5 @@ data class User(var id: Long = -1,
                 var personalInfo: PersonalInfo? = null,
                 val personalInfoDocuments: PersonalInfoDocuments = PersonalInfoDocuments(),
                 var educationInfo: EducationInfo? = null,
-                val educationInfoDocuments: EducationInfoDocuments = EducationInfoDocuments())
+                val educationInfoDocuments: EducationInfoDocuments = EducationInfoDocuments(),
+                val medicalInfoDocuments: MedicalInfoDocuments = MedicalInfoDocuments())

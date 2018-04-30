@@ -16,7 +16,9 @@ import {
   FETCH_EDUCATION_INFO_SUCCESS,
   FETCH_EDUCATION_INFO_FAILURE,
   SAVE_EDUCATION_DOCUMENT_SUCCESS,
-  SAVE_EDUCATION_DOCUMENT_FAILURE
+  SAVE_EDUCATION_DOCUMENT_FAILURE,
+  SAVE_MEDICAL_DOCUMENT_FAILURE,
+  SAVE_MEDICAL_DOCUMENT_SUCCESS
 } from "../actions/types"
 
 import {
@@ -28,7 +30,10 @@ import {
   IDENTITY_CARD_BACK,
   IDENTITY_CARD_FRONT,
   DIPLOMA_CERTIFICATE,
-  UNT_CT_CERTIFICATE
+  UNT_CT_CERTIFICATE,
+  HEALTH_063,
+  HEALTH_086,
+  FLUOROGRAPHY
 } from "../constants"
 
 const initialState = {
@@ -37,7 +42,8 @@ const initialState = {
   personalInfo: {},
   personalInfoDocuments:{},
   educationInfo: {},
-  educationInfoDocuments: {}
+  educationInfoDocuments: {},
+  medicalInfoDocuments: {}
 }
 
 export default (state = initialState, action) => {
@@ -118,6 +124,44 @@ export default (state = initialState, action) => {
     case SAVE_STUDENT_PERSONAL_INFO_DOCUMENT_FAILURE:
       return {
         ...state
+      }
+
+    case SAVE_MEDICAL_DOCUMENT_SUCCESS:
+      const medicalDocType = action.data.type
+      const medicalDocName = action.data.name
+      if(medicalDocType === HEALTH_086) {
+        return {
+          ...state,
+          medicalInfoDocuments: {
+            ...state.medicalInfoDocuments,
+            form86: medicalDocName
+          }
+        }
+      } else if(medicalDocType === HEALTH_063) {
+        return {
+          ...state,
+          medicalInfoDocuments: {
+            ...state.medicalInfoDocuments,
+            form63: medicalDocName
+          }
+        }
+      } else if(medicalDocType === FLUOROGRAPHY) {
+        return {
+          ...state,
+          medicalInfoDocuments: {
+            ...state.medicalInfoDocuments,
+            flurography: medicalDocName
+          }
+        }
+      } else {
+        return {
+          ...state
+        }
+      }
+    case SAVE_MEDICAL_DOCUMENT_FAILURE:
+      return {
+        ...state,
+        error: action.error
       }
 
     case SAVE_EDUCATION_DOCUMENT_SUCCESS:

@@ -23,6 +23,27 @@ class StudentRegisterStandImpl(
     val db: Db,
     val fileService: FileService
 ) : StudentRegister {
+    override fun saveMedicalDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
+        val user = db.users.values.firstOrNull { id == it.id }
+            ?: throw UserDoesNotExistsException("User does not exist")
+
+        var savedFile: kz.edu.sdu.regsystem.stand.model.Document? = null
+        try {
+            savedFile = fileService.store(file = file, documentType = documentType, id = id)
+            if (documentType == DocumentType.HEALTH_086) {
+                user.medicalInfoDocuments.form86 = savedFile
+            } else if (documentType == DocumentType.HEALTH_063) {
+                user.medicalInfoDocuments.form63 = savedFile
+            } else if (documentType == DocumentType.FLUOROGRAPHY) {
+                user.medicalInfoDocuments.flurography = savedFile
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return Document(name = savedFile!!.path!!.fileName.toString())
+    }
+
     override fun saveEducationInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
         val user = db.users.values.firstOrNull { id == it.id }
             ?: throw UserDoesNotExistsException("User does not exist")
@@ -31,7 +52,7 @@ class StudentRegisterStandImpl(
         try {
             savedFile = fileService.store(file = file, documentType = documentType, id = id)
             if (documentType == DocumentType.DIPLOMA_CERTIFICATE) {
-                user.educationInfoDocuments.schoolDiploma= savedFile
+                user.educationInfoDocuments.schoolDiploma = savedFile
             } else if (documentType == DocumentType.UNT_CT_CERTIFICATE) {
                 user.educationInfoDocuments.entCertificate = savedFile
             }

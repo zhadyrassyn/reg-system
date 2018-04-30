@@ -48,7 +48,9 @@ import {
   FETCH_EDUCATION_INFO_SUCCESS,
   FETCH_EDUCATION_INFO_FAILURE,
   SAVE_EDUCATION_DOCUMENT_FAILURE,
-  SAVE_EDUCATION_DOCUMENT_SUCCESS
+  SAVE_EDUCATION_DOCUMENT_SUCCESS,
+  SAVE_MEDICAL_DOCUMENT_FAILURE,
+  SAVE_MEDICAL_DOCUMENT_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -371,7 +373,48 @@ export const saveEducationDocument = (file, documentType, onSuccess, onError) =>
   })
     .catch(error => {
         dispatch({
-          type: SAVE_EDUCATION_DOCUMENT_SUCCESS,
+          type: SAVE_EDUCATION_DOCUMENT_FAILURE,
+          message: error.response && error.response.message
+        })
+
+        if (onError) {
+          onError()
+        }
+      }
+    )
+}
+
+export const saveMedicalDocument = (file, documentType, onSuccess, onError) => (dispatch) => {
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/medical/${userId}/document`
+
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('type', documentType)
+
+  axios.post(request, formData, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-type': 'multipart/form-data',
+    }
+  }).then(response => {
+    response.data.type = documentType
+
+    dispatch({
+      type: SAVE_MEDICAL_DOCUMENT_SUCCESS,
+      data: response.data
+    })
+
+    if (onSuccess) {
+      onSuccess()
+    }
+  })
+    .catch(error => {
+        dispatch({
+          type: SAVE_MEDICAL_DOCUMENT_FAILURE,
           message: error.response && error.response.message
         })
 
