@@ -52,5 +52,11 @@ class StudentController(
     @GetMapping("/education/{id}")
     fun getEducationInfo(@PathVariable("id") id: Long) = studentRegister.getEducationInfo(id)
 
+    @PostMapping("/education/{id}/document")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun saveEducationInfoDocument(@PathVariable("id")id: Long,
+                                  @RequestParam("file")file: MultipartFile,
+                                  @RequestParam("type") documentType: DocumentType) =
+        studentRegister.saveEducationInfoDocument(id, file, documentType)
 
 }

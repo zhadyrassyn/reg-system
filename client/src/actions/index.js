@@ -46,7 +46,9 @@ import {
   SAVE_EDUCATION_INFO_SUCCESS,
   SAVE_EDUCATION_INFO_FAILURE,
   FETCH_EDUCATION_INFO_SUCCESS,
-  FETCH_EDUCATION_INFO_FAILURE
+  FETCH_EDUCATION_INFO_FAILURE,
+  SAVE_EDUCATION_DOCUMENT_FAILURE,
+  SAVE_EDUCATION_DOCUMENT_SUCCESS
 } from "./types"
 
 import axios from "axios"
@@ -339,6 +341,47 @@ export const saveStudentEducationInfo = (values, onSuccess, onError) => (dispatc
   })
 }
 
+export const saveEducationDocument = (file, documentType, onSuccess, onError) => (dispatch) => {
+  const token = localStorage.getItem('token')
+
+  const userId = fetchIdFromToken(token)
+
+  const request = `${config.url}/student/education/${userId}/document`
+
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('type', documentType)
+
+  axios.post(request, formData, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-type': 'multipart/form-data',
+    }
+  }).then(response => {
+    response.data.type = documentType
+
+    dispatch({
+      type: SAVE_EDUCATION_DOCUMENT_SUCCESS,
+      data: response.data
+    })
+
+    if (onSuccess) {
+      onSuccess()
+    }
+  })
+    .catch(error => {
+        dispatch({
+          type: SAVE_EDUCATION_DOCUMENT_SUCCESS,
+          message: error.response && error.response.message
+        })
+
+        if (onError) {
+          onError()
+        }
+      }
+    )
+}
+
 export const saveDocument = (file, documentType) => (dispatch) => {
   const token = localStorage.getItem('token')
 
@@ -368,6 +411,7 @@ export const saveDocument = (file, documentType) => (dispatch) => {
       })
     )
 }
+
 export const savePersonalDocument = (file, documentType, onSuccess, onError) => (dispatch) => {
   const token = localStorage.getItem('token')
 
@@ -463,7 +507,7 @@ export const fetchEducationInfo = (onSuccess, onError) => (dispatch) => {
     }
   }).catch(error => {
     dispatch({
-      type: FETCH_SPECIALITIES_FAILURE,
+      type: FETCH_EDUCATION_INFO_FAILURE,
       error: error.response && error.response.message
     })
 

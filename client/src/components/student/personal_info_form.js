@@ -217,7 +217,6 @@ class PersonalInfoForm extends Component {
           })
       })
     }
-
   }
 
   exportFile = (e) => {
@@ -596,26 +595,6 @@ class PersonalInfoForm extends Component {
               e.target.value = null
             }}/>
           </div>
-          {/*<div className="form-row mt-3">*/}
-          {/*<Field*/}
-          {/*label={message.school[lang]}*/}
-          {/*name="school"*/}
-          {/*id="school"*/}
-          {/*options={schools}*/}
-          {/*component={this.renderSelect}*/}
-          {/*placeholder={message.school[lang]}*/}
-          {/*accessType={accessType}*/}
-          {/*/>*/}
-          {/*<Field*/}
-          {/*label={message.customSchool[lang]}*/}
-          {/*id="customSchool"*/}
-          {/*name="customSchool"*/}
-          {/*type="text"*/}
-          {/*component={this.renderField}*/}
-          {/*placeholder={message.customSchool[lang]}*/}
-          {/*accessType={accessType}*/}
-          {/*/>*/}
-          {/*</div>*/}
 
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE &&
@@ -656,23 +635,6 @@ PersonalInfoForm = reduxForm({
   enableReinitialize: true,
 })(PersonalInfoForm)
 
-
-function refactorSchools(schools) {
-  if (schools) {
-    schools = schools.map(school => ({
-      ...school,
-      value: school.id,
-      label: school.nameRu
-    }))
-  }
-
-  return schools
-}
-
-function refactorGeneralInfo(personalInfo) {
-  return personalInfo
-}
-
 export default connect(
   state => ({
     lang: state.lang,
@@ -680,7 +642,7 @@ export default connect(
     formValues: getFormValues('PersonalInfoForm')(state),
     personalInfo: state.student.personalInfo,
     personalInfoDocuments: state.student.personalInfoDocuments,
-    initialValues: refactorGeneralInfo(state.student.personalInfo)
+    initialValues: state.student.personalInfo
   }),
   dispatch => ({
     fetchAreas: bindActionCreators(fetchAreas, dispatch),

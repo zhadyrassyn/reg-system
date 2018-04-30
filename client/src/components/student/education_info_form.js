@@ -11,7 +11,10 @@ import MySelectComponent from "./my_select_component"
 import {
   ACCESS_TYPE_EDIT,
   ACCESS_TYPE_SAVE_CANCELLABLE,
-  ACCESS_TYPE_SAVE
+  ACCESS_TYPE_SAVE,
+
+  DIPLOMA_CERTIFICATE,
+  UNT_CT_CERTIFICATE
 } from "../../constants"
 
 import {
@@ -21,7 +24,8 @@ import {
   fetchFaculties,
   fetchSpecialities,
   saveStudentEducationInfo,
-  fetchEducationInfo
+  fetchEducationInfo,
+  saveEducationDocument
 } from "../../actions"
 
 class EducationInfoForm extends Component {
@@ -43,7 +47,10 @@ class EducationInfoForm extends Component {
   componentDidMount() {
     const {fetchAreas, fetchFaculties, fetchEducationInfo} = this.props
     fetchEducationInfo(
-      () => {
+      (data) => {
+        if (data.id) {
+          this.setState({accessType: ACCESS_TYPE_EDIT})
+        }
         fetchAreas()
         fetchFaculties(
           () => {
@@ -134,20 +141,20 @@ class EducationInfoForm extends Component {
   }
 
   onSubmit(values) {
-    const {saveStudentEducationInfo, educationInfo} = this.props
+    const {saveStudentEducationInfo, educationInfoDocuments} = this.props
     console.log('values ', values)
 
     const saveData = {
       ...values,
       city: (values.city && values.city.id) || null,
-      educationArea: values.educationArea.id,
+      educationArea: (values.educationArea && values.educationArea.id) || null,
       school: (values.school && values.school.id) || null,
-      faculty: values.faculty.id,
-      speciality: values.speciality.id
+      faculty: (values.faculty && values.faculty.id) || null,
+      speciality: (values.speciality && values.speciality.id) || null
     }
 
     this.setState({showDocumentErrors: true}, () => {
-      // if (personalInfo.ud_front && personalInfo.ud_front && personalInfo.photo3x4) {
+      if (educationInfoDocuments.schoolDiploma && educationInfoDocuments.entCertificate) {
         this.setState({isSaving: true}, () => {
           saveStudentEducationInfo(saveData,
             () => {
@@ -158,7 +165,7 @@ class EducationInfoForm extends Component {
             }
           )
         })
-      // }
+      }
     })
   }
 
@@ -186,9 +193,92 @@ class EducationInfoForm extends Component {
     }
   }
 
+  onFileChange = (e) => {
+    const {saveEducationDocument} = this.props
+
+    const file = e.target.files[0]
+    const documentType = this.state.documentType
+
+    if (documentType === DIPLOMA_CERTIFICATE) {
+      this.setState({isDiplomaSaving: true}, () => {
+        saveEducationDocument(file, documentType,
+          () => {
+            this.setState({isDiplomaSaving: false})
+          },
+          () => {
+            this.setState({isDiplomaSaving: false})
+          }
+        )
+      })
+    } else if (documentType === UNT_CT_CERTIFICATE) {
+      this.setState({isEntCertificateSaving: true}, () => {
+        saveEducationDocument(file, documentType,
+          () => {
+            this.setState({isEntCertificateSaving: false})
+          },
+          () => {
+            this.setState({isEntCertificateSaving: false})
+          })
+      })
+    }
+  }
+
+  exportFile = (e) => {
+    e.preventDefault()
+
+    this.setState({documentType: e.target.name}, () => {
+      //script for opening 'choose file' dialog
+      const elem = document.getElementById("educationFile")
+      if (elem && document.createEvent) {
+        const evt = document.createEvent("MouseEvents");
+        evt.initEvent("click", true, false);
+        elem.dispatchEvent(evt);
+      }
+    })
+  }
+
+  renderDocuments = (lang, showDocumentErrors, educationInfoDocuments, isDiplomaSaving, isEntCertificateSaving) => {
+    const labels = [
+      {
+        type: DIPLOMA_CERTIFICATE,
+        label: message.diploma_certificate[lang],
+        error: message.upload_file[lang],
+        imageName: educationInfoDocuments.schoolDiploma,
+        loading: isDiplomaSaving
+      },
+      {
+        type: UNT_CT_CERTIFICATE,
+        label: message.ent_certificate[lang],
+        error: message.upload_file[lang],
+        imageName: educationInfoDocuments.entCertificate,
+        loading: isEntCertificateSaving
+      }
+    ]
+
+    return labels.map(option => (
+      <li key={option.type}>
+        <p>
+          <a href="#" onClick={this.exportFile} name={option.type}>
+            {option.label}
+          </a>
+
+          {option.loading && <span className="spinner ml-3"><i className="fa fa-spinner fa-spin fa-1x"/></span>}
+
+          {showDocumentErrors && !option.imageName &&
+          <span className="text-danger ml-2">{option.error}</span>
+          }
+
+          {!option.loading && option.imageName &&
+          <a className="ml-2" target="_blank" href={`http://localhost:8081/api/upload/${option.imageName}`}><i
+            className="fas fa-eye"></i></a>
+          }
+        </p>
+      </li>
+    ))
+  }
+
   render() {
-    let {lang, areas, cities, schools, handleSubmit, submitting, faculties, specialities, educationInfo} = this.props
-    console.log('educationInfo ', educationInfo)
+    let {lang, areas, cities, schools, handleSubmit, submitting, faculties, specialities, educationInfo, educationInfoDocuments} = this.props
     const {accessType, documentType, showDocumentErrors, isSaving, isDiplomaSaving, isEntCertificateSaving} = this.state
 
     if (areas) {
@@ -366,24 +456,34 @@ class EducationInfoForm extends Component {
           <div className="form-row mt-3">
             <legend>{message.documents[lang]}</legend>
             <ul className="list-unstyled">
-              <li>
-                <p>
-                  <a href="#">
-                    {message.diploma_certificate[lang]}
-                  </a>
-                  <span className="">  Не отправлено</span>
-                </p>
-              </li>
-              <li>
-                <p>
-                  <a href="#">
-                    {message.ent_certificate[lang]}
-                  </a>
-                  <span className="">  Не отправлено</span>
-                </p>
-              </li>
+              {this.renderDocuments(lang, showDocumentErrors, educationInfoDocuments, isDiplomaSaving, isEntCertificateSaving)}
             </ul>
+            <input style={{display: 'none'}} type="file" id="educationFile" onChange={this.onFileChange} onClick={e => {
+              e.target.value = null
+            }}/>
           </div>
+
+          {/*<div className="form-row mt-3">*/}
+            {/*<legend>{message.documents[lang]}</legend>*/}
+            {/*<ul className="list-unstyled">*/}
+              {/*<li>*/}
+                {/*<p>*/}
+                  {/*<a href="#">*/}
+                    {/*{message.diploma_certificate[lang]}*/}
+                  {/*</a>*/}
+                  {/*<span className="">  Не отправлено</span>*/}
+                {/*</p>*/}
+              {/*</li>*/}
+              {/*<li>*/}
+                {/*<p>*/}
+                  {/*<a href="#">*/}
+                    {/*{message.ent_certificate[lang]}*/}
+                  {/*</a>*/}
+                  {/*<span className="">  Не отправлено</span>*/}
+                {/*</p>*/}
+              {/*</li>*/}
+            {/*</ul>*/}
+          {/*</div>*/}
 
           <div className="col text-right">
             {accessType === ACCESS_TYPE_SAVE &&
@@ -457,6 +557,7 @@ export default connect(
     fetchSpecialities: bindActionCreators(fetchSpecialities, dispatch),
     saveStudentEducationInfo: bindActionCreators(saveStudentEducationInfo, dispatch),
     fetchEducationInfo: bindActionCreators(fetchEducationInfo, dispatch),
+    saveEducationDocument: bindActionCreators(saveEducationDocument, dispatch),
     changeFieldValue: bindActionCreators(changeFieldValue, dispatch)
 
     // fetchSchools: bindActionCreators(fetchSchools, dispatch),

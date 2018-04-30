@@ -14,7 +14,9 @@ import {
   SAVE_EDUCATION_INFO_SUCCESS,
   SAVE_EDUCATION_INFO_FAILURE,
   FETCH_EDUCATION_INFO_SUCCESS,
-  FETCH_EDUCATION_INFO_FAILURE
+  FETCH_EDUCATION_INFO_FAILURE,
+  SAVE_EDUCATION_DOCUMENT_SUCCESS,
+  SAVE_EDUCATION_DOCUMENT_FAILURE
 } from "../actions/types"
 
 import {
@@ -24,7 +26,9 @@ import {
 
   PHOTO_3x4,
   IDENTITY_CARD_BACK,
-  IDENTITY_CARD_FRONT
+  IDENTITY_CARD_FRONT,
+  DIPLOMA_CERTIFICATE,
+  UNT_CT_CERTIFICATE
 } from "../constants"
 
 const initialState = {
@@ -115,6 +119,38 @@ export default (state = initialState, action) => {
       return {
         ...state
       }
+
+    case SAVE_EDUCATION_DOCUMENT_SUCCESS:
+      const educationDocType = action.data.type
+      const educationDocName = action.data.name
+      if (educationDocType === DIPLOMA_CERTIFICATE) {
+        return {
+          ...state,
+          educationInfoDocuments: {
+            ...state.educationInfoDocuments,
+            schoolDiploma: educationDocName
+          }
+        }
+      } else if(educationDocType === UNT_CT_CERTIFICATE) {
+        return {
+          ...state,
+          educationInfoDocuments: {
+            ...state.educationInfoDocuments,
+            entCertificate: educationDocName
+          }
+        }
+      } else {
+        return {
+          ...state
+        }
+      }
+
+    case SAVE_EDUCATION_DOCUMENT_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+
     case FETCH_STUDENT_PERSONAL_INFO_SUCCESS:
       return {
         ...state,
