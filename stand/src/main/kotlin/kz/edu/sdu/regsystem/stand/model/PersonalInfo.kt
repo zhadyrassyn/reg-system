@@ -31,6 +31,6 @@ data class PersonalInfo(
     val regHouse: String,
     val regStreet: String,
 
-    val comment: String = "",
-    val personalInfoStatus : PersonalInfoStatus = PersonalInfoStatus.VALID
+    var comment: String = "",
+    var personalInfoStatus : PersonalInfoStatus = PersonalInfoStatus.VALID
 )

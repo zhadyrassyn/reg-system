@@ -7,7 +7,7 @@ import {
   REJECTED
 } from "../../constants"
 
-import {fetchStudentPersonalInfoByModerator, saveDocumentsComment} from "../../actions";
+import {fetchStudentPersonalInfoByModerator, editGeneralInfo} from "../../actions";
 
 class EditStudentGeneralInfo extends Component {
 
@@ -23,6 +23,7 @@ class EditStudentGeneralInfo extends Component {
     const {currentStudentId, fetchStudentPersonalInfoByModerator} = this.props
     fetchStudentPersonalInfoByModerator(currentStudentId,
       () => {
+        this.setState({commentState: this.props.personalInfo.comment})
         console.log('success on fetchStudentPersonalInfoByModerator')
       },
       () => {
@@ -32,9 +33,9 @@ class EditStudentGeneralInfo extends Component {
   }
 
   onGeneralInfoEdit = (status) => {
-    const {saveDocumentsComment, currentStudentId} = this.props
+    const {editGeneralInfo, currentStudentId} = this.props
 
-    saveDocumentsComment(currentStudentId, this.state.commentState, status,
+    editGeneralInfo(currentStudentId, this.state.commentState, status,
       () => {
         console.log('success 123')
       },
@@ -57,8 +58,10 @@ class EditStudentGeneralInfo extends Component {
     // console.log('current student id', currentStudentId)
     // console.log('personal info ', personalInfo)
     // const comment = this.state.comment
-
+    const com = personalInfo.comment
+    console.log('com ', com)
     const commentState = this.state.commentState
+
 
     const acceptBtnClass = "btn " + (status === "VALID" && comment === commentState ? "btn-success" : "btn-outline-success")
     const rejectBtnClass = "btn ml-2 " + (status === "INVALID" && comment === commentState ? "btn-danger" : "btn-outline-danger")
@@ -106,10 +109,10 @@ class EditStudentGeneralInfo extends Component {
           {ud_back && <img src={`http://localhost:8081/api/upload/${ud_back}`} className="img-fluid" alt="Responsive image"/>}
         </div>
         <div className="col-md-12">
-          <textarea onChange={this.onTextAreaChange} className="form-control" placeholder="Comment...">{commentState}</textarea>
+          <textarea onChange={this.onTextAreaChange} className="form-control" value={commentState}></textarea>
           <div className="mt-3">
-            <button className={acceptBtnClass} onClick={this.onGeneralInfoEdit.bind(this, "ACTIVE")}>SAVE AS VALID</button>
-            <button className={rejectBtnClass} onClick={this.onGeneralInfoEdit.bind(this, "INACTIVE")}>SAVE AS INVALID</button>
+            <button className={acceptBtnClass} onClick={this.onGeneralInfoEdit.bind(this, "VALID")}>SAVE AS VALID</button>
+            <button className={rejectBtnClass} onClick={this.onGeneralInfoEdit.bind(this, "INVALID")}>SAVE AS INVALID</button>
           </div>
         </div>
       </div>
@@ -125,7 +128,7 @@ export default connect(
   }),
   dispatch => ({
     fetchStudentPersonalInfoByModerator: bindActionCreators(fetchStudentPersonalInfoByModerator, dispatch),
-    saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch)
+    editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch)
     // fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch),
     // editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),
     // saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch),

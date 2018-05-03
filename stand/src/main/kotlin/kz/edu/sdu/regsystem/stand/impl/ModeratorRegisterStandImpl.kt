@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl
 
 import kz.edu.sdu.regsystem.controller.model.*
+import kz.edu.sdu.regsystem.controller.model.enums.PersonalInfoStatus
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.Area
@@ -113,8 +114,8 @@ class ModeratorRegisterStandImpl(
             it.id == id
         } ?: throw UserDoesNotExistsException("User with id $id does not exist")
 
-        user.generalInfoStatusDto.comment = request.comment
-        user.generalInfoStatusDto.status = GeneralInfoStatus.valueOf(request.status)
+        user.personalInfo!!.comment = if (request.comment == null) "" else request.comment!!
+        user.personalInfo!!.personalInfoStatus = PersonalInfoStatus.valueOf(request.status)
     }
 
     override fun getStudentInfo(id: Long): GetStudentInfoResponse {
