@@ -144,7 +144,10 @@ class StudentRegisterStandImpl(
             regStreet = personalInfo.regStreet,
             ud_front = user.personalInfoDocuments.ud_front?.path?.fileName?.toString(),
             ud_back = user.personalInfoDocuments.ud_back?.path?.fileName?.toString(),
-            photo3x4 = user.personalInfoDocuments.photo3x4?.path?.fileName?.toString()
+            photo3x4 = user.personalInfoDocuments.photo3x4?.path?.fileName?.toString(),
+
+            comment = personalInfo.comment,
+            status = personalInfo.personalInfoStatus.name
         )
     }
 

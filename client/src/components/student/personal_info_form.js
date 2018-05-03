@@ -282,7 +282,8 @@ class PersonalInfoForm extends Component {
         areas[key].label = label
       })
     }
-
+    const textAreaClassName="form-control disabled " + (personalInfo.status === "VALID" ? " btn-outline-success" : personalInfo.status === "INVALID" ?
+    "btn-outline-danger" : "")
     const {handleSubmit, submitting} = this.props
 
     return (
@@ -621,7 +622,7 @@ class PersonalInfoForm extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="comment">{message.moderator_comment[lang]}</label>
-            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
+            <textarea className={textAreaClassName} id="comment" disabled={true} value={personalInfo.comment}></textarea>
           </div>
         </form>
       </div>

@@ -32,5 +32,5 @@ data class PersonalInfo(
     val regStreet: String,
 
     var comment: String = "",
-    var personalInfoStatus : PersonalInfoStatus = PersonalInfoStatus.VALID
+    var personalInfoStatus : PersonalInfoStatus = PersonalInfoStatus.WATING_FOR_RESPONSE
 )

@@ -70,7 +70,10 @@ data class GetPersonalInfoResponse(
 
     val ud_front: String? = null,
     val ud_back: String? = null,
-    val photo3x4: String? = null
+    val photo3x4: String? = null,
+
+    val comment: String? = "",
+    val status: String = ""
 )
 
 data class Document(
