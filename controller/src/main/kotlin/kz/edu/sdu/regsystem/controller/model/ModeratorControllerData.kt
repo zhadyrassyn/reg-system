@@ -1,5 +1,7 @@
 package kz.edu.sdu.regsystem.controller.model
 
+import javax.management.monitor.StringMonitor
+
 data class GetStudentsResponse(
     val id: Long = 0,
     val firstName: String = "",
@@ -45,4 +47,38 @@ data class SaveCommentForDocumentsRequest(
 
 data class FetchTotalAmountOfStudentsResponse(
     var total: Int = 0
+)
+
+data class FetchPersonalInfoResponse(
+    val id: Long,
+    val firstName: String,
+    val middleName: String? = "",
+    val lastName: String,
+    val gender: String,
+    val birthDate: String,
+    val givenDate: String,
+    val givenPlace: String,
+    val iin: String,
+    val ud_number: String,
+    val mobilePhone: String,
+    val telPhone: String?,
+    val nationality: String,
+    val birthPlace: String,
+    val blood_group: String? = "",
+    val citizenship: String,
+    val factStreet: String,
+    val factHouse: String,
+    val factFraction: String? = "",
+    val factFlat: String? = "",
+    val regStreet: String,
+    val regHouse: String,
+    val regFraction: String? = "",
+    val regFlact: String? = "",
+
+    val ud_front: String? = null,
+    val ud_back: String? = null,
+    val photo3x4: String? = null,
+
+    val comment: String,
+    val status: String
 )

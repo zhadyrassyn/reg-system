@@ -28,7 +28,8 @@ import {
   editGeneralInfo,
   saveDocumentsComment,
   changeDocumentStatus,
-  fetchTotalAmountOfStudents
+  fetchTotalAmountOfStudents,
+  selectStudent
 } from "../../actions"
 
 class ModeratorApp extends Component {
@@ -49,17 +50,8 @@ class ModeratorApp extends Component {
   }
 
   openModal(id) {
-
-    this.props.fetchStudentFullInfo(
-      id,
-      () => {
-        console.log('success on fetch student full info')
-        this.setState({modalIsOpen: true});
-      },
-      () => {
-        console.log('fail on fetch student full info')
-      }
-    )
+    this.props.selectStudent(id)
+    this.setState({modalIsOpen: true})
   }
 
   afterOpenModal() {
@@ -148,7 +140,7 @@ class ModeratorApp extends Component {
   }
 
   render() {
-    const {students, selectedStudent, total} = this.props
+    const {students, selectedStudent, total, lang} = this.props
     const {currentPage, perPage} = this.state
     const startCounter = (currentPage - 1) * perPage
     console.log(students)
@@ -167,11 +159,13 @@ class ModeratorApp extends Component {
           onRequestClose={this.closeModal}
           style={customStyles}
           contentLabel="Example Modal">
-          <EditStudent closeModal={this.closeModal}
-                       selectedStudent={selectedStudent}
-                       onGeneralInfoEdit={this.onGeneralInfoEdit}
-                       onSaveDocumentsComment={this.saveDocumentsComment}
-                       onDocumentStatusChange={this.changeDocumentStatus}
+          <EditStudent
+            lang={lang}
+            closeModal={this.closeModal}
+            selectedStudent={selectedStudent}
+            onGeneralInfoEdit={this.onGeneralInfoEdit}
+            onSaveDocumentsComment={this.saveDocumentsComment}
+            onDocumentStatusChange={this.changeDocumentStatus}
           />
         </Modal>
       </div>
@@ -181,9 +175,11 @@ class ModeratorApp extends Component {
 
 export default connect(
   state => ({
+    lang: state.lang,
     students: state.moderator.students,
     selectedStudent: state.moderator.selectedStudent,
-    total: state.moderator.total
+    total: state.moderator.total,
+    currentStudentId: state.moderator.currentStudentId
   }),
   dispatch => ({
     fetchStudents: bindActionCreators(fetchStudents, dispatch),
@@ -191,6 +187,7 @@ export default connect(
     editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),
     saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch),
     changeDocumentStatus: bindActionCreators(changeDocumentStatus, dispatch),
-    fetchTotalAmountOfStudents: bindActionCreators(fetchTotalAmountOfStudents, dispatch)
+    fetchTotalAmountOfStudents: bindActionCreators(fetchTotalAmountOfStudents, dispatch),
+    selectStudent: bindActionCreators(selectStudent, dispatch)
   })
 )(ModeratorApp)

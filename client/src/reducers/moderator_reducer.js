@@ -11,13 +11,18 @@ import {
   CHANGE_STUDENT_DOCUMENT_STATUS_SUCCESS,
   CHANGE_STUDENT_DOCUMENT_STATUS_FAILURE,
   FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE,
-  FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS
+  FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
+  SELECT_STUDENT,
+  FETCH_PERSONAL_INFO_SUCCESS_MODERATOR,
+  FETCH_PERSONAL_INFO_FAILURE_MODERATOR
 } from "../actions/types"
 
 const initialState = {
   students: {},
   selectedStudent: {},
-  total: 0
+  total: 0,
+  currentStudentId: 0,
+  personalInfo: {}
 }
 
 export default (state = initialState, action) => {
@@ -60,9 +65,9 @@ export default (state = initialState, action) => {
     case SAVE_STUDENT_DOCUMENTS_COMMENT_SUCCESS:
       return {
         ...state,
-        selectedStudent: {
-          ...state.selectedStudent,
-          documentsComment: action.data.comment
+        personalInfo: {
+          ...state.personalInfo,
+          comment: action.data.comment
         }
       }
     case SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE:
@@ -95,6 +100,20 @@ export default (state = initialState, action) => {
     case FETCH_TOTAL_AMOUNT_OF_STUDENTS_FAILURE:
       return {
         ...state,
+        error: action.error
+      }
+    case SELECT_STUDENT:
+      return {
+        ...state,
+        currentStudentId: action.id
+      }
+    case FETCH_PERSONAL_INFO_SUCCESS_MODERATOR:
+      return {
+        ...state,
+        personalInfo: action.data
+      }
+    case FETCH_PERSONAL_INFO_FAILURE_MODERATOR:
+      return {
         error: action.error
       }
     default:

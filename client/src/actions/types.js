@@ -79,3 +79,9 @@ export const SAVE_MEDICAL_DOCUMENT_FAILURE = 'save_medical_document_failure'
 
 export const FETCH_MEDICAL_INFO_SUCCESS = 'fetch_medical_info_success'
 export const FETCH_MEDICAL_INFO_FAILURE = 'fetch_medical_info_failure'
+
+export const SELECT_STUDENT = 'select_student'
+
+/* MODERATOR */
+export const FETCH_PERSONAL_INFO_SUCCESS_MODERATOR = 'fetch_personal_info_success'
+export const FETCH_PERSONAL_INFO_FAILURE_MODERATOR = 'fetch_personal_info_failure'

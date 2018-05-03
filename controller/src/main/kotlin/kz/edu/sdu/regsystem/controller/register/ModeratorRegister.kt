@@ -15,4 +15,6 @@ interface ModeratorRegister {
     fun changeDocumentStatus(id: Long, documentId: Long, status: String)
 
     fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse
+
+    fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse
 }

@@ -1,4 +1,5 @@
 package kz.edu.sdu.regsystem.stand.model
+import kz.edu.sdu.regsystem.controller.model.enums.PersonalInfoStatus
 import java.util.Date
 
 data class PersonalInfo(
@@ -28,5 +29,8 @@ data class PersonalInfo(
     val regFlat: String? = null,
     val regFraction: String? = null,
     val regHouse: String,
-    val regStreet: String
+    val regStreet: String,
+
+    val comment: String = "",
+    val personalInfoStatus : PersonalInfoStatus = PersonalInfoStatus.VALID
 )

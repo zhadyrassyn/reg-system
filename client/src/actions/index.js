@@ -52,7 +52,10 @@ import {
   SAVE_MEDICAL_DOCUMENT_FAILURE,
   SAVE_MEDICAL_DOCUMENT_SUCCESS,
   FETCH_MEDICAL_INFO_FAILURE,
-  FETCH_MEDICAL_INFO_SUCCESS
+  FETCH_MEDICAL_INFO_SUCCESS,
+  SELECT_STUDENT,
+  FETCH_PERSONAL_INFO_SUCCESS_MODERATOR,
+  FETCH_PERSONAL_INFO_FAILURE_MODERATOR
 } from "./types"
 
 import axios from "axios"
@@ -821,3 +824,33 @@ export const fetchTotalAmountOfStudents = (text, onSuccess, onError) => (dispatc
     }
   })
 }
+
+export const fetchStudentPersonalInfoByModerator = (id, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/${id}/personal`
+
+  const token = localStorage.getItem('token')
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({data}) => {
+    dispatch({
+      type: FETCH_PERSONAL_INFO_SUCCESS_MODERATOR,
+      data
+    })
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_PERSONAL_INFO_FAILURE_MODERATOR,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const selectStudent = id => ({type: SELECT_STUDENT, id})

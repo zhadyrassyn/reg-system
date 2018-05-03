@@ -21,6 +21,47 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        val personalInfo = user.personalInfo!!
+        return FetchPersonalInfoResponse(
+            id = id,
+            firstName = personalInfo.firstName,
+            middleName = personalInfo.middleName,
+            lastName = personalInfo.lastName,
+            gender = personalInfo.gender,
+            birthDate = dateToStringForm(personalInfo.birthDate),
+            givenDate = dateToStringForm(personalInfo.givenDate),
+            iin = personalInfo.iin,
+            ud_number = personalInfo.ud_number,
+            mobilePhone = personalInfo.mobilePhone,
+            telPhone = personalInfo.telPhone,
+            nationality = personalInfo.nationality,
+            birthPlace = personalInfo.birthPlace.nameEn,
+            blood_group = personalInfo.blood_group,
+            citizenship = personalInfo.citizenship,
+            factStreet = personalInfo.factStreet,
+            factHouse = personalInfo.factHouse,
+            factFraction = personalInfo.factFraction,
+            factFlat = personalInfo.factFlat,
+            regStreet = personalInfo.regStreet,
+            regHouse = personalInfo.regHouse,
+            regFraction = personalInfo.regFraction,
+            regFlact = personalInfo.regFlat,
+            givenPlace = personalInfo.givenPlace,
+
+            ud_back = user.personalInfoDocuments.ud_back?.path?.fileName?.toString(),
+            ud_front = user.personalInfoDocuments.ud_front?.path?.fileName?.toString(),
+            photo3x4 = user.personalInfoDocuments.photo3x4?.path?.fileName?.toString(),
+
+            comment = personalInfo.comment,
+            status = personalInfo.personalInfoStatus.name
+        )
+    }
+
     override fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse {
         val response = FetchTotalAmountOfStudentsResponse()
         response.total = if (Objects.isNull(text)) {
