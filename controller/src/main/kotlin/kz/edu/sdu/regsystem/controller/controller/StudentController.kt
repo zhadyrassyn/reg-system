@@ -20,14 +20,6 @@ class StudentController(
     fun getDocumentsStatus(@PathVariable("id") id: Long) =
         documentRegister.fetchDocumentsStatus(id)
 
-//    @PostMapping("/document/{id}")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    fun saveDocument(@PathVariable("id") id: Long,
-//                     @RequestParam("file") file: MultipartFile,
-//                     @RequestParam("type") documentType: DocumentType) =
-//        documentRegister.store(
-//        file = file, documentType = documentType, id = id)
-
     @PostMapping("/personal/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     fun savePersonalInfo(@RequestBody personalInfo: SavePersonalInfoRequest,

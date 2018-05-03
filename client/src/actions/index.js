@@ -89,7 +89,7 @@ export const verifyEmail = (token) => (dispatch) => {
       dispatch({
         type: VERIFY_EMAIL_SUCCESS
       })
-      localStorage.setItem('token', token)
+      localStorage.setItem('token', response.data.token)
       browserHistory.push('/')
     })
     .catch(error => {
