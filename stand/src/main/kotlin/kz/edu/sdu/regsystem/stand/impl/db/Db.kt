@@ -25,6 +25,49 @@ class Db {
     val faculties = HashMap<Long, UserFaculty>()
 
     init { //fill cities
+        val f1 = UserFaculty(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Бизнес школа СДУ",
+            nameEn = "SDU Business school",
+            nameKk = "СДУ Бизнес мектебі"
+        )
+
+        val f1s1 = Speciality(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Есеп және аудит",
+            nameRu = "Учет и аудит",
+            nameEn = "Accounting and auditing"
+        )
+
+        val f1s2 = Speciality(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Маркетинг",
+            nameRu = "Маркетинг",
+            nameEn = "Marketing"
+        )
+
+        f1.specializations[f1s1.id] = f1s1
+        f1.specializations[f1s2.id] = f1s2
+
+        faculties[f1.id] = f1
+
+        val f2 = UserFaculty(
+            id = longCounter.incrementAndGet(),
+            nameRu = "Факультет юриспруденции и социальнo-гуманитарных наук",
+            nameEn = "Faculty of Law and Social sciences",
+            nameKk = "Құқық және әлеуметтік-гуманитарлық ғылымдар факультеті"
+        )
+
+        val f2s1 = Speciality(
+            id = longCounter.incrementAndGet(),
+            nameKk = "Құқықтану",
+            nameEn = "Jurisprudence",
+            nameRu = "Юриспруденция"
+        )
+        f2.specializations[f2s1.id] = f2s1
+
+        faculties[f2.id] = f2
+
         val a1 = Area(
             id = 10001,
             nameRu = "Акмолинская область",
@@ -211,6 +254,45 @@ class Db {
             schoolId = c2.schools[0].id
         )
 
+        u1.personalInfo = PersonalInfo(
+            firstName = "Daniyar",
+            middleName = "Temirbekovich",
+            lastName = "Zhadyrassyn",
+            gender="male",
+            birthDate = Date(),
+            givenPlace = "Qyzylorda",
+            iin = "121212323232",
+            ud_number = "22112321",
+            mobilePhone = "7028715536",
+            telPhone = "7242236366",
+            nationality = "kazakh",
+            birthPlace = a1,
+            blood_group = "1+",
+            citizenship = "kz",
+            factStreet = "Abaya",
+            factHouse = "20",
+            factFraction = "1/1",
+            factFlat = "20",
+            regStreet = "Valikhanova",
+            regHouse = "20",
+            regFraction = "1/1",
+            regFlat = "40",
+            givenDate = Date()
+        )
+
+        u1.educationInfo = EducationInfo(
+            id = longCounter.incrementAndGet(),
+            area = a2,
+            city = a2c1,
+            school = a2c1s1,
+            ent_amount = 80,
+            ent_certificate_number = "certificatenumber",
+            ikt = "22123",
+            faculty = f1,
+            speciality = f1s1,
+            school_finish = Date()
+        )
+
         documentEnums.forEach {
             u1.documents.put(it, Document(
                 id = longCounter.incrementAndGet(),
@@ -237,7 +319,9 @@ class Db {
             id = 2000,
             email = "test4@test.com",
             password = "qwerty",
-            userStatus = UserStatus.ACTIVE
+            userStatus = UserStatus.ACTIVE,
+            cityId = cities[c1.id]?.id!!,
+            schoolId = cities[c1.id]?.schools!![0].id
         )
 
         val stubUsers = ArrayList<User>()
@@ -252,7 +336,7 @@ class Db {
                 birthDate = toDate("1996/11/12"),
                 cityId = c1.id,
                 schoolId = c1.schools[i % 10].id,
-                userStatus = UserStatus.ACTIVE
+                userStatus = UserStatus.NONACTIVE
             )
 
             documentEnums.forEach {
@@ -279,49 +363,6 @@ class Db {
         userRoles.put(u2.id, RoleType.USER)
         userRoles.put(u3.id, RoleType.MODERATOR)
         userRoles.put(u4.id, RoleType.USER)
-
-        val f1 = UserFaculty(
-            id = longCounter.incrementAndGet(),
-            nameRu = "Бизнес школа СДУ",
-            nameEn = "SDU Business school",
-            nameKk = "СДУ Бизнес мектебі"
-        )
-
-        val f1s1 = Speciality(
-            id = longCounter.incrementAndGet(),
-            nameKk = "Есеп және аудит",
-            nameRu = "Учет и аудит",
-            nameEn = "Accounting and auditing"
-        )
-
-        val f1s2 = Speciality(
-            id = longCounter.incrementAndGet(),
-            nameKk = "Маркетинг",
-            nameRu = "Маркетинг",
-            nameEn = "Marketing"
-        )
-
-        f1.specializations[f1s1.id] = f1s1
-        f1.specializations[f1s2.id] = f1s2
-
-        faculties[f1.id] = f1
-
-        val f2 = UserFaculty(
-            id = longCounter.incrementAndGet(),
-            nameRu = "Факультет юриспруденции и социальнo-гуманитарных наук",
-            nameEn = "Faculty of Law and Social sciences",
-            nameKk = "Құқық және әлеуметтік-гуманитарлық ғылымдар факультеті"
-        )
-
-        val f2s1 = Speciality(
-            id = longCounter.incrementAndGet(),
-            nameKk = "Құқықтану",
-            nameEn = "Jurisprudence",
-            nameRu = "Юриспруденция"
-        )
-        f2.specializations[f2s1.id] = f2s1
-
-        faculties[f2.id] = f2
     }
 
     private fun toDate(birthDate: String): Date {

@@ -3,6 +3,7 @@ package kz.edu.sdu.regsystem.stand.impl
 import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.model.Area
 import kz.edu.sdu.regsystem.stand.model.enums.DocumentStatus
 import kz.edu.sdu.regsystem.stand.model.enums.GeneralInfoStatus
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
@@ -82,33 +83,33 @@ class ModeratorRegisterStandImpl(
             it.id == id
         } ?: throw UserDoesNotExistsException("User with id $id does not exist")
 
-        val city = db.cities.values.firstOrNull { it.id == user.cityId }
-            ?: throw CityDoesNotExistException("City with ${user.cityId} does not exist")
-        val school = city.schools.firstOrNull { school -> school.id == user.schoolId }
-            ?: throw SchoolDoesNotExistException("Cannot find school with id ${user.schoolId}")
-        val documents = user.documents.values
-            .map {
-                DocumentInfoResposne(
-                    id = it.id,
-                    type = it.documentType.name,
-                    status = it.documentStatus.name,
-                    url = if (it.path == null) "default.png" else it.path!!.fileName.toString())
-            }
-
-        response.id = user.id
-        response.firstName = user.firstName
-        response.middleName = user.middleName
-        response.lastName = user.lastName
-        response.email = user.email
-        response.city = city.name
-        response.school = school.nameRu
-        response.birthDate = dateToStringForm(user.birthDate)
-        response.generalInfoStatus = user.generalInfoStatusDto.status.name
-        response.generalInfoComment = user.generalInfoStatusDto.comment!!
-        response.documentsComment = user.documentsComment
-        response.documents = documents
-
-        return response
+        return GetStudentInfoResponse()
+//        val personalInfo = user.personalInfo
+//        if(personalInfo == null) {
+//            return GetStudentInfoResponse()
+//        } else {
+//            val cityId: Long? = user.educationInfo?.city?.id
+//            val city: String
+//            val school: String
+//            if(cityId == null) {
+//                city = ""
+//                school = ""
+//            } else {
+//                val area = db.areas[user.educationInfo!!.area.id]
+//                val cityData = area!!.cities[cityId]
+//                city = cityData!!.nameRu
+//                school = cityData.schools[user.educationInfo!!.school.id]!!.nameRu
+//            }
+//            return GetStudentInfoResponse(
+//                id = id,
+//                firstName = personalInfo.firstName,
+//                middleName = personalInfo.middleName,
+//                lastName = personalInfo.lastName,
+//                birthDate = dateToStringForm(personalInfo.birthDate),
+//                city = city,
+//                school = school
+//            )
+//        }
     }
 
     override fun getStudents(text: String, currentPage: Int, perPage: Int): List<GetStudentsResponse> {
@@ -120,15 +121,15 @@ class ModeratorRegisterStandImpl(
                 .filter {
                     db.userRoles[it.id] == RoleType.USER
                         && it.userStatus == UserStatus.ACTIVE
-                        && (
-                        it.id.toString().contains(text, ignoreCase = true)
-                            || it.firstName.contains(text, ignoreCase = true)
-                            || it.middleName.contains(text, ignoreCase = true)
-                            || it.lastName.contains(text, ignoreCase = true)
-                            || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.nameRu.contains(text, ignoreCase = true)
-                            || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
-                        )
+//                        && (
+//                        it.id.toString().contains(text, ignoreCase = true)
+//                            || it.firstName.contains(text, ignoreCase = true)
+//                            || it.middleName.contains(text, ignoreCase = true)
+//                            || it.lastName.contains(text, ignoreCase = true)
+//                            || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
+//                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.nameRu.contains(text, ignoreCase = true)
+//                            || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
+//                        )
 
                 }
         }
@@ -140,21 +141,36 @@ class ModeratorRegisterStandImpl(
         return filteredUsers
             .subList(from, to)
             .map {
-                val city = db.cities[it.cityId] ?: throw Exception("Cannot find city with id ${it.cityId}")
-                val school = city.schools.firstOrNull { school -> school.id == it.schoolId }
-                    ?: throw BadRequestException("Cannot find school with id ${it.schoolId}")
+                if(it.personalInfo == null || it.educationInfo == null) {
+                    GetStudentsResponse(id = it.id)
+                } else {
+                    val city: String
+                    val school: String
 
-                GetStudentsResponse(
-                    id = it.id,
-                    firstName = it.firstName,
-                    middleName = it.middleName,
-                    lastName = it.lastName,
-                    email = it.email,
-                    city = city.name,
-                    school = school.nameRu,
-                    userStatus = it.userStatus.toString(),
-                    birthDate = dateToStringForm(it.birthDate)
-                )
+                    val educationArea = db.areas[it.educationInfo?.area?.id]
+                    if(educationArea == null) {
+                        city = ""
+                        school = ""
+                    } else {
+                        val cityData = educationArea!!.cities[it.educationInfo!!.city.id]
+                        city = cityData!!.nameEn
+                        school = cityData.schools[it.educationInfo!!.school.id]!!.nameRu
+                    }
+
+                    val personalInfo = it.personalInfo
+                    GetStudentsResponse(
+                        id = it.id,
+                        firstName = personalInfo!!.firstName,
+                        middleName = personalInfo.middleName,
+                        lastName = personalInfo.lastName,
+                        city = city,
+                        school = school,
+                        userStatus = it.userStatus.toString(),
+                        birthDate = dateToStringForm(personalInfo.birthDate)
+                    )
+                }
+
+
             }
     }
 

@@ -1,21 +1,21 @@
 package kz.edu.sdu.regsystem.controller.model
 
 data class GetStudentsResponse(
-    val id: Long,
-    val firstName: String,
-    val middleName: String,
-    val lastName: String,
-    val email: String,
-    val city: String,
-    val school: String,
-    val birthDate: String,
-    val userStatus: String
+    val id: Long = 0,
+    val firstName: String = "",
+    val middleName: String? = "",
+    val lastName: String = "",
+    val email: String = "",
+    val city: String = "",
+    val school: String = "",
+    val birthDate: String = "",
+    val userStatus: String = "ACTIVE"
 )
 
 data class GetStudentInfoResponse(
     var id: Long = -1,
     var firstName: String = "",
-    var middleName: String = "",
+    var middleName: String? = "",
     var lastName: String = "",
     var email: String = "",
     var city: String = "",
