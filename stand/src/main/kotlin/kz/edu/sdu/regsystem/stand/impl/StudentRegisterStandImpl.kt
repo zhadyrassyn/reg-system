@@ -7,6 +7,7 @@ import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
 import kz.edu.sdu.regsystem.stand.model.*
 import kz.edu.sdu.regsystem.stand.model.enums.AreaType
+import kz.edu.sdu.regsystem.stand.model.enums.CommentStatus
 import kz.edu.sdu.regsystem.stand.model.enums.SchoolStatus
 import kz.edu.sdu.regsystem.stand.model.enums.UserCityStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
@@ -29,6 +30,8 @@ class StudentRegisterStandImpl(
 
         val medicalInfoDocuments = user.medicalInfoDocuments
         return GetMedicalInfoResponseData(
+            comment = medicalInfoDocuments.comment,
+            status = medicalInfoDocuments.status.name,
             form63 = medicalInfoDocuments.form63?.path?.fileName?.toString(),
             form86 = medicalInfoDocuments.form86?.path?.fileName?.toString(),
             flurography = medicalInfoDocuments.flurography?.path?.fileName?.toString()

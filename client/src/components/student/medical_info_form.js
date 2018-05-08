@@ -144,6 +144,8 @@ class MedicalInfoForm extends Component {
     const {lang, medicalInfoDocuments} = this.props
     const {isForm86Saving, isForm63Saving, isFlurographySaving} = this.state
 
+    const textAreaClassName="form-control disabled " + (medicalInfoDocuments.status === "VALID" ? " btn-outline-success" : medicalInfoDocuments.status === "INVALID" ?
+      "btn-outline-danger" : "")
     return (
       <div className="container-fluid">
         <div className="form-row mt-3">
@@ -158,7 +160,7 @@ class MedicalInfoForm extends Component {
 
         <div className="form-group">
           <label htmlFor="comment">{message.moderator_comment[lang]}</label>
-          <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
+          <textarea className={textAreaClassName} id="comment" rows="3" disabled={true} value={medicalInfoDocuments.comment}></textarea>
         </div>
       </div>
     )

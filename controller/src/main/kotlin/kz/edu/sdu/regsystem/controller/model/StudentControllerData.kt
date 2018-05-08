@@ -118,6 +118,8 @@ data class GetEducationInfoResponseData(
 )
 
 data class GetMedicalInfoResponseData(
+    val comment: String? = "",
+    val status: String = "",
     val form63: String? = null,
     val form86: String? = null,
     val flurography: String? = null
