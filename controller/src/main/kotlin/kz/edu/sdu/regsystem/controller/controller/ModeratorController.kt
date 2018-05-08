@@ -41,4 +41,7 @@ class ModeratorController(
 
     @GetMapping("/students/{id}/personal")
     fun fetchPersonalInfo(@PathVariable("id") id: Long) = moderatorRegister.fetchPersonalInfo(id)
+
+    @GetMapping("/students/{id}/education")
+    fun fetchEducationInfo(@PathVariable("id") id: Long) = moderatorRegister.fetchEducationInfo(id)
 }

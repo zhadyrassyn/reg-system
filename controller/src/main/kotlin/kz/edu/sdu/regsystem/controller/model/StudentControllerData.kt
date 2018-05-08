@@ -108,7 +108,7 @@ data class GetEducationInfoResponseData(
     val ent_certificate_number: String? = null,
     val ikt: String? = null,
     val faculty: GetFacultiesResponseData? = null,
-    val speciality: GetSpecializationsResponseData? = null,
+    val speciality: GetSpecialtyResponseData? = null,
     val school_finish: String? = null,
 
     val schoolDiploma: String? = null,

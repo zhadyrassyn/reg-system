@@ -4,14 +4,10 @@ import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.model.enums.PersonalInfoStatus
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
-import kz.edu.sdu.regsystem.stand.model.Area
 import kz.edu.sdu.regsystem.stand.model.enums.DocumentStatus
-import kz.edu.sdu.regsystem.stand.model.enums.GeneralInfoStatus
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
-import kz.edu.sdu.regsystem.stand.model.exceptions.CityDoesNotExistException
-import kz.edu.sdu.regsystem.stand.model.exceptions.SchoolDoesNotExistException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
@@ -22,6 +18,57 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun fetchEducationInfo(id: Long): FetchEducationInfoResponse {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        val educationInfo = user.educationInfo
+            ?: return FetchEducationInfoResponse()
+
+        return FetchEducationInfoResponse(
+            educationArea = AreaData(
+                id = educationInfo.area.id,
+                nameKk = educationInfo.area.nameKk,
+                nameRu = educationInfo.area.nameRu,
+                nameEn = educationInfo.area.nameEn
+            ),
+            city = CityData(
+                id = educationInfo.city.id,
+                nameKk = educationInfo.city.nameKk,
+                nameRu = educationInfo.city.nameRu,
+                nameEn = educationInfo.city.nameEn
+            ),
+            school = SchoolData(
+                id = educationInfo.school.id,
+                nameKk = educationInfo.school.nameKk,
+                nameRu = educationInfo.school.nameRu,
+                nameEn = educationInfo.school.nameEn
+            ),
+            ent_amount = educationInfo.ent_amount.toString(),
+            ent_certificate_number = educationInfo.ent_certificate_number,
+            ikt = educationInfo.ikt,
+            faculty = GetFacultiesResponseData(
+                id = educationInfo.faculty.id,
+                nameKk = educationInfo.faculty.nameKk,
+                nameRu = educationInfo.faculty.nameRu,
+                nameEn = educationInfo.faculty.nameEn
+            ),
+            speciality = GetSpecialtyResponseData(
+                id = educationInfo.speciality.id,
+                nameKk = educationInfo.speciality.nameKk,
+                nameRu = educationInfo.speciality.nameRu,
+                nameEn = educationInfo.speciality.nameEn
+            ),
+            school_finish = dateToStringForm(educationInfo.school_finish),
+            schoolDiploma = user.educationInfoDocuments.schoolDiploma?.path?.fileName?.toString(),
+            entCertificate = user.educationInfoDocuments.entCertificate?.path?.fileName?.toString(),
+            comment = educationInfo.comment,
+            status = educationInfo.educationInfoStatus.name
+        )
+
+    }
+
     override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
         val user = db.users.values.firstOrNull {
             it.id == id

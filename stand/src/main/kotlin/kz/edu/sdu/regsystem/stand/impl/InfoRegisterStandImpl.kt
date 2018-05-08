@@ -51,12 +51,12 @@ class InfoRegisterStandImpl(
     }
 
     @Cacheable("specializagions")
-    override fun getSpecialities(facultyId: Long): List<GetSpecializationsResponseData> {
+    override fun getSpecialities(facultyId: Long): List<GetSpecialtyResponseData> {
         val faculty = db.faculties.values.firstOrNull { it.id == facultyId }
             ?: throw BadRequestException("Faculty with id $facultyId does not exist")
 
         return faculty.specializations.values.map {
-            GetSpecializationsResponseData(
+            GetSpecialtyResponseData(
                 id = it.id,
                 nameKk = it.nameKk,
                 nameEn = it.nameEn,

@@ -17,4 +17,6 @@ interface ModeratorRegister {
     fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse
 
     fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse
+
+    fun fetchEducationInfo(id: Long): FetchEducationInfoResponse
 }

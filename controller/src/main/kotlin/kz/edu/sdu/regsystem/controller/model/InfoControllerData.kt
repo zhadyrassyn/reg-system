@@ -14,7 +14,7 @@ data class GetFacultiesResponseData(
     val nameKk: String
 )
 
-data class GetSpecializationsResponseData(
+data class GetSpecialtyResponseData(
     val id: Long,
     val nameRu: String,
     val nameEn: String,

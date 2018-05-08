@@ -11,5 +11,5 @@ interface InfoRegister {
 
     fun getFaculties(): List<GetFacultiesResponseData>
 
-    fun getSpecialities(facultyId: Long): List<GetSpecializationsResponseData>
+    fun getSpecialities(facultyId: Long): List<GetSpecialtyResponseData>
 }

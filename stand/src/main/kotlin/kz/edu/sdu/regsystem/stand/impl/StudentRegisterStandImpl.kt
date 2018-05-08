@@ -214,7 +214,7 @@ class StudentRegisterStandImpl(
                 nameKk = educationInfo.faculty.nameKk,
                 nameEn = educationInfo.faculty.nameEn
             ),
-            speciality = GetSpecializationsResponseData(
+            speciality = GetSpecialtyResponseData(
                 id = educationInfo.speciality.id,
                 nameRu = educationInfo.speciality.nameRu,
                 nameEn = educationInfo.speciality.nameEn,

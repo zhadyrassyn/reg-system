@@ -1,7 +1,5 @@
 package kz.edu.sdu.regsystem.controller.model
 
-import javax.management.monitor.StringMonitor
-
 data class GetStudentsResponse(
     val id: Long = 0,
     val firstName: String = "",
@@ -82,3 +80,24 @@ data class FetchPersonalInfoResponse(
     val comment: String,
     val status: String
 )
+
+data class FetchEducationInfoResponse (
+    val educationArea: AreaData? = null,
+    val city: CityData? = null,
+    val school: SchoolData? = null,
+
+    val ent_amount: String? = "",
+    val ent_certificate_number: String? = "",
+    val ikt: String? = "",
+    val faculty: GetFacultiesResponseData? = null,
+    val speciality: GetSpecialtyResponseData? = null,
+
+    val school_finish: String? = "",
+    val schoolDiploma: String? = null,
+    val entCertificate: String? = null,
+
+    val comment: String? = "",
+    val status: String? = "WATING_FOR_RESPONSE"
+)
+
+

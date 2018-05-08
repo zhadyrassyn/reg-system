@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import EditStudentDocuments from "./edit_student_documents"
 import EditStudentGeneralInfo from "./edit_student_general_Info"
+import EditStudentEducationInfo from "./edit_student_education_info"
 import {message} from "../../locale/message"
 
 import {
@@ -62,6 +63,9 @@ class EditStudent extends Component {
           <div className="col-md-12">
             {activeForm === FORM_PERSONAL_INFO &&
               <EditStudentGeneralInfo/>
+            }
+            {activeForm === FORM_EDUCATION_INFO &&
+              <EditStudentEducationInfo/>
             }
             {/*{activeForm === FORM_DOCUMENTS &&*/}
               {/*<EditStudentDocuments*/}

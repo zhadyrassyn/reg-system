@@ -1,5 +1,6 @@
 package kz.edu.sdu.regsystem.stand.model
 
+import kz.edu.sdu.regsystem.controller.model.enums.EducationInfoStatus
 import java.util.*
 
 data class EducationInfo(
@@ -12,5 +13,8 @@ data class EducationInfo(
     val ikt: String,
     val faculty: UserFaculty,
     val speciality: Speciality,
-    val school_finish: Date
+    val school_finish: Date,
+
+    var comment: String = "",
+    var educationInfoStatus : EducationInfoStatus = EducationInfoStatus.WATING_FOR_RESPONSE
 )
