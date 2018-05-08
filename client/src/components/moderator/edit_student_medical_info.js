@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import {bindActionCreators} from "redux"
 import {connect} from "react-redux"
 import {message} from "../../locale/message"
-import {fetchStudentMedicalInfoByModerator, saveEducationComment} from "../../actions";
+import {fetchStudentMedicalInfoByModerator, saveMedicalComment} from "../../actions";
 
 class EditStudentMedicalInfo extends Component {
 
@@ -28,9 +28,9 @@ class EditStudentMedicalInfo extends Component {
   }
 
   saveComment = (status) => {
-    const {saveEducationComment, currentStudentId} = this.props
+    const {saveMedicalComment, currentStudentId} = this.props
 
-    saveEducationComment(currentStudentId, this.state.commentState, status,
+    saveMedicalComment(currentStudentId, this.state.commentState, status,
       () => {
         console.log('success 123')
       },
@@ -57,10 +57,12 @@ class EditStudentMedicalInfo extends Component {
     return (
       <div className="row mt-5">
         <div className="col-md-12">
-          {/*{!schoolDiploma && <p className="text-danger">{message.diploma_certificate[lang]} {message.not_send[lang]}</p>}*/}
-          {/*{schoolDiploma && <img src={`http://localhost:8081/api/upload/${schoolDiploma}`} className="img-fluid" alt="Responsive image"/>}*/}
-          {/*{!entCertificate && <p className="text-danger">{message.ent_certificate[lang]} {message.not_send[lang]}</p>}*/}
-          {/*{entCertificate && <img src={`http://localhost:8081/api/upload/${entCertificate}`} className="img-fluid" alt="Responsive image"/>}*/}
+          {!form63 && <p className="text-danger">{message.medical_form_63[lang]} {message.not_send[lang]}</p>}
+          {form63 && <img src={`http://localhost:8081/api/upload/${form63}`} className="img-fluid" alt="Responsive image"/>}
+          {!form86 && <p className="text-danger">{message.medical_form_86[lang]} {message.not_send[lang]}</p>}
+          {form86 && <img src={`http://localhost:8081/api/upload/${form86}`} className="img-fluid" alt="Responsive image"/>}
+          {!flurography && <p className="text-danger">{message.flurography[lang]} {message.not_send[lang]}</p>}
+          {flurography && <img src={`http://localhost:8081/api/upload/${flurography}`} className="img-fluid" alt="Responsive image"/>}
         </div>
         <div className="col-md-12">
           <textarea onChange={this.onTextAreaChange} className="form-control" value={commentState}></textarea>
@@ -82,6 +84,6 @@ export default connect(
   }),
   dispatch => ({
     fetchStudentMedicalInfoByModerator: bindActionCreators(fetchStudentMedicalInfoByModerator, dispatch),
-    // saveEducationComment: bindActionCreators(saveEducationComment, dispatch)
+    saveMedicalComment: bindActionCreators(saveMedicalComment, dispatch)
   })
 )(EditStudentMedicalInfo)

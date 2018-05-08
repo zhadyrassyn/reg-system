@@ -61,7 +61,9 @@ import {
   SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
   SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR,
   FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
-  FETCH_MEDICAL_INFO_FAILURE_MODERATOR
+  FETCH_MEDICAL_INFO_FAILURE_MODERATOR,
+  SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR,
+  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR
 } from "./types"
 
 import axios from "axios"
@@ -768,6 +770,37 @@ export const saveEducationComment = (id, comment, status, onSuccess, onError) =>
   }).catch(error => {
     dispatch({
       type: SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const saveMedicalComment = (id, comment, status, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/${id}/medical/comment`
+
+  const token = localStorage.getItem('token')
+  const data = {
+    comment: comment,
+    status: status
+  }
+  axios.post(request, data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(() => {
+    dispatch({
+      type: SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR,
+      data
+    })
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR,
       error: error.response && error.response.message
     })
     if (onError) {

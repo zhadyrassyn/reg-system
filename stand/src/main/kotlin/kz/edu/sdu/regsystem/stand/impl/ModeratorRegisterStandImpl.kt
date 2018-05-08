@@ -5,6 +5,7 @@ import kz.edu.sdu.regsystem.controller.model.enums.EducationInfoStatus
 import kz.edu.sdu.regsystem.controller.model.enums.PersonalInfoStatus
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
+import kz.edu.sdu.regsystem.stand.model.enums.CommentStatus
 import kz.edu.sdu.regsystem.stand.model.enums.DocumentStatus
 import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
@@ -19,6 +20,15 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun saveMedicalComment(id: Long, request: EditGeneralInfORequest) {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        user.medicalInfoDocuments.comment = if(request.comment == null) "" else request.comment
+        user.medicalInfoDocuments.status = CommentStatus.valueOf(request.status)
+    }
+
     override fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse {
         val user = db.users.values.firstOrNull {
             it.id == id

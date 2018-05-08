@@ -24,4 +24,6 @@ interface ModeratorRegister {
 
     fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse
 
+    fun saveMedicalComment(id: Long, request: EditGeneralInfORequest)
+
 }

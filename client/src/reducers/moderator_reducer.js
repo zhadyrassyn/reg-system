@@ -20,7 +20,9 @@ import {
   SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
   SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR,
   FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
-  FETCH_MEDICAL_INFO_FAILURE_MODERATOR
+  FETCH_MEDICAL_INFO_FAILURE_MODERATOR,
+  SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR,
+  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR
 } from "../actions/types"
 
 const initialState = {
@@ -153,6 +155,19 @@ export default (state = initialState, action) => {
         medicalInfo: action.data
       }
     case FETCH_MEDICAL_INFO_FAILURE_MODERATOR:
+      return {
+        error: action.error
+      }
+    case SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR:
+      return {
+        ...state,
+        medicalInfo: {
+          ...state.medicalInfo,
+          comment: action.data.comment,
+          status: action.data.status
+        }
+      }
+    case SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR:
       return {
         error: action.error
       }
