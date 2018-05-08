@@ -16,7 +16,9 @@ import {
   FETCH_PERSONAL_INFO_SUCCESS_MODERATOR,
   FETCH_PERSONAL_INFO_FAILURE_MODERATOR,
   FETCH_EDUCATION_INFO_SUCCESS_MODERATOR,
-  FETCH_EDUCATION_INFO_FAILURE_MODERATOR
+  FETCH_EDUCATION_INFO_FAILURE_MODERATOR,
+  SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
+  SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR
 } from "../actions/types"
 
 const initialState = {
@@ -70,7 +72,8 @@ export default (state = initialState, action) => {
         ...state,
         personalInfo: {
           ...state.personalInfo,
-          comment: action.data.comment
+          comment: action.data.comment,
+          status: action.data.status
         }
       }
     case SAVE_STUDENT_DOCUMENTS_COMMENT_FAILURE:
@@ -125,6 +128,19 @@ export default (state = initialState, action) => {
         educationInfo: action.data
       }
     case FETCH_EDUCATION_INFO_FAILURE_MODERATOR:
+      return {
+        error: action.error
+      }
+    case SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR:
+      return {
+        ...state,
+        educationInfo: {
+          ...state.educationInfo,
+          comment: action.data.comment,
+          status: action.data.status
+        }
+      }
+    case SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR:
       return {
         error: action.error
       }

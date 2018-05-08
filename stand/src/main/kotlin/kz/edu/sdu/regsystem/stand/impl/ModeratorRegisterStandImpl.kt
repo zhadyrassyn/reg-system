@@ -1,6 +1,7 @@
 package kz.edu.sdu.regsystem.stand.impl
 
 import kz.edu.sdu.regsystem.controller.model.*
+import kz.edu.sdu.regsystem.controller.model.enums.EducationInfoStatus
 import kz.edu.sdu.regsystem.controller.model.enums.PersonalInfoStatus
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.stand.impl.db.Db
@@ -18,6 +19,15 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun saveEducationComment(id: Long, request: EditGeneralInfORequest) {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        user.educationInfo!!.comment = if (request.comment == null) "" else request.comment!!
+        user.educationInfo!!.educationInfoStatus = EducationInfoStatus.valueOf(request.status)
+    }
+
     override fun fetchEducationInfo(id: Long): FetchEducationInfoResponse {
         val user = db.users.values.firstOrNull {
             it.id == id

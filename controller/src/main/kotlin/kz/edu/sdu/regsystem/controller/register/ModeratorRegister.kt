@@ -19,4 +19,7 @@ interface ModeratorRegister {
     fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse
 
     fun fetchEducationInfo(id: Long): FetchEducationInfoResponse
+
+    fun saveEducationComment(id: Long, request: EditGeneralInfORequest)
+
 }

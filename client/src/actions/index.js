@@ -57,7 +57,9 @@ import {
   FETCH_PERSONAL_INFO_SUCCESS_MODERATOR,
   FETCH_PERSONAL_INFO_FAILURE_MODERATOR,
   FETCH_EDUCATION_INFO_SUCCESS_MODERATOR,
-  FETCH_EDUCATION_INFO_FAILURE_MODERATOR
+  FETCH_EDUCATION_INFO_FAILURE_MODERATOR,
+  SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
+  SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR
 } from "./types"
 
 import axios from "axios"
@@ -733,6 +735,37 @@ export const editGeneralInfo = (id, generalInfoComment, generalInfoStatus, onSuc
   }).catch(error => {
     dispatch({
       type: EDIT_STUDENT_GENERAL_INFO_FAILURE,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const saveEducationComment = (id, comment, status, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/${id}/education/comment`
+
+  const token = localStorage.getItem('token')
+  const data = {
+    comment: comment,
+    status: status
+  }
+  axios.post(request, data, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(() => {
+    dispatch({
+      type: SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
+      data
+    })
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR,
       error: error.response && error.response.message
     })
     if (onError) {
