@@ -85,3 +85,6 @@ export const SELECT_STUDENT = 'select_student'
 /* MODERATOR */
 export const FETCH_PERSONAL_INFO_SUCCESS_MODERATOR = 'fetch_personal_info_success'
 export const FETCH_PERSONAL_INFO_FAILURE_MODERATOR = 'fetch_personal_info_failure'
+
+export const FETCH_EDUCATION_INFO_SUCCESS_MODERATOR = 'fetch_education_info_moderator_success'
+export const FETCH_EDUCATION_INFO_FAILURE_MODERATOR = 'fetch_education_info_moderator_failure'

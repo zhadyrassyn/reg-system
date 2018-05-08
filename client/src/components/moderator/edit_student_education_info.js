@@ -7,7 +7,7 @@ import {
   REJECTED
 } from "../../constants"
 
-import {fetchStudentPersonalInfoByModerator, editGeneralInfo} from "../../actions";
+import {fetchStudentEducationInfoByModerator, editGeneralInfo} from "../../actions";
 
 class EditStudentEducationInfo extends Component {
 
@@ -20,16 +20,16 @@ class EditStudentEducationInfo extends Component {
   }
 
   componentDidMount() {
-    // const {currentStudentId, fetchStudentPersonalInfoByModerator} = this.props
-    // fetchStudentPersonalInfoByModerator(currentStudentId,
-    //   () => {
-    //     this.setState({commentState: this.props.personalInfo.comment})
-    //     console.log('success on fetchStudentPersonalInfoByModerator')
-    //   },
-    //   () => {
-    //     console.log('fail on fetchStudentPersonalInfoByModerator')
-    //   }
-    // )
+    const {currentStudentId, fetchStudentEducationInfoByModerator} = this.props
+    fetchStudentEducationInfoByModerator(currentStudentId,
+      () => {
+        // this.setState({commentState: this.props.personalInfo.comment})
+        console.log('success on fetchStudentEducationInfoByModerator')
+      },
+      () => {
+        console.log('fail on fetchStudentEducationInfoByModerator')
+      }
+    )
   }
 
   onGeneralInfoEdit = (status) => {
@@ -84,7 +84,7 @@ export default connect(
     personalInfo: state.moderator.personalInfo
   }),
   dispatch => ({
-    fetchStudentPersonalInfoByModerator: bindActionCreators(fetchStudentPersonalInfoByModerator, dispatch),
+    fetchStudentEducationInfoByModerator: bindActionCreators(fetchStudentEducationInfoByModerator, dispatch),
     editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch)
     // fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch),
     // editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),

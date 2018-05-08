@@ -14,7 +14,9 @@ import {
   FETCH_TOTAL_AMOUNT_OF_STUDENTS_SUCCESS,
   SELECT_STUDENT,
   FETCH_PERSONAL_INFO_SUCCESS_MODERATOR,
-  FETCH_PERSONAL_INFO_FAILURE_MODERATOR
+  FETCH_PERSONAL_INFO_FAILURE_MODERATOR,
+  FETCH_EDUCATION_INFO_SUCCESS_MODERATOR,
+  FETCH_EDUCATION_INFO_FAILURE_MODERATOR
 } from "../actions/types"
 
 const initialState = {
@@ -22,7 +24,8 @@ const initialState = {
   selectedStudent: {},
   total: 0,
   currentStudentId: 0,
-  personalInfo: {}
+  personalInfo: {},
+  educationInfo: {}
 }
 
 export default (state = initialState, action) => {
@@ -113,6 +116,15 @@ export default (state = initialState, action) => {
         personalInfo: action.data
       }
     case FETCH_PERSONAL_INFO_FAILURE_MODERATOR:
+      return {
+        error: action.error
+      }
+    case FETCH_EDUCATION_INFO_SUCCESS_MODERATOR:
+      return {
+        ...state,
+        educationInfo: action.data
+      }
+    case FETCH_EDUCATION_INFO_FAILURE_MODERATOR:
       return {
         error: action.error
       }
