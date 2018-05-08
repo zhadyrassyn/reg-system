@@ -22,4 +22,6 @@ interface ModeratorRegister {
 
     fun saveEducationComment(id: Long, request: EditGeneralInfORequest)
 
+    fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse
+
 }

@@ -19,6 +19,22 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse {
+        val user = db.users.values.firstOrNull {
+            it.id == id
+        } ?: throw UserDoesNotExistsException("User with id $id does not exist")
+
+        val medicalInfo = user.medicalInfoDocuments
+
+        return FetchMedicalInfoResponse(
+            comment = medicalInfo.comment,
+            status = medicalInfo.status.name,
+            form86 = medicalInfo.form86?.path?.fileName?.toString(),
+            form63 = medicalInfo.form63?.path?.fileName?.toString(),
+            flurography = medicalInfo.flurography?.path?.fileName?.toString()
+        )
+    }
+
     override fun saveEducationComment(id: Long, request: EditGeneralInfORequest) {
         val user = db.users.values.firstOrNull {
             it.id == id

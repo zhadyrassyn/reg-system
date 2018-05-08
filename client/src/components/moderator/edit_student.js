@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import EditStudentDocuments from "./edit_student_documents"
 import EditStudentGeneralInfo from "./edit_student_general_Info"
 import EditStudentEducationInfo from "./edit_student_education_info"
+import EditStudentMedicalInfo from "./edit_student_medical_info"
 import {message} from "../../locale/message"
 
 import {
@@ -9,8 +10,6 @@ import {
   FORM_EDUCATION_INFO,
   FORM_MEDICAL_INFO
 } from "../../constants"
-
-
 
 class EditStudent extends Component {
   constructor(props) {
@@ -67,13 +66,9 @@ class EditStudent extends Component {
             {activeForm === FORM_EDUCATION_INFO &&
               <EditStudentEducationInfo/>
             }
-            {/*{activeForm === FORM_DOCUMENTS &&*/}
-              {/*<EditStudentDocuments*/}
-                {/*selectedStudent={ selectedStudent }*/}
-                {/*onSaveDocumentsComment={ onSaveDocumentsComment }*/}
-                {/*onDocumentStatusChange = { onDocumentStatusChange }*/}
-              {/*/>*/}
-            {/*}*/}
+            {activeForm === FORM_MEDICAL_INFO &&
+              <EditStudentMedicalInfo/>
+            }
           </div>
         </div>
       </div>

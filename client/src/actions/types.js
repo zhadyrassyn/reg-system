@@ -91,3 +91,6 @@ export const FETCH_EDUCATION_INFO_FAILURE_MODERATOR = 'fetch_education_info_mode
 
 export const SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR = 'save_education_comment_moderator_success'
 export const SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR = 'save_education_comment_moderator_failure'
+
+export const FETCH_MEDICAL_INFO_SUCCESS_MODERATOR = 'fetch_medial_info_moderator_success'
+export const FETCH_MEDICAL_INFO_FAILURE_MODERATOR = 'fetch_medial_info_moderator_failure'

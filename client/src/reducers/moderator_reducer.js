@@ -18,7 +18,9 @@ import {
   FETCH_EDUCATION_INFO_SUCCESS_MODERATOR,
   FETCH_EDUCATION_INFO_FAILURE_MODERATOR,
   SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
-  SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR
+  SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR,
+  FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
+  FETCH_MEDICAL_INFO_FAILURE_MODERATOR
 } from "../actions/types"
 
 const initialState = {
@@ -27,7 +29,8 @@ const initialState = {
   total: 0,
   currentStudentId: 0,
   personalInfo: {},
-  educationInfo: {}
+  educationInfo: {},
+  medicalInfo: {}
 }
 
 export default (state = initialState, action) => {
@@ -141,6 +144,15 @@ export default (state = initialState, action) => {
         }
       }
     case SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR:
+      return {
+        error: action.error
+      }
+    case FETCH_MEDICAL_INFO_SUCCESS_MODERATOR:
+      return {
+        ...state,
+        medicalInfo: action.data
+      }
+    case FETCH_MEDICAL_INFO_FAILURE_MODERATOR:
       return {
         error: action.error
       }

@@ -59,7 +59,9 @@ import {
   FETCH_EDUCATION_INFO_SUCCESS_MODERATOR,
   FETCH_EDUCATION_INFO_FAILURE_MODERATOR,
   SAVE_EDUCATION_COMMENT_SUCCESS_MODERATOR,
-  SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR
+  SAVE_EDUCATION_COMMENT_FAILURE_MODERATOR,
+  FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
+  FETCH_MEDICAL_INFO_FAILURE_MODERATOR
 } from "./types"
 
 import axios from "axios"
@@ -908,6 +910,34 @@ export const fetchStudentEducationInfoByModerator = (id, onSuccess, onError) => 
   }).catch(error => {
     dispatch({
       type: FETCH_EDUCATION_INFO_FAILURE_MODERATOR,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const fetchStudentMedicalInfoByModerator = (id, onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/${id}/medical`
+
+  const token = localStorage.getItem('token')
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({data}) => {
+    dispatch({
+      type: FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
+      data
+    })
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_MEDICAL_INFO_FAILURE_MODERATOR,
       error: error.response && error.response.message
     })
     if (onError) {

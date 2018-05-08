@@ -49,4 +49,7 @@ class ModeratorController(
     @ResponseStatus(HttpStatus.OK)
     fun saveEducationComment(@PathVariable("id") id: Long,
                              @RequestBody request: EditGeneralInfORequest) = moderatorRegister.saveEducationComment(id, request)
+
+    @GetMapping("/students/{id}/medical")
+    fun fetchMedicalInfo(@PathVariable("id") id: Long) = moderatorRegister.fetchMedicalInfo(id)
 }
