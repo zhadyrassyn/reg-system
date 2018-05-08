@@ -322,6 +322,8 @@ class EducationInfoForm extends Component {
       educationInfo.speciality = this.refactorDefaultOption(educationInfo.speciality, lang)
     }
 
+    const textAreaClassName="form-control disabled " + (educationInfo.status === "VALID" ? " btn-outline-success" : educationInfo.status === "INVALID" ?
+      "btn-outline-danger" : "")
     return (
       <div className="container-fluid">
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))} className="my-2">
@@ -488,7 +490,7 @@ class EducationInfoForm extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="comment">{message.moderator_comment[lang]}</label>
-            <textarea className="form-control" id="comment" rows="3" disabled={true}></textarea>
+            <textarea className={textAreaClassName} id="comment" rows="3" disabled={true} value={educationInfo.comment}></textarea>
           </div>
         </form>
       </div>

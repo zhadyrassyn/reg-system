@@ -222,7 +222,10 @@ class StudentRegisterStandImpl(
             ),
             school_finish = toDate(educationInfo.school_finish),
             schoolDiploma = user.educationInfoDocuments.schoolDiploma?.path?.fileName?.toString(),
-            entCertificate = user.educationInfoDocuments.entCertificate?.path?.fileName?.toString()
+            entCertificate = user.educationInfoDocuments.entCertificate?.path?.fileName?.toString(),
+            comment = educationInfo.comment,
+            status = educationInfo.educationInfoStatus.name
+
         )
     }
 
