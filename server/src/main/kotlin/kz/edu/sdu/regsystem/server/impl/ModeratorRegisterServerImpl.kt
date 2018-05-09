@@ -6,6 +6,26 @@ import org.springframework.stereotype.Service
 
 @Service
 class ModeratorRegisterServerImpl : ModeratorRegister{
+    override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun fetchEducationInfo(id: Long): FetchEducationInfoResponse {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun saveEducationComment(id: Long, request: EditGeneralInfORequest) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun saveMedicalComment(id: Long, request: EditGeneralInfORequest) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getStudentInfo(id: Long): GetStudentInfoResponse {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

@@ -1,7 +1,9 @@
 package kz.edu.sdu.regsystem.server.repositoy
 
+import kz.edu.sdu.regsystem.server.domain.Area
 import kz.edu.sdu.regsystem.server.domain.City
 import kz.edu.sdu.regsystem.server.domain.School
+import kz.edu.sdu.regsystem.server.domain.enums.AreaType
 import kz.edu.sdu.regsystem.server.domain.enums.SchoolStatusEnum
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -10,6 +12,21 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class InfoRepository(val jdbcTemplate: JdbcTemplate) {
+
+    /* GETTERS */
+    fun getAreas(): List<Area> {
+        val query = "SELECT * FROM AREA WHERE type='SYSTEM'"
+        return jdbcTemplate.query(query, RowMapper { rs, rowNum ->
+            Area(
+                id = rs.getLong("id"),
+                nameRu = rs.getString("name_ru"),
+                nameEn = rs.getString("name_en"),
+                nameKk = rs.getString("name_kk"),
+                type = AreaType.SYSTEM
+            )
+        })
+    }
+
     fun getCities(): List<City> {
         val query = "SELECT * FROM CITY"
         return jdbcTemplate.query(query, { rs, _ ->
@@ -21,6 +38,26 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
             )
 
         })
+    }
+
+    /* SAVERS */
+    fun saveArea(area: Area) : Long {
+        val query = "INSERT INTO AREA(name_ru, name_en, name_kk, type) VALUES (?, ?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, area.nameRu)
+                ps.setString(counter++, area.nameEn)
+                ps.setString(counter++, area.nameKk)
+                ps.setString(counter, area.type.name)
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
     }
 
     fun saveCity(city: City): Long {

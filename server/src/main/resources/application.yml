@@ -24,9 +24,14 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: dandibobo537@gmail.com
+    frontend:
+      url: http://localhost:8080
 frontend:
   url: http://localhost:8080
 emailPassword: 123
+
+jwt:
+  key: 123
 
 ---
 spring:
