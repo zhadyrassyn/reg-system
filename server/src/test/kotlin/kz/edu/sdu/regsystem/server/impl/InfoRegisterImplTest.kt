@@ -3,7 +3,6 @@ package kz.edu.sdu.regsystem.server.impl
 import kz.edu.sdu.regsystem.server.domain.Area
 import kz.edu.sdu.regsystem.server.domain.City
 import kz.edu.sdu.regsystem.server.domain.School
-import kz.edu.sdu.regsystem.server.domain.enums.SchoolStatusEnum
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,7 +11,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertNotNull
 import org.testng.annotations.Test
-import java.util.*
 import kotlin.collections.ArrayList
 
 @SpringBootTest
@@ -27,11 +25,13 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
-    var areas : List<Area> = ArrayList()
-    var cities: List<City> = ArrayList<City>()
-    var schools: List<School> = ArrayList<School>()
+    var areas: List<Area> = ArrayList()
+    var cities: List<City> = ArrayList()
+    var schools: List<School> = ArrayList()
 
     fun clearDb() {
+        jdbcTemplate.execute("DELETE FROM SCHOOL")
+        jdbcTemplate.execute("DELETE FROM CITY")
         jdbcTemplate.execute("DELETE FROM AREA")
 //        jdbcTemplate.execute("DELETE FROM SPECIALTY")
 //        jdbcTemplate.execute("DELETE FROM FACULTY")
@@ -50,57 +50,54 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
             nameKk = "Акмолинская область"
         )
 
+        a1.id = infoRepository.saveArea(a1)
+
+        val a1c1 = City(
+            nameRu = "Комсомольское",
+            nameEn = "Komsomolskoe",
+            nameKk = "Комсомольское",
+            areaId = a1.id
+        )
+
+        a1c1.id = infoRepository.saveCity(a1c1)
+
+        val a1c1s1 = School(
+            nameRu = "Шалкар НУ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар НУ",
+            cityId = a1c1.id
+        )
+
+        val a1c1s2 = School(
+            nameRu = "Шалкар БИЛ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар БИЛ",
+            cityId = a1c1.id
+        )
+
+        a1c1s1.id = infoRepository.saveSchool(a1c1s1)
+        a1c1s2.id = infoRepository.saveSchool(a1c1s2)
+
+        schools = arrayListOf(a1c1s1, a1c1s2)
+
+        val a1c2 = City(
+            nameRu = "Астана",
+            nameEn = "Astana",
+            nameKk = "Астана",
+            areaId = a1.id
+        )
+        a1c2.id = infoRepository.saveCity(a1c2)
+
+        cities = arrayListOf(a1c1, a1c2)
+
         val a2 = Area(
             nameRu = "Актюбинская область",
             nameEn = "Akubinskaya oblast",
             nameKk = "Актюбинская область"
         )
-
-        a1.id = infoRepository.saveArea(a1)
         a2.id = infoRepository.saveArea(a2)
 
         areas = arrayListOf(a1, a2)
-
-
-
-//
-//        val c1 = City(
-//            id = -1,
-//            nameRu = "ru1",
-//            nameEn = "en1",
-//            nameKk = "kk1")
-//        val c2 = City(id = -1,
-//            nameRu = "ru2",
-//            nameEn = "en2",
-//            nameKk = "kk2")
-//
-//        cities = Arrays.asList(c1, c2)
-//        cities.forEach {
-//            val id = infoRepository.saveCity(it)
-//            it.id = id
-//        }
-//
-//        val s1 = School(
-//            id = -1,
-//            nameRu = "s1ru",
-//            nameEn = "s1en",
-//            nameKk = "s1kk",
-//            status = SchoolStatusEnum.ACTIVE,
-//            cityId = cities[0].id)
-//
-//        val s2 = School(
-//            id = -1,
-//            nameRu = "s2ru",
-//            nameEn = "s2en",
-//            nameKk = "s2kk",
-//            status = SchoolStatusEnum.NONACTIVE,
-//            cityId = cities[0].id)
-//
-//        schools = Arrays.asList(s1, s2)
-//        for(i in 0..schools.size-1) {
-//            val schoolId = infoRepository.saveSchool(schools[i])
-//            schools[i].id = schoolId
-//        }
     }
 
     @Test
@@ -116,7 +113,7 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
         assertNotNull(response)
         assertEquals(response.size, areas.size)
 
-        for (i in 0..response.size-1) {
+        for (i in 0..response.size - 1) {
             assertEquals(response[i].id, areas[i].id)
             assertEquals(response[i].nameRu, areas[i].nameRu)
             assertEquals(response[i].nameEn, areas[i].nameEn)
@@ -124,45 +121,49 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
         }
     }
 
-//    @Test
-//    fun getCities() {
-//        initDb()
-//
-//        //
-//        //
-//        val response = infoRegisterImpl.getCities()
-//        //
-//        //
-//
-//        assertNotNull(response)
-//        assertEquals(response.size, cities.size)
-//
-//        for (i in 0..response.size - 1) {
-//            assertEquals(response[i].id, cities[i].id)
-//            assertEquals(response[i].nameEn, cities[i].nameEn)
-//            assertEquals(response[i].nameRu, cities[i].nameRu)
-//            assertEquals(response[i].nameKk, cities[i].nameKk)
-//        }
-//    }
-//
-//    @Test
-//    fun getSchoolsByCity() {
-//        initDb()
-//
-//        //
-//        //
-//        val response = infoRegisterImpl.getSchools(cities[0].id)
-//        //
-//        //
-//
-//        assertNotNull(response)
-//        assertEquals(response.size, 1)
-//
-//        assertEquals(response[0].id, schools[0].id)
-//        assertEquals(response[0].nameRu, schools[0].nameRu)
-//        assertEquals(response[0].nameEn, schools[0].nameEn)
-//        assertEquals(response[0].nameKk, schools[0].nameKk)
-//        assertEquals(response[0].schoolStatus, schools[0].status.name)
-//    }
+    @Test
+    fun getCities() {
+        initDb()
+
+        //
+        //
+        val response = infoRegisterImpl.getCitiesAndVillages(areas[0].id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.size, cities.size)
+
+        for (i in 0..response.size - 1) {
+            assertEquals(response[i].id, cities[i].id)
+            assertEquals(response[i].nameEn, cities[i].nameEn)
+            assertEquals(response[i].nameRu, cities[i].nameRu)
+            assertEquals(response[i].nameKk, cities[i].nameKk)
+            assertEquals(response[i].areaId, cities[i].areaId)
+        }
+    }
+
+    //
+    @Test
+    fun getSchools() {
+        initDb()
+
+        //
+        //
+        val response = infoRegisterImpl.getSchools(0, cities[0].id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.size, schools.size)
+
+        for (i in 0..response.size - 1) {
+            assertEquals(response[i].id, schools[i].id)
+            assertEquals(response[i].nameEn, schools[i].nameEn)
+            assertEquals(response[i].nameRu, schools[i].nameRu)
+            assertEquals(response[i].nameKk, schools[i].nameKk)
+            assertEquals(response[i].cityId, schools[i].cityId)
+        }
+    }
 
 }

@@ -19,41 +19,41 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
     fun ifUserExists(email: String) : Boolean {
         val query = "SELECT COUNT(*) AS TOTAL FROM USERS WHERE email=?"
 
-        val amount = jdbcTemplate.queryForObject(query, RowMapper { rs, rowNum ->
+        val amount = jdbcTemplate.queryForObject(query, RowMapper { rs, _ ->
             rs.getString("total")
         }, email) ?: throw SQLException("Cannot execute statement $query")
 
         return amount.toInt() != 0
     }
 
-    fun fetchUserByEmail(email: String) : User? {
-        val query = "SELECT * FROM USERS WHERE email=?"
-
-        try {
-            return jdbcTemplate.queryForObject(
-                query, RowMapper { rs, rowNum ->
-                User(
-                    id = rs.getLong("id"),
-                    email = rs.getString("email"),
-                    password = rs.getString("password"),
-                    firstName = rs.getString("first_name"),
-                    middleName = rs.getString("middle_name"),
-                    lastName = rs.getString("last_name"),
-                    birthDate = rs.getDate("bithDate"),
-                    status = UsersStatusEnum.valueOf(rs.getString("status")),
-                    city = City(
-                        id = rs.getLong("id")
-                    ),
-                    school = School(
-                        id = rs.getLong("id")
-                    ),
-                    role = RoleTypesEnum.valueOf(rs.getString("role"))
-                )
-            }, email)
-        } catch (e: EmptyResultDataAccessException) {
-            return null
-        }
-    }
+//    fun fetchUserByEmail(email: String) : User? {
+//        val query = "SELECT * FROM USERS WHERE email=?"
+//
+//        try {
+//            return jdbcTemplate.queryForObject(
+//                query, RowMapper { rs, rowNum ->
+//                User(
+//                    id = rs.getLong("id"),
+//                    email = rs.getString("email"),
+//                    password = rs.getString("password"),
+//                    firstName = rs.getString("first_name"),
+//                    middleName = rs.getString("middle_name"),
+//                    lastName = rs.getString("last_name"),
+//                    birthDate = rs.getDate("bithDate"),
+//                    status = UsersStatusEnum.valueOf(rs.getString("status")),
+//                    city = City(
+//                        id = rs.getLong("id")
+//                    ),
+//                    school = School(
+//                        id = rs.getLong("id")
+//                    ),
+//                    role = RoleTypesEnum.valueOf(rs.getString("role"))
+//                )
+//            }, email)
+//        } catch (e: EmptyResultDataAccessException) {
+//            return null
+//        }
+//    }
 
     fun save(user: User): Long {
         val query = "INSERT INTO USERS(email, password, status, role, reg_date) VALUES (?, ?, ?, ?, ?)"
@@ -84,28 +84,28 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
             })
     }
 
-    fun fetchUserById(id: Long): User? {
-        val query = "SELECT * FROM USERS WHERE id=?"
-
-        return jdbcTemplate.queryForObject(
-            query, RowMapper { rs, rowNum ->
-            User(
-                id = rs.getLong("id"),
-                email = rs.getString("email"),
-                password = rs.getString("password"),
-                firstName = rs.getString("first_name"),
-                middleName = rs.getString("middle_name"),
-                lastName = rs.getString("last_name"),
-                birthDate = rs.getDate("bithDate"),
-                status = UsersStatusEnum.valueOf(rs.getString("status")),
-                city = City(
-                    id = rs.getLong("id")
-                ),
-                school = School(
-                    id = rs.getLong("id")
-                ),
-                role = RoleTypesEnum.valueOf(rs.getString("role"))
-            )
-        }, id)
-    }
+//    fun fetchUserById(id: Long): User? {
+//        val query = "SELECT * FROM USERS WHERE id=?"
+//
+//        return jdbcTemplate.queryForObject(
+//            query, RowMapper { rs, rowNum ->
+//            User(
+//                id = rs.getLong("id"),
+//                email = rs.getString("email"),
+//                password = rs.getString("password"),
+//                firstName = rs.getString("first_name"),
+//                middleName = rs.getString("middle_name"),
+//                lastName = rs.getString("last_name"),
+//                birthDate = rs.getDate("bithDate"),
+//                status = UsersStatusEnum.valueOf(rs.getString("status")),
+//                city = City(
+//                    id = rs.getLong("id")
+//                ),
+//                school = School(
+//                    id = rs.getLong("id")
+//                ),
+//                role = RoleTypesEnum.valueOf(rs.getString("role"))
+//            )
+//        }, id)
+//    }
 }

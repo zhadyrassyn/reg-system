@@ -1,5 +1,5 @@
 package kz.edu.sdu.regsystem.server.domain.enums
 
-enum class AreaType {
+enum class ExistType {
     SYSTEM, CUSTOM
 }

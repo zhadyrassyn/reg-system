@@ -21,11 +21,29 @@ class InfoRegisterImpl(val infoRepository: InfoRepository) : InfoRegister {
     }
 
     override fun getCitiesAndVillages(areaId: Long): List<GetCitiesAndVillagesResponseData> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return infoRepository.getCities()
+            .map {
+                GetCitiesAndVillagesResponseData(
+                    id = it.id,
+                    nameRu = it.nameRu,
+                    nameEn = it.nameEn,
+                    nameKk = it.nameKk,
+                    areaId = it.areaId
+                )
+            }
     }
 
     override fun getSchools(areaId: Long, cityId: Long): List<SchoolData> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return infoRepository.getSchools()
+            .map {
+                SchoolData(
+                    id = it.id,
+                    nameRu = it.nameRu,
+                    nameEn = it.nameEn,
+                    nameKk = it.nameKk,
+                    cityId = it.cityId
+                )
+            }
     }
 
     override fun getFaculties(): List<GetFacultiesResponseData> {
