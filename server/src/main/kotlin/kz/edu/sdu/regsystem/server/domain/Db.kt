@@ -34,3 +34,11 @@ data class Faculty(
     val nameEn: String,
     val nameKk: String
 )
+
+data class Specialty(
+    var id: Long = -1,
+    val nameRu: String,
+    val nameEn: String,
+    val nameKk: String,
+    val faculty_id: Long
+)

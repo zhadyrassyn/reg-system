@@ -1,9 +1,6 @@
 package kz.edu.sdu.regsystem.server.impl
 
-import kz.edu.sdu.regsystem.server.domain.Area
-import kz.edu.sdu.regsystem.server.domain.City
-import kz.edu.sdu.regsystem.server.domain.Faculty
-import kz.edu.sdu.regsystem.server.domain.School
+import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -30,6 +27,7 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
     var cities: List<City> = ArrayList()
     var schools: List<School> = ArrayList()
     var faculties: List<Faculty> = ArrayList()
+    var specialties: List<Specialty> = ArrayList()
 
     fun clearDb() {
         jdbcTemplate.execute("DELETE FROM SCHOOL")
@@ -105,6 +103,25 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
         )
 
         f1.id = infoRepository.saveFaculty(f1)
+
+        val f1s1 = Specialty(
+            nameKk = "Есеп және аудит",
+            nameRu = "Учет и аудит",
+            nameEn = "Accounting and auditing",
+            faculty_id = f1.id
+        )
+
+        val f1s2 = Specialty(
+            nameKk = "Маркетинг",
+            nameRu = "Маркетинг",
+            nameEn = "Marketing",
+            faculty_id = f1.id
+        )
+
+        f1s1.id = infoRepository.saveSpecialty(f1s1)
+        f1s2.id = infoRepository.saveSpecialty(f1s2)
+
+        specialties = arrayListOf(f1s1, f1s2)
 
         val f2 = Faculty(
             nameRu = "Факультет юриспруденции и социальнo-гуманитарных наук",
@@ -201,6 +218,27 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
             assertEquals(response[i].nameEn, faculties[i].nameEn)
             assertEquals(response[i].nameRu, faculties[i].nameRu)
             assertEquals(response[i].nameKk, faculties[i].nameKk)
+        }
+    }
+
+    @Test
+    fun getSpecialities() {
+        initDb()
+
+        //
+        //
+        val response = infoRegisterImpl.getSpecialities(faculties[0].id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.size, specialties.size)
+
+        for (i in 0..response.size - 1) {
+            assertEquals(response[i].id, specialties[i].id)
+            assertEquals(response[i].nameEn, specialties[i].nameEn)
+            assertEquals(response[i].nameRu, specialties[i].nameRu)
+            assertEquals(response[i].nameKk, specialties[i].nameKk)
         }
     }
 

@@ -1,9 +1,6 @@
 package kz.edu.sdu.regsystem.server.repositoy
 
-import kz.edu.sdu.regsystem.server.domain.Area
-import kz.edu.sdu.regsystem.server.domain.City
-import kz.edu.sdu.regsystem.server.domain.Faculty
-import kz.edu.sdu.regsystem.server.domain.School
+import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -63,6 +60,19 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 nameRu = rs.getString("name_ru"),
                 nameEn = rs.getString("name_en"),
                 nameKk = rs.getString("name_kk")
+            )
+        })
+    }
+
+    fun getSpecialties(): List<Specialty> {
+        val query = "SELECT * FROM SPECIALTY"
+        return jdbcTemplate.query(query, { rs, _ ->
+            Specialty(
+                id = rs.getLong("id"),
+                nameRu = rs.getString("name_ru"),
+                nameEn = rs.getString("name_en"),
+                nameKk = rs.getString("name_kk"),
+                faculty_id = rs.getLong("faculty_id")
             )
         })
     }
@@ -139,6 +149,25 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 ps.setString(counter++, faculty.nameRu)
                 ps.setString(counter++, faculty.nameEn)
                 ps.setString(counter, faculty.nameKk)
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
+    }
+
+    fun saveSpecialty(specialty: Specialty): Long {
+        val query = "INSERT INTO SPECIALTY(name_ru, name_en, name_kk, faculty_id) VALUES (?, ?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, specialty.nameRu)
+                ps.setString(counter++, specialty.nameEn)
+                ps.setString(counter++, specialty.nameKk)
+                ps.setLong(counter, specialty.faculty_id)
                 ps
             }, keyHolder)
 
