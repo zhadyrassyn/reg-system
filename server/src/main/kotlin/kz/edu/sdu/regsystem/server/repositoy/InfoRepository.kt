@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.repositoy
 
 import kz.edu.sdu.regsystem.server.domain.Area
 import kz.edu.sdu.regsystem.server.domain.City
+import kz.edu.sdu.regsystem.server.domain.Faculty
 import kz.edu.sdu.regsystem.server.domain.School
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import org.springframework.jdbc.core.JdbcTemplate
@@ -50,6 +51,18 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 nameKk = rs.getString("name_kk"),
                 type = ExistType.SYSTEM,
                 cityId = rs.getLong("city_id")
+            )
+        })
+    }
+
+    fun getFaculties(): List<Faculty> {
+        val query = "SELECT * FROM FACULTY"
+        return jdbcTemplate.query(query, { rs, _ ->
+            Faculty(
+                id = rs.getLong("id"),
+                nameRu = rs.getString("name_ru"),
+                nameEn = rs.getString("name_en"),
+                nameKk = rs.getString("name_kk")
             )
         })
     }
@@ -108,6 +121,24 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 ps.setString(counter++, school.nameKk)
                 ps.setString(counter++, school.type.name)
                 ps.setLong(counter, school.cityId)
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
+    }
+
+    fun saveFaculty(faculty: Faculty): Long {
+        val query = "INSERT INTO FACULTY(name_ru, name_en, name_kk) VALUES (?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, faculty.nameRu)
+                ps.setString(counter++, faculty.nameEn)
+                ps.setString(counter, faculty.nameKk)
                 ps
             }, keyHolder)
 

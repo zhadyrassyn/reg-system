@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.server.domain.Area
 import kz.edu.sdu.regsystem.server.domain.City
+import kz.edu.sdu.regsystem.server.domain.Faculty
 import kz.edu.sdu.regsystem.server.domain.School
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,17 +29,15 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
     var areas: List<Area> = ArrayList()
     var cities: List<City> = ArrayList()
     var schools: List<School> = ArrayList()
+    var faculties: List<Faculty> = ArrayList()
 
     fun clearDb() {
         jdbcTemplate.execute("DELETE FROM SCHOOL")
         jdbcTemplate.execute("DELETE FROM CITY")
         jdbcTemplate.execute("DELETE FROM AREA")
-//        jdbcTemplate.execute("DELETE FROM SPECIALTY")
-//        jdbcTemplate.execute("DELETE FROM FACULTY")
-//        jdbcTemplate.execute("DELETE FROM USERS")
-//        jdbcTemplate.execute("DELETE FROM SCHOOL")
-//        jdbcTemplate.execute("DELETE FROM CITY")
-//        jdbcTemplate.execute("DELETE FROM AREA")
+
+        jdbcTemplate.execute("DELETE FROM FACULTY")
+        jdbcTemplate.execute("DELETE FROM SPECIALTY")
     }
 
     fun initDb() {
@@ -98,6 +97,25 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
         a2.id = infoRepository.saveArea(a2)
 
         areas = arrayListOf(a1, a2)
+
+        val f1 = Faculty(
+            nameRu = "Бизнес школа СДУ",
+            nameEn = "SDU Business school",
+            nameKk = "СДУ Бизнес мектебі"
+        )
+
+        f1.id = infoRepository.saveFaculty(f1)
+
+        val f2 = Faculty(
+            nameRu = "Факультет юриспруденции и социальнo-гуманитарных наук",
+            nameEn = "Faculty of Law and Social sciences",
+            nameKk = "Құқық және әлеуметтік-гуманитарлық ғылымдар факультеті"
+        )
+
+        f2.id = infoRepository.saveFaculty(f2)
+
+        faculties = arrayListOf(f1, f2)
+
     }
 
     @Test
@@ -143,7 +161,6 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
         }
     }
 
-    //
     @Test
     fun getSchools() {
         initDb()
@@ -163,6 +180,27 @@ class InfoRegisterImplTest : AbstractTestNGSpringContextTests() {
             assertEquals(response[i].nameRu, schools[i].nameRu)
             assertEquals(response[i].nameKk, schools[i].nameKk)
             assertEquals(response[i].cityId, schools[i].cityId)
+        }
+    }
+
+    @Test
+    fun getFaculties() {
+        initDb()
+
+        //
+        //
+        val response = infoRegisterImpl.getFaculties()
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.size, faculties.size)
+
+        for (i in 0..response.size - 1) {
+            assertEquals(response[i].id, faculties[i].id)
+            assertEquals(response[i].nameEn, faculties[i].nameEn)
+            assertEquals(response[i].nameRu, faculties[i].nameRu)
+            assertEquals(response[i].nameKk, faculties[i].nameKk)
         }
     }
 

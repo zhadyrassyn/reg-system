@@ -27,3 +27,10 @@ data class School(
     val type: ExistType = ExistType.SYSTEM,
     val cityId: Long
 )
+
+data class Faculty(
+    var id: Long = -1,
+    val nameRu: String,
+    val nameEn: String,
+    val nameKk: String
+)

@@ -47,7 +47,15 @@ class InfoRegisterImpl(val infoRepository: InfoRepository) : InfoRegister {
     }
 
     override fun getFaculties(): List<GetFacultiesResponseData> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return infoRepository.getFaculties()
+            .map {
+                GetFacultiesResponseData(
+                    id = it.id,
+                    nameRu = it.nameRu,
+                    nameEn = it.nameEn,
+                    nameKk = it.nameKk
+                )
+            }
     }
 
     override fun getSpecialities(facultyId: Long): List<GetSpecialtyResponseData> {
