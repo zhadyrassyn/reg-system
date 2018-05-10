@@ -3,8 +3,8 @@ package kz.edu.sdu.regsystem.server.impl
 import io.jsonwebtoken.Jwts
 import kz.edu.sdu.regsystem.controller.model.AuthRequest
 import kz.edu.sdu.regsystem.server.domain.User
-import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
-import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
+import kz.edu.sdu.regsystem.server.domain.enums.RoleType
+import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
 import kz.edu.sdu.regsystem.server.exception.PasswordMismatchException
 import kz.edu.sdu.regsystem.server.exception.UserAlreadyExistsException
 import kz.edu.sdu.regsystem.server.exception.UserDoesNotExistsException
@@ -22,10 +22,10 @@ import org.testng.Assert.assertNotNull
 import org.testng.annotations.Test
 
 @SpringBootTest
-class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
+class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Autowired
-    lateinit var authRegisterServerImpl: AuthRegisterServerImpl
+    lateinit var authRegisterImpl: AuthRegisterImpl
 
     @Autowired
     lateinit var usersRepository: UsersRepository
@@ -50,37 +50,38 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
         jdbcTemplate.execute("DELETE FROM VERIFICATION_TOKEN")
         jdbcTemplate.execute("DELETE FROM USERS")
 
-        user = User(
-            email = authRequest.email,
-            password = authRequest.password,
-            status = UsersStatusEnum.NONACTIVE,
-            role = RoleTypesEnum.USER
-        )
+//        user = User(
+//            email = authRequest.email,
+//            password = authRequest.password,
+//            status = UserStatus.NONACTIVE,
+//            role = RoleType.USER
+//        )
     }
 
     @Test
-    fun signUpUserDoesNotExists() {
-//        initDb()
-//
-//        //
-//        //
-//        authRegisterServerImpl.signUp(authRequest)
-//        //
-//        //
-//
-//        val user = usersRepository.fetchUserByEmail(authRequest.email)
-//
-//        assertNotNull(user)
-//        assertEquals(user!!.email, authRequest.email)
-//
-//        assertEquals(user.password, Utils.encrypt(authRequest.password))
-//        assertEquals(user.role, RoleTypesEnum.USER)
-//
-//        val verificationToken = verificationTokenRepository.fetchToken(user.id)
-//        assertNotNull(verificationToken)
-//        assertNotNull(verificationToken!!.token)
-//
-//        //assert that email was sent
+    fun signUp() {
+        initDb()
+
+        //
+        //
+        authRegisterImpl.signUp(authRequest)
+        //
+        //
+
+        val user = usersRepository.fetchUserByEmail(authRequest.email)
+
+        assertNotNull(user)
+        assertEquals(user!!.email, authRequest.email)
+
+        assertEquals(user.password, Utils.encrypt(authRequest.password))
+        assertEquals(user.role, RoleType.USER)
+        assertEquals(user.status, UserStatus.NONACTIVE)
+
+        val verificationToken = verificationTokenRepository.fetchToken(user.id)
+        assertNotNull(verificationToken)
+        assertNotNull(verificationToken!!.token)
+
+        //assert that email was sent
     }
 
     @Test(expectedExceptions = [(UserAlreadyExistsException::class)])
@@ -91,7 +92,7 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 
         //
         //
-        authRegisterServerImpl.signUp(authRequest)
+        authRegisterImpl.signUp(authRequest)
         //
         //
     }
@@ -106,7 +107,7 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 //
 //        //
 //        //
-//        val response = authRegisterServerImpl.verifyUser(activationToken)
+//        val response = authRegisterImpl.verifyUser(activationToken)
 //        //
 //        //
 //
@@ -128,40 +129,40 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 //
 //        val user = usersRepository.fetchUserById(id)
 //        assertNotNull(user)
-//        assertEquals(user!!.status, UsersStatusEnum.ACTIVE)
+//        assertEquals(user!!.status, UserStatus.ACTIVE)
     }
 
-    @Test
-    fun signInSuccess() {
-        initDb()
-        user!!.status = UsersStatusEnum.ACTIVE
-        val id = usersRepository.save(user!!)
-        user!!.id = id
-
-        authRequest.password = "google"
-        //
-        //
-        val response = authRegisterServerImpl.signIn(authRequest)
-        //
-        //
-
-        assertNotNull(response)
-        assertNotNull(response.token)
-
-        val jwtKey = env.getProperty("jwt.key")
-
-        val jwtBody = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(response.token).body
-        val email = jwtBody.subject
-        val idValue = jwtBody["id"]
-        val scope = jwtBody["scope"]
-
-        assertNotNull(email)
-        assertEquals(email, authRequest.email)
-        assertNotNull(idValue)
-        assertEquals(idValue.toString().toLong(), id)
-        assertNotNull(scope)
-        assertEquals(scope.toString().trim(), user!!.role.name)
-    }
+//    @Test
+//    fun signInSuccess() {
+//        initDb()
+//        user!!.status = UserStatus.ACTIVE
+//        val id = usersRepository.save(user!!)
+//        user!!.id = id
+//
+//        authRequest.password = "google"
+//        //
+//        //
+//        val response = authRegisterImpl.signIn(authRequest)
+//        //
+//        //
+//
+//        assertNotNull(response)
+//        assertNotNull(response.token)
+//
+//        val jwtKey = env.getProperty("jwt.key")
+//
+//        val jwtBody = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(response.token).body
+//        val email = jwtBody.subject
+//        val idValue = jwtBody["id"]
+//        val scope = jwtBody["scope"]
+//
+//        assertNotNull(email)
+//        assertEquals(email, authRequest.email)
+//        assertNotNull(idValue)
+//        assertEquals(idValue.toString().toLong(), id)
+//        assertNotNull(scope)
+//        assertEquals(scope.toString().trim(), user!!.role.name)
+//    }
 
     @Test(expectedExceptions = [UserDoesNotExistsException::class])
     fun signInFailUserDoesNotExist() {
@@ -169,7 +170,7 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
 
         //
         //
-        val response = authRegisterServerImpl.signIn(authRequest)
+        val response = authRegisterImpl.signIn(authRequest)
         //
         //
     }
@@ -182,7 +183,7 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
         authRequest.password = "123"
         //
         //
-        val response = authRegisterServerImpl.signIn(authRequest)
+        val response = authRegisterImpl.signIn(authRequest)
         //
         //
     }
@@ -195,7 +196,7 @@ class AuthRegisterServerImplTest : AbstractTestNGSpringContextTests() {
         authRequest.password = "google"
         //
         //
-        val response = authRegisterServerImpl.signIn(authRequest)
+        val response = authRegisterImpl.signIn(authRequest)
         //
         //
     }

@@ -4,8 +4,8 @@ import kz.edu.sdu.regsystem.controller.model.AuthRequest
 import kz.edu.sdu.regsystem.controller.model.AuthResponse
 import kz.edu.sdu.regsystem.controller.register.AuthRegister
 import kz.edu.sdu.regsystem.server.domain.User
-import kz.edu.sdu.regsystem.server.domain.enums.RoleTypesEnum
-import kz.edu.sdu.regsystem.server.domain.enums.UsersStatusEnum
+import kz.edu.sdu.regsystem.server.domain.enums.RoleType
+import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
 import kz.edu.sdu.regsystem.server.exception.*
 import kz.edu.sdu.regsystem.server.services.EmailSender
 import kz.edu.sdu.regsystem.server.services.JwtService
@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AuthRegisterServerImpl(
+class AuthRegisterImpl(
     val usersRepository: UsersRepository,
     val emailSender: EmailSender,
     val emailConfig: EmailConfig,
     val verificationTokenRepository: VerificationTokenRepository,
     val jwtService: JwtService) : AuthRegister {
 
-    private val logger = LoggerFactory.getLogger(AuthRegisterServerImpl::class.java)
+    private val logger = LoggerFactory.getLogger(AuthRegisterImpl::class.java)
 
     /**
      * throws UserAlreadyExistsException: if user with email to sign up is already in database
@@ -39,8 +39,9 @@ class AuthRegisterServerImpl(
         val user = User(
             email = signUpRequest.email,
             password = Utils.encrypt(signUpRequest.password),
-            status = UsersStatusEnum.NONACTIVE,
-            role = RoleTypesEnum.USER
+            regDate = Date(),
+            status = UserStatus.NONACTIVE,
+            role = RoleType.USER
         )
 
         val id = usersRepository.save(user)
@@ -75,7 +76,7 @@ class AuthRegisterServerImpl(
 //            ?: throw VerificationTokenDoesNotExistsException("Activation token $token does not exist")
 //
 //        val userId = verificationTokenDto.user!!.id
-//        usersRepository.changeStatus(userId, UsersStatusEnum.ACTIVE)
+//        usersRepository.changeStatus(userId, UserStatus.ACTIVE)
 //
 //        val user = usersRepository.fetchUserById(userId)
 //            ?: throw UserDoesNotExistsException("User with id $userId does not exist")
@@ -98,7 +99,7 @@ class AuthRegisterServerImpl(
 //            ?: throw UserDoesNotExistsException("User with email ${signInRequest.email} does not exist")
 //        if(user.password != Utils.encrypt(signInRequest.password)) {
 //            throw PasswordMismatchException("Password for user with email ${signInRequest.email} mismatch")
-//        } else if(user.status == UsersStatusEnum.NONACTIVE) {
+//        } else if(user.status == UserStatus.NONACTIVE) {
 //            throw UserNotConfirmedException("User with email ${signInRequest.email} not confirmed itself")
 //        }
 //

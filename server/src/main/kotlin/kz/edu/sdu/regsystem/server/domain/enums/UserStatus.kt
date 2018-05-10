@@ -1,5 +1,5 @@
 package kz.edu.sdu.regsystem.server.domain.enums
 
-enum class UsersStatusEnum {
+enum class UserStatus {
     ACTIVE, NONACTIVE
 }

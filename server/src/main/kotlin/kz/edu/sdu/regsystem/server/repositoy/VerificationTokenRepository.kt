@@ -1,6 +1,5 @@
 package kz.edu.sdu.regsystem.server.repositoy
 
-import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.VerificationToken
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
@@ -11,25 +10,23 @@ import java.util.*
 
 @Repository
 class VerificationTokenRepository(val jdbcTemplate: JdbcTemplate) {
-    fun fetchToken(userId: Long) : VerificationToken? {
+    fun fetchToken(userId: Long): VerificationToken? {
         val query = "SELECT * FROM VERIFICATION_TOKEN WHERE user_id=?"
 
         return jdbcTemplate.queryForObject(query,
             RowMapper { rs, rowNum ->
                 VerificationToken(
-                id = rs.getLong("id"),
-                token = rs.getString("token"),
-                createdDate = rs.getDate("created_date"),
-                user = User(
-                    id = rs.getLong("user_id")
+                    id = rs.getLong("id"),
+                    token = rs.getString("token"),
+                    createdDate = rs.getDate("created_date"),
+                    userId = rs.getLong("user_id")
                 )
-            )
-        },
+            },
             userId
         )
     }
 
-    fun fetchToken(activationToken: String) : VerificationToken? {
+    fun fetchToken(activationToken: String): VerificationToken? {
         val query = "SELECT * FROM VERIFICATION_TOKEN WHERE token=?"
 
         return jdbcTemplate.queryForObject(query,
@@ -38,16 +35,14 @@ class VerificationTokenRepository(val jdbcTemplate: JdbcTemplate) {
                     id = rs.getLong("id"),
                     token = rs.getString("token"),
                     createdDate = rs.getDate("created_date"),
-                    user = User(
-                        id = rs.getLong("user_id")
-                    )
+                    userId = rs.getLong("user_id")
                 )
             },
             activationToken
         )
     }
 
-    fun save(userId: Long, activationToken: String) : Long {
+    fun save(userId: Long, activationToken: String): Long {
         val query = "INSERT INTO VERIFICATION_TOKEN(token, created_date, user_id) VALUES (?, ?, ?)"
 
         val keyHolder = GeneratedKeyHolder()
