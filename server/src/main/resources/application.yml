@@ -29,9 +29,7 @@ spring:
 frontend:
   url: http://localhost:8080
 emailPassword: 123
-
-jwt:
-  key: 123
+jwtKey: 123
 
 ---
 spring:

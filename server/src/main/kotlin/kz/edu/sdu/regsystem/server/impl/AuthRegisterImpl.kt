@@ -72,18 +72,16 @@ class AuthRegisterImpl(
     }
 
     override fun verifyUser(token: String): AuthResponse {
-//        val verificationTokenDto = verificationTokenRepository.fetchToken(token)
-//            ?: throw VerificationTokenDoesNotExistsException("Activation token $token does not exist")
-//
-//        val userId = verificationTokenDto.user!!.id
-//        usersRepository.changeStatus(userId, UserStatus.ACTIVE)
-//
-//        val user = usersRepository.fetchUserById(userId)
-//            ?: throw UserDoesNotExistsException("User with id $userId does not exist")
-//
-//        return AuthResponse(token = jwtService.generateToken(user))
+        val verificationTokenDto = verificationTokenRepository.fetchToken(token)
+            ?: throw VerificationTokenDoesNotExistsException("Activation token $token does not exist")
 
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val userId = verificationTokenDto.userId
+        usersRepository.changeStatus(userId, UserStatus.ACTIVE)
+
+        val user = usersRepository.fetchUserById(userId)
+            ?: throw UserDoesNotExistsException("User with id $userId does not exist")
+
+        return AuthResponse(token = jwtService.generateToken(user))
     }
 
     override fun resendActivationEmail(email: String) {

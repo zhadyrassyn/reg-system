@@ -100,37 +100,38 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun verifyUser() {
-//        initDb()
-//
-//        val id = usersRepository.save(user!!)
-//        val activationToken = "activationToken"
-//        verificationTokenRepository.save(id, "activationToken")
-//
-//        //
-//        //
-//        val response = authRegisterImpl.verifyUser(activationToken)
-//        //
-//        //
-//
-//        assertNotNull(response)
-//        assertNotNull(response.token)
-//        val jwtKey = env.getProperty("jwt.key")
-//
-//        val jwtBody = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(response.token).body
-//        val email = jwtBody.subject
-//        val idValue = jwtBody["id"]
-//        val scope = jwtBody["scope"]
-//
-//        assertNotNull(email)
-//        assertEquals(email, authRequest.email)
-//        assertNotNull(idValue)
-//        assertEquals(idValue.toString().toLong(), id)
-//        assertNotNull(scope)
-//        assertEquals(scope.toString().trim(), user!!.role.name)
-//
-//        val user = usersRepository.fetchUserById(id)
-//        assertNotNull(user)
-//        assertEquals(user!!.status, UserStatus.ACTIVE)
+        println(env.getProperty("jwtKey"))
+        initDb()
+
+        val id = usersRepository.save(user)
+        val activationToken = "activationToken"
+        verificationTokenRepository.save(id, "activationToken")
+
+        //
+        //
+        val response = authRegisterImpl.verifyUser(activationToken)
+        //
+        //
+
+        assertNotNull(response)
+        assertNotNull(response.token)
+
+        val jwtKey = env.getProperty("jwtKey")
+        val jwtBody = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(response.token).body
+        val email = jwtBody.subject
+        val idValue = jwtBody["id"]
+        val scope = jwtBody["scope"]
+
+        assertNotNull(email)
+        assertEquals(email, authRequest.email)
+        assertNotNull(idValue)
+        assertEquals(idValue.toString().toLong(), id)
+        assertNotNull(scope)
+        assertEquals(scope.toString().trim(), user.role.name)
+
+        val user = usersRepository.fetchUserById(id)
+        assertNotNull(user)
+        assertEquals(user!!.status, UserStatus.ACTIVE)
     }
 
 //    @Test

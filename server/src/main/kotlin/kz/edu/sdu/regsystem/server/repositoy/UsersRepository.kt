@@ -73,28 +73,19 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
             })
     }
 
-//    fun fetchUserById(id: Long): User? {
-//        val query = "SELECT * FROM USERS WHERE id=?"
-//
-//        return jdbcTemplate.queryForObject(
-//            query, RowMapper { rs, rowNum ->
-//            User(
-//                id = rs.getLong("id"),
-//                email = rs.getString("email"),
-//                password = rs.getString("password"),
-//                firstName = rs.getString("first_name"),
-//                middleName = rs.getString("middle_name"),
-//                lastName = rs.getString("last_name"),
-//                birthDate = rs.getDate("bithDate"),
-//                status = UserStatus.valueOf(rs.getString("status")),
-//                city = City(
-//                    id = rs.getLong("id")
-//                ),
-//                school = School(
-//                    id = rs.getLong("id")
-//                ),
-//                role = RoleType.valueOf(rs.getString("role"))
-//            )
-//        }, id)
-//    }
+    fun fetchUserById(id: Long): User? {
+        val query = "SELECT * FROM USERS WHERE id=?"
+
+        return jdbcTemplate.queryForObject(
+            query, RowMapper { rs, rowNum ->
+            User(
+                id = rs.getLong("id"),
+                email = rs.getString("email"),
+                password = rs.getString("password"),
+                regDate = rs.getDate("reg_date"),
+                status = UserStatus.valueOf(rs.getString("status")),
+                role = RoleType.valueOf(rs.getString("role"))
+            )
+        }, id)
+    }
 }

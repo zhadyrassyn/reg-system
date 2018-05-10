@@ -20,7 +20,7 @@ class BeansConfig(val env: Environment) {
 
     val EMAIL_FRONTEND_URL="spring.mail.frontend.url"
 
-    val JWT_KEY="jwt.key"
+    val JWT_KEY="jwtKey"
 
     @Bean("emailConfig")
     fun getEmailConfig() : EmailConfig {
