@@ -45,18 +45,19 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
         password = Utils.encrypt("google")
     )
 
-    var user = User(
-        email = authRequest.email,
-        password = authRequest.password,
-        regDate = Date(),
-        status = UserStatus.NONACTIVE,
-        role = RoleType.USER
-    )
+    lateinit var user: User
 
     fun initDb() {
         jdbcTemplate.execute("DELETE FROM VERIFICATION_TOKEN")
         jdbcTemplate.execute("DELETE FROM USERS")
 
+        user = User(
+            email = authRequest.email,
+            password = authRequest.password,
+            regDate = Date(),
+            status = UserStatus.NONACTIVE,
+            role = RoleType.USER
+        )
     }
 
     @Test
@@ -100,7 +101,6 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun verifyUser() {
-        println(env.getProperty("jwtKey"))
         initDb()
 
         val id = usersRepository.save(user)
@@ -134,37 +134,37 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
         assertEquals(user!!.status, UserStatus.ACTIVE)
     }
 
-//    @Test
-//    fun signInSuccess() {
-//        initDb()
-//        user!!.status = UserStatus.ACTIVE
-//        val id = usersRepository.save(user!!)
-//        user!!.id = id
-//
-//        authRequest.password = "google"
-//        //
-//        //
-//        val response = authRegisterImpl.signIn(authRequest)
-//        //
-//        //
-//
-//        assertNotNull(response)
-//        assertNotNull(response.token)
-//
-//        val jwtKey = env.getProperty("jwt.key")
-//
-//        val jwtBody = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(response.token).body
-//        val email = jwtBody.subject
-//        val idValue = jwtBody["id"]
-//        val scope = jwtBody["scope"]
-//
-//        assertNotNull(email)
-//        assertEquals(email, authRequest.email)
-//        assertNotNull(idValue)
-//        assertEquals(idValue.toString().toLong(), id)
-//        assertNotNull(scope)
-//        assertEquals(scope.toString().trim(), user!!.role.name)
-//    }
+    @Test
+    fun signInSuccess() {
+        initDb()
+        user.status = UserStatus.ACTIVE
+        val id = usersRepository.save(user)
+        user.id = id
+
+        authRequest.password = "google"
+        //
+        //
+        val response = authRegisterImpl.signIn(authRequest)
+        //
+        //
+
+        assertNotNull(response)
+        assertNotNull(response.token)
+
+        val jwtKey = env.getProperty("jwtKey")
+
+        val jwtBody = Jwts.parser().setSigningKey(jwtKey).parseClaimsJws(response.token).body
+        val email = jwtBody.subject
+        val idValue = jwtBody["id"]
+        val scope = jwtBody["scope"]
+
+        assertNotNull(email)
+        assertEquals(email, authRequest.email)
+        assertNotNull(idValue)
+        assertEquals(idValue.toString().toLong(), id)
+        assertNotNull(scope)
+        assertEquals(scope.toString().trim(), user.role.name)
+    }
 
     @Test(expectedExceptions = [UserDoesNotExistsException::class])
     fun signInFailUserDoesNotExist() {
@@ -180,7 +180,7 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
     @Test(expectedExceptions = [PasswordMismatchException::class])
     fun signInPasswordMismatch() {
         initDb()
-        usersRepository.save(user!!)
+        usersRepository.save(user)
 
         authRequest.password = "123"
         //
@@ -193,7 +193,7 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
     @Test(expectedExceptions = [UserNotConfirmedException::class])
     fun signInUserNotConfirmed() {
         initDb()
-        usersRepository.save(user!!)
+        usersRepository.save(user)
 
         authRequest.password = "google"
         //
