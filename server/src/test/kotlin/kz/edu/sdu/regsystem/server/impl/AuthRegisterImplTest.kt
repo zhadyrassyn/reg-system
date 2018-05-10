@@ -20,6 +20,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertNotNull
 import org.testng.annotations.Test
+import java.util.*
 
 @SpringBootTest
 class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
@@ -40,22 +41,22 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
     lateinit var env: Environment
 
     var authRequest = AuthRequest(
-        email = "bojaxim@uemail99.com",
+        email = "xucoh@ethersportz.info",
         password = Utils.encrypt("google")
     )
 
-    var user: User? = null
+    var user = User(
+        email = authRequest.email,
+        password = authRequest.password,
+        regDate = Date(),
+        status = UserStatus.NONACTIVE,
+        role = RoleType.USER
+    )
 
     fun initDb() {
         jdbcTemplate.execute("DELETE FROM VERIFICATION_TOKEN")
         jdbcTemplate.execute("DELETE FROM USERS")
 
-//        user = User(
-//            email = authRequest.email,
-//            password = authRequest.password,
-//            status = UserStatus.NONACTIVE,
-//            role = RoleType.USER
-//        )
     }
 
     @Test
@@ -88,7 +89,7 @@ class AuthRegisterImplTest : AbstractTestNGSpringContextTests() {
     fun signUpUserAlreadyExists() {
         initDb()
 
-        usersRepository.save(user!!)
+        usersRepository.save(user)
 
         //
         //
