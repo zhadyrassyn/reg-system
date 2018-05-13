@@ -1,5 +1,7 @@
 package kz.edu.sdu.regsystem.server.exception
 
+import java.lang.RuntimeException
+
 /* BAD REQUEST EXCEPTIONS */
 open class BadRequestException : Exception {
     constructor(message: String) : super(message)
@@ -60,3 +62,10 @@ open class BootstrapException : InternalServerError {
 data class ErrorResponse(val statusCode: Int,
                          val statusMessage: String,
                          val message: String?)
+
+/* RUNTIME EXCEPTIONS */
+class StorageException : RuntimeException {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, cause: Throwable) : super(message, cause)
+}
