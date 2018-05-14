@@ -1,5 +1,6 @@
 package kz.edu.sdu.regsystem.server.domain
 
+import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.domain.enums.RoleType
 import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
@@ -59,5 +60,42 @@ data class VerificationToken(
     var id: Long = -1,
     val token: String,
     val createdDate: Date,
+    val userId: Long
+)
+
+data class PersonalInfo(
+    var id: Long = -1,
+    val firstName: String,
+    val middleName: String? = null,
+    val lastName: String,
+    val gender: String,
+
+    val birthDate: Date,
+    val givenDate: Date,
+    val givenPlace: String,
+    val iin: String,
+    val ud_number: String,
+    val nationality: String,
+    val blood_group: String? = null,
+    val citizenship: String,
+
+    val birthPlaceId: Long,
+
+    val mobilePhone: String,
+    val telPhone: String? = null,
+
+    val factFlat: String? = null,
+    val factFraction: String? = null,
+    val factHouse: String,
+    val factStreet: String,
+
+    val regFlat: String? = null,
+    val regFraction: String? = null,
+    val regHouse: String,
+    val regStreet: String,
+
+    var comment: String = "",
+    var status : ConclusionStatus = ConclusionStatus.WAITING_FOR_RESPONSE,
+
     val userId: Long
 )

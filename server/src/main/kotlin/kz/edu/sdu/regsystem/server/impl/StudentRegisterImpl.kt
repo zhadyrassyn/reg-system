@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
 @Service
-class StudentRegisterServerImpl : StudentRegister {
+class StudentRegisterImpl : StudentRegister {
     override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

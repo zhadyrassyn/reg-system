@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.repositoy
 
 import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.support.GeneratedKeyHolder
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class InfoRepository(val jdbcTemplate: JdbcTemplate) {
 
-    /* GETTERS */
+    /* GET ALL */
     fun getAreas(): List<Area> {
         val query = "SELECT * FROM AREA WHERE type='SYSTEM'"
         return jdbcTemplate.query(query, { rs, rowNum ->
@@ -75,6 +76,26 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
                 faculty_id = rs.getLong("faculty_id")
             )
         })
+    }
+
+    /* GET BY ID */
+    fun fetchArea(id: Long) : Area? {
+        val query = "SELECT * FROM AREA WHERE id=?"
+
+        try {
+            return jdbcTemplate.queryForObject(
+                query, RowMapper { rs, rowNum ->
+                Area(
+                    id = rs.getLong("id"),
+                    nameRu = rs.getString("name_ru"),
+                    nameEn = rs.getString("name_en"),
+                    nameKk = rs.getString("name_kk"),
+                    type = ExistType.valueOf(rs.getString("type"))
+                )
+            }, id)
+        } catch (e: EmptyResultDataAccessException) {
+            return null
+        }
     }
 
     /* SAVERS */
