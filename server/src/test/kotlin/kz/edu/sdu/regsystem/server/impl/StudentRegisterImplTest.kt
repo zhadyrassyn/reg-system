@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.server.domain.Area
+import kz.edu.sdu.regsystem.server.domain.PersonalInfo
 import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.domain.enums.GenderType
@@ -42,6 +43,8 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     lateinit var area: Area
 
+    lateinit var a: SavePersonalInfoRequest
+
     private fun clearDb() {
         jdbcTemplate.execute("DELETE FROM DOCUMENT")
         jdbcTemplate.execute("DELETE FROM PersonalInfo")
@@ -67,44 +70,43 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         )
 
         area.id = infoRepository.saveArea(area)
+
+        a = SavePersonalInfoRequest(
+            firstName = "Daniyar",
+            middleName = null,
+            lastName = "Qazbek",
+            gender = GenderType.MALE.name,
+            birthDate = fromStrToDate("1997-06-15"),
+            givenDate = fromStrToDate("2000-01-05"),
+            givenPlace = "RK ||",
+            iin = "970211555589",
+            ud_number = "123123123",
+            mobilePhone = "87021112233",
+            telPhone = null,
+            nationality = "kazakh",
+
+            birthPlace = null,
+            birthPlaceCustom = "Pavlodar",
+
+            blood_group = "first+",
+            citizenship = "Kazakhstan",
+
+            factFlat = "12",
+            factFraction = "22",
+            factHouse = "20",
+            factStreet = "Tahibayeva",
+
+            regFlat = null,
+            regFraction = null,
+            regHouse = "50",
+            regStreet = "Abaya"
+        )
     }
 
     @Test
     fun testSavePersonalInfoNotExistWithCustomBirthPlace() {
         clearDb()
 
-        val a = SavePersonalInfoRequest(
-            firstName = "Daniyar",
-            middleName = null,
-            lastName = "Qazbek",
-            gender = GenderType.MALE.name,
-            birthDate = fromStrToDate("1997-06-15"),
-            givenDate = fromStrToDate("2000-01-05"),
-            givenPlace = "RK ||",
-            iin = "970211555589",
-            ud_number = "123123123",
-            mobilePhone = "87021112233",
-            telPhone = null,
-            nationality = "kazakh",
-
-            birthPlace = null,
-            birthPlaceCustom = "Pavlodar",
-
-            blood_group = "first+",
-            citizenship = "Kazakhstan",
-
-            factFlat = "12",
-            factFraction = "22",
-            factHouse = "20",
-            factStreet = "Tahibayeva",
-
-            regFlat = null,
-            regFraction = null,
-            regHouse = "50",
-            regStreet = "Abaya"
-        )
-
-
         //
         //
         studentRegisterImpl.savePersonalInfo(a, user.id)
@@ -112,76 +114,49 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         //
 
         val b = personalInfoRepository.fetchPersonalInfo(user.id)
-
-        assertNotNull(b)
-        assertEquals(b!!.firstName, a.firstName)
-        assertEquals(b.middleName, a.middleName)
-        assertEquals(b.lastName, a.lastName)
-        assertEquals(b.gender, a.gender)
-        assertEquals(b.birthDate, a.birthDate)
-        assertEquals(b.givenDate, a.givenDate)
-        assertEquals(b.givenPlace, a.givenPlace)
-        assertEquals(b.iin, a.iin)
-        assertEquals(b.ud_number, a.ud_number)
-        assertEquals(b.mobilePhone, a.mobilePhone)
-        assertEquals(b.telPhone, a.telPhone)
-        assertEquals(b.nationality, a.nationality)
-        assertNotNull(b.birthPlaceId)
-        assertEquals(b.blood_group, a.blood_group)
-        assertEquals(b.citizenship, a.citizenship)
-
-        assertEquals(b.factFlat, a.factFlat)
-        assertEquals(b.factFraction, a.factFraction)
-        assertEquals(b.factHouse, a.factHouse)
-        assertEquals(b.factStreet, a.factStreet)
-
-        assertEquals(b.regFlat, a.regFlat)
-        assertEquals(b.regFraction, a.regFraction)
-        assertEquals(b.regHouse, a.regHouse)
-        assertEquals(b.regStreet, a.regStreet)
-
+        testSavePersonalInfoCheck(a, b)
         //check birth place value to a.birthPlaceCustom"
-        val birthPlace = infoRepository.fetchArea(b.birthPlaceId)
+        val birthPlace = infoRepository.fetchArea(b!!.birthPlaceId)
         assertNotNull(birthPlace)
         assertEquals(birthPlace!!.nameEn, a.birthPlaceCustom)
         assertEquals(birthPlace.type, ExistType.CUSTOM)
+    }
+
+    fun testSavePersonalInfoCheck(left: SavePersonalInfoRequest, right: PersonalInfo?) {
+        assertNotNull(right!!)
+        assertEquals(right.firstName, left.firstName)
+        assertEquals(right.middleName, left.middleName)
+        assertEquals(right.lastName, left.lastName)
+        assertEquals(right.gender, left.gender)
+        assertEquals(right.birthDate, left.birthDate)
+        assertEquals(right.givenDate, left.givenDate)
+        assertEquals(right.givenPlace, left.givenPlace)
+        assertEquals(right.iin, left.iin)
+        assertEquals(right.ud_number, left.ud_number)
+        assertEquals(right.mobilePhone, left.mobilePhone)
+        assertEquals(right.telPhone, left.telPhone)
+        assertEquals(right.nationality, left.nationality)
+        assertNotNull(right.birthPlaceId)
+        assertEquals(right.blood_group, left.blood_group)
+        assertEquals(right.citizenship, left.citizenship)
+
+        assertEquals(right.factFlat, left.factFlat)
+        assertEquals(right.factFraction, left.factFraction)
+        assertEquals(right.factHouse, left.factHouse)
+        assertEquals(right.factStreet, left.factStreet)
+
+        assertEquals(right.regFlat, left.regFlat)
+        assertEquals(right.regFraction, left.regFraction)
+        assertEquals(right.regHouse, left.regHouse)
+        assertEquals(right.regStreet, left.regStreet)
     }
 
     @Test
     fun testSavePersonalInfoNotExistWithSystemBirthPlace() {
         clearDb()
 
-        val a = SavePersonalInfoRequest(
-            firstName = "Daniyar",
-            middleName = null,
-            lastName = "Qazbek",
-            gender = GenderType.MALE.name,
-            birthDate = fromStrToDate("1997-06-15"),
-            givenDate = fromStrToDate("2000-01-05"),
-            givenPlace = "RK ||",
-            iin = "970211555589",
-            ud_number = "123123123",
-            mobilePhone = "87021112233",
-            telPhone = null,
-            nationality = "kazakh",
-
-            birthPlace = area.id,
-            birthPlaceCustom = "Pavlodar",
-
-            blood_group = "first+",
-            citizenship = "Kazakhstan",
-
-            factFlat = "12",
-            factFraction = "22",
-            factHouse = "20",
-            factStreet = "Tahibayeva",
-
-            regFlat = null,
-            regFraction = null,
-            regHouse = "50",
-            regStreet = "Abaya"
-        )
-
+        a.birthPlace = area.id
+        a.birthPlaceCustom = "Pavlodar"
 
         //
         //
@@ -191,70 +166,14 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
         val b = personalInfoRepository.fetchPersonalInfo(user.id)
 
-        assertNotNull(b)
-        assertEquals(b!!.firstName, a.firstName)
-        assertEquals(b.middleName, a.middleName)
-        assertEquals(b.lastName, a.lastName)
-        assertEquals(b.gender, a.gender)
-        assertEquals(b.birthDate, a.birthDate)
-        assertEquals(b.givenDate, a.givenDate)
-        assertEquals(b.givenPlace, a.givenPlace)
-        assertEquals(b.iin, a.iin)
-        assertEquals(b.ud_number, a.ud_number)
-        assertEquals(b.mobilePhone, a.mobilePhone)
-        assertEquals(b.telPhone, a.telPhone)
-        assertEquals(b.nationality, a.nationality)
-        assertNotNull(b.birthPlaceId)
-        assertEquals(b.blood_group, a.blood_group)
-        assertEquals(b.citizenship, a.citizenship)
+        testSavePersonalInfoCheck(a, b)
 
-        assertEquals(b.factFlat, a.factFlat)
-        assertEquals(b.factFraction, a.factFraction)
-        assertEquals(b.factHouse, a.factHouse)
-        assertEquals(b.factStreet, a.factStreet)
-
-        assertEquals(b.regFlat, a.regFlat)
-        assertEquals(b.regFraction, a.regFraction)
-        assertEquals(b.regHouse, a.regHouse)
-        assertEquals(b.regStreet, a.regStreet)
-
-        assertEquals(b.birthPlaceId, a.birthPlace)
+        assertEquals(b!!.birthPlaceId, a.birthPlace!!)
     }
 
     @Test
     fun testUpdatePersonalInfo() {
         clearDb()
-
-        var a = SavePersonalInfoRequest(
-            firstName = "Daniyar",
-            middleName = null,
-            lastName = "Qazbek",
-            gender = GenderType.MALE.name,
-            birthDate = fromStrToDate("1997-06-15"),
-            givenDate = fromStrToDate("2000-01-05"),
-            givenPlace = "RK ||",
-            iin = "970211555589",
-            ud_number = "123123123",
-            mobilePhone = "87021112233",
-            telPhone = null,
-            nationality = "kazakh",
-
-            birthPlace = null,
-            birthPlaceCustom = "Pavlodar",
-
-            blood_group = "first+",
-            citizenship = "Kazakhstan",
-
-            factFlat = "12",
-            factFraction = "22",
-            factHouse = "20",
-            factStreet = "Tahibayeva",
-
-            regFlat = null,
-            regFraction = null,
-            regHouse = "50",
-            regStreet = "Abaya"
-        )
 
         personalInfoRepository.save(personalInfo = a, areaId = area.id, userId = user.id)
 
@@ -297,34 +216,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
         val b = personalInfoRepository.fetchPersonalInfo(user.id)
 
-        assertNotNull(b)
-        assertEquals(b!!.firstName, a.firstName)
-        assertEquals(b.middleName, a.middleName)
-        assertEquals(b.lastName, a.lastName)
-        assertEquals(b.gender, a.gender)
-        assertEquals(b.birthDate, a.birthDate)
-        assertEquals(b.givenDate, a.givenDate)
-        assertEquals(b.givenPlace, a.givenPlace)
-        assertEquals(b.iin, a.iin)
-        assertEquals(b.ud_number, a.ud_number)
-        assertEquals(b.mobilePhone, a.mobilePhone)
-        assertEquals(b.telPhone, a.telPhone)
-        assertEquals(b.nationality, a.nationality)
-        assertNotNull(b.birthPlaceId)
-        assertEquals(b.blood_group, a.blood_group)
-        assertEquals(b.citizenship, a.citizenship)
+        testSavePersonalInfoCheck(a, b)
 
-        assertEquals(b.factFlat, a.factFlat)
-        assertEquals(b.factFraction, a.factFraction)
-        assertEquals(b.factHouse, a.factHouse)
-        assertEquals(b.factStreet, a.factStreet)
-
-        assertEquals(b.regFlat, a.regFlat)
-        assertEquals(b.regFraction, a.regFraction)
-        assertEquals(b.regHouse, a.regHouse)
-        assertEquals(b.regStreet, a.regStreet)
-
-        assertEquals(b.birthPlaceId, a.birthPlace)
+        assertEquals(b!!.birthPlaceId, a.birthPlace)
     }
 
     fun fromStrToDate(date: String) : Date {
