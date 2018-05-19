@@ -1,11 +1,14 @@
 package kz.edu.sdu.regsystem.server.repositoy
 
+import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.server.domain.PersonalInfo
 import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
+import java.sql.Timestamp
 
 @Repository
 class PersonalInfoRepository(val jdbcTemplate: JdbcTemplate) {
@@ -54,5 +57,93 @@ class PersonalInfoRepository(val jdbcTemplate: JdbcTemplate) {
         } catch (e: EmptyResultDataAccessException) {
             return null
         }
+    }
+
+    fun save(personalInfo: SavePersonalInfoRequest, areaId: Long, userId: Long) : Long? {
+        val query = "INSERT INTO PersonalInfo(" +
+            "first_name, middle_name, last_name, gender, birth_date, " +
+            "given_date, given_place, iin, ud_number, nationality, " +
+            "blood_group, citizenship, birth_place_id, mobile_phone, tel_phone, " +
+            "fact_flat, fact_fraction, fact_house, fact_street, " +
+            "reg_flat, reg_fraction, reg_house, reg_street, comment, status, user_id) VALUES " +
+            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, personalInfo.firstName)
+                ps.setString(counter++, personalInfo.middleName)
+                ps.setString(counter++, personalInfo.lastName)
+                ps.setString(counter++, personalInfo.gender)
+                ps.setTimestamp(counter++, Timestamp(personalInfo.birthDate.time))
+                ps.setTimestamp(counter++, Timestamp(personalInfo.givenDate.time))
+                ps.setString(counter++, personalInfo.givenPlace)
+                ps.setString(counter++, personalInfo.iin)
+                ps.setString(counter++, personalInfo.ud_number)
+                ps.setString(counter++, personalInfo.nationality)
+                ps.setString(counter++, personalInfo.blood_group)
+                ps.setString(counter++, personalInfo.citizenship)
+                ps.setLong(counter++, areaId)
+                ps.setString(counter++, personalInfo.mobilePhone)
+                ps.setString(counter++, personalInfo.telPhone)
+                ps.setString(counter++, personalInfo.factFlat)
+                ps.setString(counter++, personalInfo.factFraction)
+                ps.setString(counter++, personalInfo.factHouse)
+                ps.setString(counter++, personalInfo.factStreet)
+                ps.setString(counter++, personalInfo.regFlat)
+                ps.setString(counter++, personalInfo.regFraction)
+                ps.setString(counter++, personalInfo.regHouse)
+                ps.setString(counter++, personalInfo.regStreet)
+                ps.setString(counter++, "")
+                ps.setString(counter++, ConclusionStatus.WAITING_FOR_RESPONSE.name)
+                ps.setLong(counter, userId)
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
+    }
+
+    fun update(personalInfo: SavePersonalInfoRequest, areaId: Long, userId: Long, id: Long) {
+        val query = "UPDATE PersonalInfo SET " +
+            "first_name=?, middle_name=?, last_name=?, gender=?, birth_date=?, " +
+            "given_date=?, given_place=?, iin=?, ud_number=?, nationality=?," +
+            "blood_group=?, citizenship=?, birth_place_id=?, mobile_phone=?, tel_phone=?," +
+            "fact_flat=?, fact_fraction=?, fact_house=?, fact_street=?, reg_flat=?," +
+            "reg_fraction=?, reg_house=?, reg_street=?, comment=?, status=?, user_id=? WHERE id=?"
+
+        jdbcTemplate.update(query,
+            {ps ->
+                var counter = 1
+                ps.setString(counter++, personalInfo.firstName)
+                ps.setString(counter++, personalInfo.middleName)
+                ps.setString(counter++, personalInfo.lastName)
+                ps.setString(counter++, personalInfo.gender)
+                ps.setTimestamp(counter++, Timestamp(personalInfo.birthDate.time))
+                ps.setTimestamp(counter++, Timestamp(personalInfo.givenDate.time))
+                ps.setString(counter++, personalInfo.givenPlace)
+                ps.setString(counter++, personalInfo.iin)
+                ps.setString(counter++, personalInfo.ud_number)
+                ps.setString(counter++, personalInfo.nationality)
+                ps.setString(counter++, personalInfo.blood_group)
+                ps.setString(counter++, personalInfo.citizenship)
+                ps.setLong(counter++, areaId)
+                ps.setString(counter++, personalInfo.mobilePhone)
+                ps.setString(counter++, personalInfo.telPhone)
+                ps.setString(counter++, personalInfo.factFlat)
+                ps.setString(counter++, personalInfo.factFraction)
+                ps.setString(counter++, personalInfo.factHouse)
+                ps.setString(counter++, personalInfo.factStreet)
+                ps.setString(counter++, personalInfo.regFlat)
+                ps.setString(counter++, personalInfo.regFraction)
+                ps.setString(counter++, personalInfo.regHouse)
+                ps.setString(counter++, personalInfo.regStreet)
+                ps.setString(counter++, "")
+                ps.setString(counter++, ConclusionStatus.WAITING_FOR_RESPONSE.name)
+                ps.setLong(counter++, userId)
+                ps.setLong(counter, id)
+            })
     }
 }

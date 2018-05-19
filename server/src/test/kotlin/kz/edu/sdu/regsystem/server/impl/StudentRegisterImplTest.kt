@@ -3,6 +3,7 @@ package kz.edu.sdu.regsystem.server.impl
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
+import kz.edu.sdu.regsystem.server.domain.enums.GenderType
 import kz.edu.sdu.regsystem.server.domain.enums.RoleType
 import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
@@ -37,12 +38,12 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     lateinit var jdbcTemplate: JdbcTemplate
 
     private fun clearDb() {
-        jdbcTemplate.execute("DROP TABLE DOCUMENT")
-        jdbcTemplate.execute("DROP TABLE PersonalInfo")
-        jdbcTemplate.execute("DROP TABLE EducationInfo")
-        jdbcTemplate.execute("DROP TABLE MedicalInfo")
-        jdbcTemplate.execute("DROP TABLE VERIFICATION_TOKEN")
-        jdbcTemplate.execute("DROP TABLE USERS")
+        jdbcTemplate.execute("DELETE FROM DOCUMENT")
+        jdbcTemplate.execute("DELETE FROM PersonalInfo")
+        jdbcTemplate.execute("DELETE FROM EducationInfo")
+        jdbcTemplate.execute("DELETE FROM MedicalInfo")
+        jdbcTemplate.execute("DELETE FROM VERIFICATION_TOKEN")
+        jdbcTemplate.execute("DELETE FROM USERS")
     }
 
     @Test
@@ -63,7 +64,7 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
             firstName = "Daniyar",
             middleName = null,
             lastName = "Qazbek",
-            gender = "man",
+            gender = GenderType.MALE.name,
             birthDate = fromStrToDate("1997-06-15"),
             givenDate = fromStrToDate("2000-01-05"),
             givenPlace = "RK ||",
