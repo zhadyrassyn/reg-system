@@ -2,12 +2,11 @@ package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.server.domain.Area
+import kz.edu.sdu.regsystem.server.domain.Document
 import kz.edu.sdu.regsystem.server.domain.PersonalInfo
 import kz.edu.sdu.regsystem.server.domain.User
-import kz.edu.sdu.regsystem.server.domain.enums.ExistType
-import kz.edu.sdu.regsystem.server.domain.enums.GenderType
-import kz.edu.sdu.regsystem.server.domain.enums.RoleType
-import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
+import kz.edu.sdu.regsystem.server.domain.enums.*
+import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
@@ -35,6 +34,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     @Autowired
     lateinit var infoRepository: InfoRepository
+
+    @Autowired
+    lateinit var documentRepository: DocumentRepository
 
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
@@ -226,8 +228,85 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         return format.parse(date)
     }
 
+    private fun toDate(birthDate: Date): String {
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        return formatter.format(birthDate)
+    }
+
+    @Test
+    fun testGetPersonalInfoNotExist() {
+        clearDb()
+
+        //
+        //
+        val response = studentRegisterImpl.getPersonalInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response?.ud_front, "")
+        assertEquals(response?.ud_back, "")
+        assertEquals(response?.photo3x4, "")
+    }
+
     @Test
     fun testGetPersonalInfo() {
+        clearDb()
+        val document = Document(
+            id = -1,
+            ud_back = "UdBack",
+            ud_front = "UdFront",
+            photo3x4 = "photo3x4",
+            school_diploma = "school_diploma",
+            ent_certificate = "ent_certificate",
+            form86 = "form86",
+            form63 = "form63",
+            flurography = "flurography",
+            userId = user.id
+        )
+        document.id = documentRepository.save(document)
+
+        personalInfoRepository.save(personalInfo = a, areaId = area.id, userId = user.id)
+
+        //
+        //
+        val response = studentRegisterImpl.getPersonalInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response!!.firstName, a.firstName)
+        assertEquals(response.middleName, a.middleName)
+        assertEquals(response.lastName, a.lastName)
+        assertEquals(response.gender, a.gender)
+        assertEquals(response.birthDate, toDate(a.birthDate))
+        assertEquals(response.givenDate, toDate(a.givenDate))
+        assertEquals(response.givenPlace, a.givenPlace)
+        assertEquals(response.iin, a.iin)
+        assertEquals(response.ud_number, a.ud_number)
+        assertEquals(response.mobilePhone, a.mobilePhone)
+        assertEquals(response.telPhone, a.telPhone)
+        assertEquals(response.nationality, a.nationality)
+        assertEquals(response.birthPlace, area.id)
+        assertNull(response.birthPlaceCustom)
+        assertEquals(response.blood_group, a.blood_group)
+        assertEquals(response.citizenship, a.citizenship)
+
+        assertEquals(response.factFlat, a.factFlat)
+        assertEquals(response.factFraction, a.factFraction)
+        assertEquals(response.factHouse, a.factHouse)
+        assertEquals(response.factStreet, a.factStreet)
+
+        assertEquals(response.regFlat, a.regFlat)
+        assertEquals(response.regFraction, a.regFraction)
+        assertEquals(response.regHouse, a.regHouse)
+        assertEquals(response.regStreet, a.regStreet)
+
+        assertEquals(response.ud_back, document.ud_back)
+        assertEquals(response.ud_front, document.ud_front)
+        assertEquals(response.photo3x4, document.photo3x4)
+
+        assertEquals(response.status, ConclusionStatus.WAITING_FOR_RESPONSE.name)
     }
 
     @Test
