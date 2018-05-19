@@ -5,36 +5,36 @@ import java.util.*
 
 data class SavePersonalInfoRequest(
     val id: Long? = null,
-    val firstName: String,
-    val middleName: String? = null,
-    val lastName: String,
-    val gender: String,
+    var firstName: String,
+    var middleName: String? = null,
+    var lastName: String,
+    var gender: String,
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    val birthDate: Date,
+    var birthDate: Date,
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    val givenDate: Date,
-    val givenPlace: String,
-    val iin: String,
-    val ud_number: String,
+    var givenDate: Date,
+    var givenPlace: String,
+    var iin: String,
+    var ud_number: String,
 
-    val mobilePhone: String,
-    val telPhone: String? = null,
-    val nationality: String,
+    var mobilePhone: String,
+    var telPhone: String? = null,
+    var nationality: String,
 
-    val birthPlace: Long? = null,
-    val birthPlaceCustom: String? = null,
-    val blood_group: String? = null,
-    val citizenship: String,
-    val factFlat: String? = null,
-    val factFraction: String? = null,
-    val factHouse: String,
-    val factStreet: String,
+    var birthPlace: Long? = null,
+    var birthPlaceCustom: String? = null,
+    var blood_group: String? = null,
+    var citizenship: String,
+    var factFlat: String? = null,
+    var factFraction: String? = null,
+    var factHouse: String,
+    var factStreet: String,
 
-    val regFlat: String? = null,
-    val regFraction: String? = null,
-    val regHouse: String,
-    val regStreet: String
+    var regFlat: String? = null,
+    var regFraction: String? = null,
+    var regHouse: String,
+    var regStreet: String
 )
 
 data class GetPersonalInfoResponse(

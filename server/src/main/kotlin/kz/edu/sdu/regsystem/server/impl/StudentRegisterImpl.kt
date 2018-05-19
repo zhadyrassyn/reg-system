@@ -38,7 +38,7 @@ class StudentRegisterImpl(
         if(Objects.isNull(personalInfoDb)) {
             personalInfoRepository.save(personalInfo, areaId, id)
         } else {
-            personalInfoRepository.update(personalInfo, areaId, id, personalInfo.id!!)
+            personalInfoRepository.update(personalInfo, areaId, id, personalInfoDb!!.id)
         }
     }
 

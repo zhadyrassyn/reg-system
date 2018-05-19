@@ -40,6 +40,8 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     lateinit var user: User
 
+    lateinit var area: Area
+
     private fun clearDb() {
         jdbcTemplate.execute("DELETE FROM DOCUMENT")
         jdbcTemplate.execute("DELETE FROM PersonalInfo")
@@ -58,6 +60,13 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         )
         user.id = usersRepository.save(user)
 
+        area = Area(
+            nameEn = "abc1",
+            nameKk = "abc2",
+            nameRu = "abc3"
+        )
+
+        area.id = infoRepository.saveArea(area)
     }
 
     @Test
@@ -142,14 +151,6 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     fun testSavePersonalInfoNotExistWithSystemBirthPlace() {
         clearDb()
 
-        val area = Area(
-            nameEn = "abc1",
-            nameKk = "abc2",
-            nameRu = "abc3"
-        )
-
-        area.id = infoRepository.saveArea(area)
-
         val a = SavePersonalInfoRequest(
             firstName = "Daniyar",
             middleName = null,
@@ -181,6 +182,112 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
             regStreet = "Abaya"
         )
 
+
+        //
+        //
+        studentRegisterImpl.savePersonalInfo(a, user.id)
+        //
+        //
+
+        val b = personalInfoRepository.fetchPersonalInfo(user.id)
+
+        assertNotNull(b)
+        assertEquals(b!!.firstName, a.firstName)
+        assertEquals(b.middleName, a.middleName)
+        assertEquals(b.lastName, a.lastName)
+        assertEquals(b.gender, a.gender)
+        assertEquals(b.birthDate, a.birthDate)
+        assertEquals(b.givenDate, a.givenDate)
+        assertEquals(b.givenPlace, a.givenPlace)
+        assertEquals(b.iin, a.iin)
+        assertEquals(b.ud_number, a.ud_number)
+        assertEquals(b.mobilePhone, a.mobilePhone)
+        assertEquals(b.telPhone, a.telPhone)
+        assertEquals(b.nationality, a.nationality)
+        assertNotNull(b.birthPlaceId)
+        assertEquals(b.blood_group, a.blood_group)
+        assertEquals(b.citizenship, a.citizenship)
+
+        assertEquals(b.factFlat, a.factFlat)
+        assertEquals(b.factFraction, a.factFraction)
+        assertEquals(b.factHouse, a.factHouse)
+        assertEquals(b.factStreet, a.factStreet)
+
+        assertEquals(b.regFlat, a.regFlat)
+        assertEquals(b.regFraction, a.regFraction)
+        assertEquals(b.regHouse, a.regHouse)
+        assertEquals(b.regStreet, a.regStreet)
+
+        assertEquals(b.birthPlaceId, a.birthPlace)
+    }
+
+    @Test
+    fun testUpdatePersonalInfo() {
+        clearDb()
+
+        var a = SavePersonalInfoRequest(
+            firstName = "Daniyar",
+            middleName = null,
+            lastName = "Qazbek",
+            gender = GenderType.MALE.name,
+            birthDate = fromStrToDate("1997-06-15"),
+            givenDate = fromStrToDate("2000-01-05"),
+            givenPlace = "RK ||",
+            iin = "970211555589",
+            ud_number = "123123123",
+            mobilePhone = "87021112233",
+            telPhone = null,
+            nationality = "kazakh",
+
+            birthPlace = null,
+            birthPlaceCustom = "Pavlodar",
+
+            blood_group = "first+",
+            citizenship = "Kazakhstan",
+
+            factFlat = "12",
+            factFraction = "22",
+            factHouse = "20",
+            factStreet = "Tahibayeva",
+
+            regFlat = null,
+            regFraction = null,
+            regHouse = "50",
+            regStreet = "Abaya"
+        )
+
+        personalInfoRepository.save(personalInfo = a, areaId = area.id, userId = user.id)
+
+         a = SavePersonalInfoRequest(
+            firstName = "a",
+            middleName = "b",
+            lastName = "c",
+            gender = GenderType.ANOTHER.name,
+            birthDate = fromStrToDate("1997-07-15"),
+            givenDate = fromStrToDate("2000-08-05"),
+            givenPlace = "RK |||",
+            iin = "970211555588",
+            ud_number = "123123124",
+            mobilePhone = "87021112234",
+            telPhone = "77011111111",
+            nationality = "kazakh1",
+
+            birthPlace = area.id,
+            birthPlaceCustom = "Pavlodar",
+
+            blood_group = "first-",
+            citizenship = "Russia",
+
+            factFlat = "33",
+            factFraction = "33",
+            factHouse = "20",
+            factStreet = "Tahibayeva1",
+
+            regFlat = "11",
+            regFraction = "22",
+            regHouse = "44",
+            regStreet = "Auezova"
+        )
 
         //
         //
