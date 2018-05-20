@@ -5,17 +5,17 @@ import kz.edu.sdu.regsystem.server.props.StorageProperties
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
-import java.nio.file.attribute.FileAttribute
+import java.util.*
 
 @Service
 class FileService(
     properties: StorageProperties
-//    val db: Db
 )  {
     private lateinit var rootLocation: Path
 
@@ -31,41 +31,48 @@ class FileService(
         }
     }
 
-//    fun store(file: MultipartFile, documentType: DocumentType, id: Long) : Document? {
-//        var filename = StringUtils.cleanPath(file.originalFilename)
-//
-//        try {
-//            if(file.isEmpty) {
-//                throw StorageException("Failed to store empty file $filename")
-//            }
-//
-//            if(filename.contains("..")) {
-//                // This is a security check
-//                throw StorageException("Cannot store file with relative path outside current directory $filename")
-//            }
-//
-//            try {
-//                val fileExtension = getFileExtension(filename)
-//                filename = "${id}_$documentType.$fileExtension"
-//
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//
-//            Files.copy(file.inputStream, rootLocation.resolve(filename),
-//                StandardCopyOption.REPLACE_EXISTING)
-//
-//            return Document(
-//                id = db.longCounter.incrementAndGet(),
-//                documentType = documentType,
-//                path = rootLocation.resolve(filename),
-//                documentStatus = DocumentStatus.WAITING_FOR_RESPONSE
-//            )
-//
-//        } catch (e: IOException) {
-//            throw StorageException("Failed to store file " + filename, e)
-//        }
-//    }
+    fun store(file: MultipartFile) : String {
+        var filename = StringUtils.cleanPath(file.originalFilename)
+
+        try {
+            if(file.isEmpty) {
+                throw StorageException("Failed to store empty file $filename")
+            }
+
+            if(filename.contains("..")) {
+                // This is a security check
+                throw StorageException("Cannot store file with relative path outside current directory $filename")
+            }
+
+            try {
+                val fileExtension = getFileExtension(filename)
+                filename = "${UUID.randomUUID().toString()}.$fileExtension"
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            Files.copy(file.inputStream, rootLocation.resolve(filename),
+                StandardCopyOption.REPLACE_EXISTING)
+
+        } catch (e: IOException) {
+            throw StorageException("Failed to store file " + filename, e)
+        }
+
+        return filename
+    }
+
+    fun deleteFile(filename: String) {
+        Files.deleteIfExists(rootLocation.resolve(filename))
+    }
+
+    fun getFile(fileName: String) : File {
+        return File(rootLocation.resolve(fileName).toUri())
+    }
+
+    fun getFilePath(filename: String) : Path {
+        return rootLocation.resolve(filename)
+    }
 
     private fun getFileExtension(filename: String): String {
         val index = filename.lastIndexOf('.')

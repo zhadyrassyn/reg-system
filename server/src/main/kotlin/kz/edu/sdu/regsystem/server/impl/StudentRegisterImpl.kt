@@ -6,8 +6,10 @@ import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.server.domain.Area
 import kz.edu.sdu.regsystem.server.domain.PersonalInfo
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
+import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
+import kz.edu.sdu.regsystem.server.services.FileService
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -17,7 +19,9 @@ import java.util.*
 @Service
 class StudentRegisterImpl(
     val infoRepository: InfoRepository,
-    val personalInfoRepository: PersonalInfoRepository
+    val personalInfoRepository: PersonalInfoRepository,
+    val fileService: FileService,
+    val documentRepository: DocumentRepository
 ) : StudentRegister {
     override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
         //save customBirthPlace is exist
@@ -100,7 +104,17 @@ class StudentRegisterImpl(
     }
 
     override fun savePersonalInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val savedFileName = fileService.store(file)
+
+        val documentDto = documentRepository.get(id)
+
+        if(documentDto == null) {
+            documentRepository.save(userId = id, fileName = savedFileName, documentType = documentType)
+        } else {
+            documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
+        }
+
+        return Document(name = savedFileName)
     }
 
     override fun saveEducationInfo(educationInfo: SaveEducationInfoRequestData, id: Long) {

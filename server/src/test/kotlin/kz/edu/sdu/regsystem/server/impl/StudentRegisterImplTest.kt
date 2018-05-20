@@ -1,24 +1,33 @@
 package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
+import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.server.domain.Area
 import kz.edu.sdu.regsystem.server.domain.Document
 import kz.edu.sdu.regsystem.server.domain.PersonalInfo
 import kz.edu.sdu.regsystem.server.domain.User
 import kz.edu.sdu.regsystem.server.domain.enums.*
+import kz.edu.sdu.regsystem.server.props.StorageProperties
 import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
+import kz.edu.sdu.regsystem.server.services.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.testng.annotations.Test
-
 import org.testng.Assert.*
+import org.testng.annotations.Test
+import java.io.File
+import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 @SpringBootTest
 class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
@@ -39,6 +48,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     lateinit var documentRepository: DocumentRepository
 
     @Autowired
+    lateinit var fileService: FileService
+
+    @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
     lateinit var user: User
@@ -46,6 +58,14 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     lateinit var area: Area
 
     lateinit var a: SavePersonalInfoRequest
+
+    var properties: StorageProperties = StorageProperties()
+
+    private lateinit var rootLocation: Path
+
+    init {
+        this.rootLocation = Paths.get(properties.location)
+    }
 
     private fun clearDb() {
         jdbcTemplate.execute("DELETE FROM DOCUMENT")
@@ -311,6 +331,25 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     @Test
     fun testSavePersonalInfoDocument() {
+        clearDb()
+
+        val fileName = "testimg.png"
+        val source = File("${System.getProperty("user.home")}/test/$fileName")
+
+        fileService.deleteFile(fileName)
+        val multipartFile = MockMultipartFile("testimg.png", "testimg.png", null, FileInputStream(source))
+
+
+        //
+        //
+        val response = studentRegisterImpl.savePersonalInfoDocument(id = user.id,file = multipartFile, documentType = DocumentType.IDENTITY_CARD_FRONT)
+        //
+        //
+
+        assertNotNull(response)
+        assertNotNull(response.name)
+
+        assertEquals(Files.readAllBytes(fileService.getFilePath(response.name)), Files.readAllBytes(source.toPath()))
     }
 
     @Test

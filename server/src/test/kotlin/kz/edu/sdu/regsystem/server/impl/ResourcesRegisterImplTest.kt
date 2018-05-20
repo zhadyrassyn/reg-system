@@ -21,7 +21,7 @@ class ResourcesRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     var properties: StorageProperties = StorageProperties()
 
-    private lateinit var rootLocation: Path
+    lateinit public var rootLocation: Path
 
     init {
         this.rootLocation = Paths.get(properties.location)
