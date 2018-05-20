@@ -83,14 +83,14 @@ data class Document(
 data class SaveEducationInfoRequestData(
     val id: Long? = null,
     val educationArea: Long? = null,
-    val another_cityVillage: String? = null,
     val city: Long? = null,
+    val another_cityVillage: String? = null,
     val school: Long? = null,
     val customSchool: String? = null,
     val ent_amount: Long,
     val ent_certificate_number: String,
-    val faculty: Long,
     val ikt: String,
+    val faculty: Long,
     val speciality: Long,
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

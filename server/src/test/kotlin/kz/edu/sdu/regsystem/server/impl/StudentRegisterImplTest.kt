@@ -1,17 +1,12 @@
 package kz.edu.sdu.regsystem.server.impl
 
+import kz.edu.sdu.regsystem.controller.model.SaveEducationInfoRequestData
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
-import kz.edu.sdu.regsystem.server.domain.Area
-import kz.edu.sdu.regsystem.server.domain.Document
-import kz.edu.sdu.regsystem.server.domain.PersonalInfo
-import kz.edu.sdu.regsystem.server.domain.User
+import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.*
 import kz.edu.sdu.regsystem.server.props.StorageProperties
-import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
-import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
+import kz.edu.sdu.regsystem.server.repositoy.*
 import kz.edu.sdu.regsystem.server.services.FileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -46,6 +41,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     @Autowired
     lateinit var documentRepository: DocumentRepository
+
+    @Autowired
+    lateinit var educationInfoRepository: EducationInfoRepository
 
     @Autowired
     lateinit var fileService: FileService
@@ -353,7 +351,77 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     }
 
     @Test
-    fun testSaveEducationInfo() {
+    fun testSaveEducationInfoSystemValues() {
+        clearDb()
+
+        val city = City(
+            nameRu = "Комсомольское",
+            nameEn = "Komsomolskoe",
+            nameKk = "Комсомольское",
+            areaId = area.id
+        )
+        city.id = infoRepository.saveCity(city)
+
+        val school = School(
+            nameRu = "Шалкар НУ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар НУ",
+            cityId = city.id
+        )
+        school.id = infoRepository.saveSchool(school)
+
+        val f1 = Faculty(
+            nameRu = "Бизнес школа СДУ",
+            nameEn = "SDU Business school",
+            nameKk = "СДУ Бизнес мектебі"
+        )
+
+        f1.id = infoRepository.saveFaculty(f1)
+
+        val f1s1 = Specialty(
+            nameKk = "Есеп және аудит",
+            nameRu = "Учет и аудит",
+            nameEn = "Accounting and auditing",
+            faculty_id = f1.id
+        )
+
+        f1s1.id = infoRepository.saveSpecialty(f1s1)
+
+        val s = SaveEducationInfoRequestData(
+            id = -1,
+            educationArea = area.id,
+            city = city.id,
+            another_cityVillage = null,
+            school = school.id,
+            customSchool = null,
+            ent_amount = 112,
+            ent_certificate_number = "123213",
+            ikt = "2221",
+            faculty = f1.id,
+            speciality = f1s1.id,
+            school_finish = fromStrToDate("2000-01-05")
+        )
+
+        //
+        //
+        studentRegisterImpl.saveEducationInfo(s, user.id)
+        //
+        //
+
+        val educationInfoDto = educationInfoRepository.get(user.id)
+
+        assertNotNull(educationInfoDto)
+        assertEquals(educationInfoDto!!.areaId, s.educationArea)
+        assertEquals(educationInfoDto.cityId, s.city)
+        assertEquals(educationInfoDto.schoolId, s.school)
+        assertEquals(educationInfoDto.entAmount, s.ent_amount.toInt())
+        assertEquals(educationInfoDto.entCertificateNumber, s.ent_certificate_number)
+        assertEquals(educationInfoDto.ikt, s.ikt)
+        assertEquals(educationInfoDto.facultyId, s.faculty)
+        assertEquals(educationInfoDto.specialtyId, s.speciality)
+        assertEquals(educationInfoDto.schoolFinish, s.school_finish)
+        assertEquals(educationInfoDto.comment, "")
+        assertEquals(educationInfoDto.status, ConclusionStatus.WAITING_FOR_RESPONSE)
     }
 
     @Test

@@ -1,12 +1,13 @@
 package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.controller.model.*
+import kz.edu.sdu.regsystem.controller.model.Document
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
-import kz.edu.sdu.regsystem.server.domain.Area
-import kz.edu.sdu.regsystem.server.domain.PersonalInfo
+import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
+import kz.edu.sdu.regsystem.server.repositoy.EducationInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
 import kz.edu.sdu.regsystem.server.services.FileService
@@ -21,7 +22,8 @@ class StudentRegisterImpl(
     val infoRepository: InfoRepository,
     val personalInfoRepository: PersonalInfoRepository,
     val fileService: FileService,
-    val documentRepository: DocumentRepository
+    val documentRepository: DocumentRepository,
+    val educationInfoRepository: EducationInfoRepository
 ) : StudentRegister {
     override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
         //save customBirthPlace is exist
@@ -118,7 +120,54 @@ class StudentRegisterImpl(
     }
 
     override fun saveEducationInfo(educationInfo: SaveEducationInfoRequestData, id: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val cityId = if (Objects.isNull(educationInfo.city) && !StringUtils.isEmpty(educationInfo.another_cityVillage)) {
+            infoRepository.saveCity(
+                City(
+                    id = 1,
+                    nameRu = educationInfo.another_cityVillage!!,
+                    nameKk = educationInfo.another_cityVillage!!,
+                    nameEn = educationInfo.another_cityVillage!!,
+                    areaId = educationInfo.educationArea!!,
+                    type = ExistType.CUSTOM
+                )
+            )
+        } else
+            educationInfo.city!!
+
+        val schoolId = if (Objects.isNull(educationInfo.school) && !StringUtils.isEmpty(educationInfo.customSchool)) {
+            infoRepository.saveSchool(
+                School(
+                    id = 1,
+                    nameRu = educationInfo.customSchool!!,
+                    nameKk = educationInfo.customSchool!!,
+                    nameEn = educationInfo.customSchool!!,
+                    cityId = cityId,
+                    type = ExistType.CUSTOM
+                )
+            )
+        } else
+            educationInfo.school!!
+
+        val educationInfoDto = educationInfoRepository.get(id)
+        val save = EducationInfo(
+            id = if (educationInfoDto == null) -1 else educationInfoDto.id,
+            areaId = educationInfo.educationArea!!,
+            cityId = cityId,
+            schoolId = schoolId,
+            schoolFinish = educationInfo.school_finish,
+            entAmount = educationInfo.ent_amount.toInt(),
+            entCertificateNumber = educationInfo.ent_certificate_number,
+            ikt = educationInfo.ikt,
+            facultyId = educationInfo.faculty,
+            specialtyId = educationInfo.speciality,
+            userId = id
+        )
+        if(educationInfoDto == null) {
+            educationInfoRepository.save(save)
+        } else {
+            educationInfoRepository.update(save)
+        }
+
     }
 
     override fun getEducationInfo(id: Long): GetEducationInfoResponseData {
