@@ -98,6 +98,46 @@ class InfoRepository(val jdbcTemplate: JdbcTemplate) {
         }
     }
 
+    fun fetchCity(id: Long) : City? {
+        val query = "SELECT * FROM CITY WHERE id=?"
+
+        try {
+            return jdbcTemplate.queryForObject(
+                query, RowMapper { rs, rowNum ->
+                City(
+                    id = rs.getLong("id"),
+                    nameRu = rs.getString("name_ru"),
+                    nameEn = rs.getString("name_en"),
+                    nameKk = rs.getString("name_kk"),
+                    type = ExistType.valueOf(rs.getString("type")),
+                    areaId = rs.getLong("area_id")
+                )
+            }, id)
+        } catch (e: EmptyResultDataAccessException) {
+            return null
+        }
+    }
+
+    fun fetchSchool(id: Long) : School? {
+        val query = "SELECT * FROM SCHOOL WHERE id=?"
+
+        try {
+            return jdbcTemplate.queryForObject(
+                query, RowMapper { rs, rowNum ->
+                School(
+                    id = rs.getLong("id"),
+                    nameRu = rs.getString("name_ru"),
+                    nameEn = rs.getString("name_en"),
+                    nameKk = rs.getString("name_kk"),
+                    type = ExistType.valueOf(rs.getString("type")),
+                    cityId = rs.getLong("city_id")
+                )
+            }, id)
+        } catch (e: EmptyResultDataAccessException) {
+            return null
+        }
+    }
+
     /* SAVERS */
     fun saveArea(area: Area) : Long {
         val query = "INSERT INTO AREA(name_ru, name_en, name_kk, type) VALUES (?, ?, ?, ?)"

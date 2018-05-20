@@ -57,6 +57,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     lateinit var a: SavePersonalInfoRequest
 
+    lateinit var faculty: Faculty
+    lateinit var specialty: Specialty
+
     var properties: StorageProperties = StorageProperties()
 
     private lateinit var rootLocation: Path
@@ -121,6 +124,23 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
             regHouse = "50",
             regStreet = "Abaya"
         )
+
+        faculty = Faculty(
+            nameRu = "Бизнес школа СДУ",
+            nameEn = "SDU Business school",
+            nameKk = "СДУ Бизнес мектебі"
+        )
+
+        faculty.id = infoRepository.saveFaculty(faculty)
+
+        specialty = Specialty(
+            nameKk = "Есеп және аудит",
+            nameRu = "Учет и аудит",
+            nameEn = "Accounting and auditing",
+            faculty_id = faculty.id
+        )
+
+        specialty.id = infoRepository.saveSpecialty(specialty)
     }
 
     @Test
@@ -423,6 +443,102 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         assertEquals(educationInfoDto.comment, "")
         assertEquals(educationInfoDto.status, ConclusionStatus.WAITING_FOR_RESPONSE)
     }
+
+    @Test
+    fun testSaveEducationInfoCustomValues() {
+        clearDb()
+
+        val s = SaveEducationInfoRequestData(
+            id = -1,
+            educationArea = area.id,
+            city = null,
+            another_cityVillage = "Lovely",
+            school = null,
+            customSchool = "lschool",
+            ent_amount = 112,
+            ent_certificate_number = "123213",
+            ikt = "2221",
+            faculty = faculty.id,
+            speciality = specialty.id,
+            school_finish = fromStrToDate("2000-01-05")
+        )
+
+        //
+        //
+        studentRegisterImpl.saveEducationInfo(s, user.id)
+        //
+        //
+
+        val educationInfoDto = educationInfoRepository.get(user.id)
+
+        assertNotNull(educationInfoDto)
+        assertNotNull(educationInfoDto!!.areaId)
+        assertNotNull(educationInfoDto.cityId)
+        assertNotNull(educationInfoDto.schoolId)
+
+        val cityDto = infoRepository.fetchCity(educationInfoDto.cityId)
+        val schoolDto = infoRepository.fetchSchool(educationInfoDto.schoolId)
+
+        assertEquals(ExistType.CUSTOM, cityDto!!.type)
+        assertEquals(cityDto.nameEn, s.another_cityVillage)
+
+        assertEquals(ExistType.CUSTOM, schoolDto!!.type)
+        assertEquals(schoolDto.nameEn, s.customSchool)
+    }
+
+//    @Test
+//    fun testUpdateEducationInfo() {
+//        clearDb()
+//
+//        val city = City(
+//            nameRu = "Комсомольское",
+//            nameEn = "Komsomolskoe",
+//            nameKk = "Комсомольское",
+//            areaId = area.id,
+//            type = ExistType.CUSTOM
+//        )
+//        city.id = infoRepository.saveCity(city)
+//
+//        val school = School(
+//            nameRu = "Шалкар НУ",
+//            nameEn = "Shalkar NU",
+//            nameKk = "Шалкар НУ",
+//            cityId = city.id
+//        )
+//        school.id = infoRepository.saveSchool(school)
+//
+//        val s = SaveEducationInfoRequestData(
+//            id = -1,
+//            educationArea = area.id,
+//            city = city.id,
+//            another_cityVillage = null,
+//            school = school.id,
+//            customSchool = null,
+//            ent_amount = 112,
+//            ent_certificate_number = "123213",
+//            ikt = "2221",
+//            faculty = faculty.id,
+//            speciality = specialty.id,
+//            school_finish = fromStrToDate("2000-01-05")
+//        )
+//
+//        //
+//        //
+//        studentRegisterImpl.saveEducationInfo(s, user.id)
+//        //
+//        //
+//
+//        val educationInfoDto = educationInfoRepository.get(user.id)
+//
+//        assertNotNull(educationInfoDto)
+//        assertNotNull(educationInfoDto!!.areaId)
+//        assertNotNull(educationInfoDto.cityId)
+//        assertNotNull(educationInfoDto.schoolId)
+//
+//        assertEquals(ExistType.SYSTEM, infoRepository.fetchArea(educationInfoDto.areaId)?.type)
+//        assertEquals(ExistType.SYSTEM, infoRepository.fetchArea(educationInfoDto.cityId)?.type)
+//        assertEquals(ExistType.SYSTEM, infoRepository.fetchArea(educationInfoDto.schoolId)?.type)
+//    }
 
     @Test
     fun testGetEducationInfo() {
