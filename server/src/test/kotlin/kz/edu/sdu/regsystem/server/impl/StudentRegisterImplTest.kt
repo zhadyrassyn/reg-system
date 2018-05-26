@@ -717,10 +717,41 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
     @Test
     fun testSaveMedicalDocument() {
+        clearDb()
+
+        val fileName = "testimg.png"
+        val source = File("${System.getProperty("user.home")}/test/$fileName")
+
+        fileService.deleteFile(fileName)
+        val multipartFile = MockMultipartFile("testimg.png", "testimg.png", null, FileInputStream(source))
+
+
+        //
+        //
+        val response = studentRegisterImpl.saveEducationInfoDocument(id = user.id,file = multipartFile, documentType = DocumentType.IDENTITY_CARD_FRONT)
+        //
+        //
+
+        assertNotNull(response)
+        assertNotNull(response.name)
+
+        assertEquals(Files.readAllBytes(fileService.getFilePath(response.name)), Files.readAllBytes(source.toPath()))
     }
 
     @Test
     fun testGetMedicalInfo() {
+        clearDb()
+
+        //
+        //
+        val response = studentRegisterImpl.getMedicalInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.form86, "")
+        assertEquals(response.form63, "")
+        assertEquals(response.flurography, "")
     }
 
 }

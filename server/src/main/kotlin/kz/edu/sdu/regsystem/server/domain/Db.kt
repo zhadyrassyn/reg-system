@@ -192,3 +192,15 @@ data class EducationInfoDocument(
     val school_diploma: String,
     val ent_certificate: String
 )
+
+
+data class MedicalInfoDocument(
+    val id: Long = -1,
+    val comment: String = "",
+    val status: ConclusionStatus = ConclusionStatus.WAITING_FOR_RESPONSE,
+    val userId: Long,
+
+    val form86: String,
+    val form63: String,
+    val flurography: String
+)

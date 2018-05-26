@@ -7,10 +7,7 @@ import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
-import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
-import kz.edu.sdu.regsystem.server.repositoy.EducationInfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
+import kz.edu.sdu.regsystem.server.repositoy.*
 import kz.edu.sdu.regsystem.server.services.FileService
 import kz.edu.sdu.regsystem.server.services.RedisService
 import org.springframework.stereotype.Service
@@ -26,7 +23,7 @@ class StudentRegisterImpl(
     val fileService: FileService,
     val documentRepository: DocumentRepository,
     val educationInfoRepository: EducationInfoRepository,
-    val redisService: RedisService
+    val medicalInfoRepository: MedicalInfoRepository
 ) : StudentRegister {
     override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
         //save customBirthPlace is exist
@@ -257,11 +254,29 @@ class StudentRegisterImpl(
     }
 
     override fun saveMedicalDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val savedFileName = fileService.store(file)
+
+        val documentDto = documentRepository.get(id)
+
+        if (documentDto == null) {
+            documentRepository.save(userId = id, fileName = savedFileName, documentType = documentType)
+        } else {
+            documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
+        }
+
+        return Document(name = savedFileName)
     }
 
     override fun getMedicalInfo(id: Long): GetMedicalInfoResponseData {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val medicalInfo = medicalInfoRepository.fetchMedicalInfoDocument(id) ?: return GetMedicalInfoResponseData()
+
+        return GetMedicalInfoResponseData(
+            comment = medicalInfo.comment,
+            status = medicalInfo.status.name,
+            form63 = medicalInfo.form63,
+            form86 = medicalInfo.form86,
+            flurography = medicalInfo.flurography
+        )
     }
 
 }
