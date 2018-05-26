@@ -113,8 +113,8 @@ data class GetEducationInfoResponseData(
     val comment: String? = "",
     val status: String = "",
 
-    val schoolDiploma: String? = null,
-    val entCertificate: String? = null
+    val schoolDiploma: String? = "",
+    val entCertificate: String? = ""
 )
 
 data class GetMedicalInfoResponseData(

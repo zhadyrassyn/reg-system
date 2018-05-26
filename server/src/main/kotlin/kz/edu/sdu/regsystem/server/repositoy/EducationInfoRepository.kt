@@ -2,6 +2,7 @@ package kz.edu.sdu.regsystem.server.repositoy
 
 import kz.edu.sdu.regsystem.controller.model.SaveEducationInfoRequestData
 import kz.edu.sdu.regsystem.server.domain.EducationInfo
+import kz.edu.sdu.regsystem.server.domain.EducationInfoDocument
 import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
@@ -34,6 +35,35 @@ class EducationInfoRepository(
                     comment = rs.getString("comment"),
                     status = ConclusionStatus.valueOf(rs.getString("status")),
                     userId = rs.getLong("user_id")
+                )
+            }, userId)
+        } catch (e: EmptyResultDataAccessException) {
+            return null
+        }
+    }
+
+    fun fetchEducationInfoDocument(userId: Long) : EducationInfoDocument? {
+        val query = "SELECT * FROM EducationInfo AS PI INNER JOIN DOCUMENT AS D ON PI.user_id = D.user_id WHERE PI.user_id=?"
+
+        try {
+            return jdbcTemplate.queryForObject(
+                query, RowMapper { rs, rowNum ->
+                EducationInfoDocument(
+                    id = rs.getLong("id"),
+                    areaId = rs.getLong("area_id"),
+                    cityId = rs.getLong("city_id"),
+                    schoolId = rs.getLong("school_id"),
+                    schoolFinish = rs.getDate("school_finish"),
+                    entAmount = rs.getInt("ent_amount"),
+                    entCertificateNumber = rs.getString("ent_certificate_number"),
+                    ikt = rs.getString("ikt"),
+                    facultyId = rs.getLong("faculty_id"),
+                    specialtyId = rs.getLong("specialty_id"),
+                    comment = rs.getString("comment"),
+                    status = ConclusionStatus.valueOf(rs.getString("status")),
+                    userId = userId,
+                    school_diploma = rs.getString("school_diploma"),
+                    ent_certificate = rs.getString("ent_certificate")
                 )
             }, userId)
         } catch (e: EmptyResultDataAccessException) {

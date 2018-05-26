@@ -54,9 +54,12 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     lateinit var user: User
 
     lateinit var area: Area
+    lateinit var city: City
+    lateinit var school: School
 
     lateinit var a: SavePersonalInfoRequest
 
+    lateinit var document: Document
     lateinit var faculty: Faculty
     lateinit var specialty: Specialty
 
@@ -73,6 +76,11 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         jdbcTemplate.execute("DELETE FROM PersonalInfo")
         jdbcTemplate.execute("DELETE FROM EducationInfo")
         jdbcTemplate.execute("DELETE FROM MedicalInfo")
+        jdbcTemplate.execute("DELETE FROM SCHOOL")
+        jdbcTemplate.execute("DELETE FROM CITY")
+        jdbcTemplate.execute("DELETE FROM AREA")
+        jdbcTemplate.execute("DELETE FROM SPECIALTY")
+        jdbcTemplate.execute("DELETE FROM FACULTY")
         jdbcTemplate.execute("DELETE FROM VERIFICATION_TOKEN")
         jdbcTemplate.execute("DELETE FROM USERS")
 
@@ -93,6 +101,22 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         )
 
         area.id = infoRepository.saveArea(area)
+
+        city = City(
+            nameRu = "Комсомольское",
+            nameEn = "Komsomolskoe",
+            nameKk = "Комсомольское",
+            areaId = area.id
+        )
+        city.id = infoRepository.saveCity(city)
+
+        school = School(
+            nameRu = "Шалкар НУ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар НУ",
+            cityId = city.id
+        )
+        school.id = infoRepository.saveSchool(school)
 
         a = SavePersonalInfoRequest(
             firstName = "Daniyar",
@@ -141,6 +165,21 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         )
 
         specialty.id = infoRepository.saveSpecialty(specialty)
+
+        document = Document(
+            id = -1,
+            ud_back = "UdBack",
+            ud_front = "UdFront",
+            photo3x4 = "photo3x4",
+            school_diploma = "school_diploma",
+            ent_certificate = "ent_certificate",
+            form86 = "form86",
+            form63 = "form63",
+            flurography = "flurography",
+            userId = user.id
+        )
+        document.id = documentRepository.save(document)
+
     }
 
     @Test
@@ -290,19 +329,6 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     @Test
     fun testGetPersonalInfo() {
         clearDb()
-        val document = Document(
-            id = -1,
-            ud_back = "UdBack",
-            ud_front = "UdFront",
-            photo3x4 = "photo3x4",
-            school_diploma = "school_diploma",
-            ent_certificate = "ent_certificate",
-            form86 = "form86",
-            form63 = "form63",
-            flurography = "flurography",
-            userId = user.id
-        )
-        document.id = documentRepository.save(document)
 
         personalInfoRepository.save(personalInfo = a, areaId = area.id, userId = user.id)
 
@@ -374,39 +400,6 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     fun testSaveEducationInfoSystemValues() {
         clearDb()
 
-        val city = City(
-            nameRu = "Комсомольское",
-            nameEn = "Komsomolskoe",
-            nameKk = "Комсомольское",
-            areaId = area.id
-        )
-        city.id = infoRepository.saveCity(city)
-
-        val school = School(
-            nameRu = "Шалкар НУ",
-            nameEn = "Shalkar NU",
-            nameKk = "Шалкар НУ",
-            cityId = city.id
-        )
-        school.id = infoRepository.saveSchool(school)
-
-        val f1 = Faculty(
-            nameRu = "Бизнес школа СДУ",
-            nameEn = "SDU Business school",
-            nameKk = "СДУ Бизнес мектебі"
-        )
-
-        f1.id = infoRepository.saveFaculty(f1)
-
-        val f1s1 = Specialty(
-            nameKk = "Есеп және аудит",
-            nameRu = "Учет и аудит",
-            nameEn = "Accounting and auditing",
-            faculty_id = f1.id
-        )
-
-        f1s1.id = infoRepository.saveSpecialty(f1s1)
-
         val s = SaveEducationInfoRequestData(
             id = -1,
             educationArea = area.id,
@@ -417,8 +410,8 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
             ent_amount = 112,
             ent_certificate_number = "123213",
             ikt = "2221",
-            faculty = f1.id,
-            speciality = f1s1.id,
+            faculty = faculty.id,
+            speciality = specialty.id,
             school_finish = fromStrToDate("2000-01-05")
         )
 
@@ -490,22 +483,6 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     fun testUpdateEducationInfo() {
         clearDb()
 
-        val city = City(
-            nameRu = "Комсомольское",
-            nameEn = "Komsomolskoe",
-            nameKk = "Комсомольское",
-            areaId = area.id
-        )
-        city.id = infoRepository.saveCity(city)
-
-        val school = School(
-            nameRu = "Шалкар НУ",
-            nameEn = "Shalkar NU",
-            nameKk = "Шалкар НУ",
-            cityId = city.id
-        )
-        school.id = infoRepository.saveSchool(school)
-
         val educationInfo = EducationInfo(
             id = -1,
             areaId = area.id,
@@ -567,11 +544,175 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     }
 
     @Test
-    fun testGetEducationInfo() {
+    fun testGetEducationInfoEmpty() {
+        clearDb()
+
+        //
+        //
+        val response = studentRegisterImpl.getEducationInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.schoolDiploma, "")
+        assertEquals(response.entCertificate, "")
+    }
+
+    @Test
+    fun testGetEducationInfoWithSystemValues() {
+        clearDb()
+
+        val educationInfo = EducationInfo(
+            id = -1,
+            areaId = area.id,
+            cityId = city.id,
+            schoolId = school.id,
+            schoolFinish = fromStrToDate("2000-05-11"),
+            entAmount = 112,
+            entCertificateNumber = "221",
+            ikt = "5543",
+            facultyId = faculty.id,
+            specialtyId = specialty.id,
+            userId = user.id
+        )
+
+        educationInfo.id = educationInfoRepository.save(educationInfo)
+
+        //
+        //
+        val response = studentRegisterImpl.getEducationInfo(educationInfo.userId)
+        //
+        //
+
+        assertNotNull(response)
+        //area
+        assertEquals(response.educationArea?.id, area.id)
+        assertEquals(response.educationArea?.nameEn, area.nameEn)
+        assertEquals(response.educationArea?.nameRu, area.nameRu)
+        assertEquals(response.educationArea?.nameKk, area.nameKk)
+        //city
+        assertEquals(response.city?.id, city.id)
+        assertEquals(response.city?.nameEn, city.nameEn)
+        assertEquals(response.city?.nameRu, city.nameRu)
+        assertEquals(response.city?.nameKk, city.nameKk)
+        //school
+        assertEquals(response.school?.id, school.id)
+        assertEquals(response.school?.nameEn, school.nameEn)
+        assertEquals(response.school?.nameRu, school.nameRu)
+        assertEquals(response.school?.nameKk, school.nameKk)
+
+        assertNull(response.another_cityVillage)
+        assertNull(response.customSchool)
+
+        assertEquals(response.ent_amount, educationInfo.entAmount.toLong())
+        assertEquals(response.ent_certificate_number, educationInfo.entCertificateNumber)
+        assertEquals(response.ikt, educationInfo.ikt)
+        assertEquals(response.school_finish, toDate(educationInfo.schoolFinish))
+
+        assertEquals(response.faculty?.id, faculty.id)
+        assertEquals(response.faculty?.nameEn, faculty.nameEn)
+        assertEquals(response.faculty?.nameRu, faculty.nameRu)
+        assertEquals(response.faculty?.nameKk, faculty.nameKk)
+
+        assertEquals(response.speciality?.id, specialty.id)
+        assertEquals(response.speciality?.nameEn, specialty.nameEn)
+        assertEquals(response.speciality?.nameRu, specialty.nameRu)
+        assertEquals(response.speciality?.nameKk, specialty.nameKk)
+
+        //docs
+        assertEquals(response.schoolDiploma, document.school_diploma)
+        assertEquals(response.entCertificate, document.ent_certificate)
+    }
+
+    @Test
+    fun testGetEducationInfoWithCustomValues() {
+        clearDb()
+
+//        city.type = ExistType.CUSTOM
+//        school.type = ExistType.CUSTOM
+        val educationInfo = EducationInfo(
+            id = -1,
+            areaId = area.id,
+            cityId = city.id,
+            schoolId = school.id,
+            schoolFinish = fromStrToDate("2000-05-11"),
+            entAmount = 112,
+            entCertificateNumber = "221",
+            ikt = "5543",
+            facultyId = faculty.id,
+            specialtyId = specialty.id,
+            userId = user.id
+        )
+
+        educationInfo.id = educationInfoRepository.save(educationInfo)
+
+        //
+        //
+        val response = studentRegisterImpl.getEducationInfo(educationInfo.userId)
+        //
+        //
+
+        assertNotNull(response)
+        //area
+        assertEquals(response.educationArea?.id, area.id)
+        assertEquals(response.educationArea?.nameEn, area.nameEn)
+        assertEquals(response.educationArea?.nameRu, area.nameRu)
+        assertEquals(response.educationArea?.nameKk, area.nameKk)
+        //city
+        assertEquals(response.city?.id, city.id)
+        assertEquals(response.city?.nameEn, city.nameEn)
+        assertEquals(response.city?.nameRu, city.nameRu)
+        assertEquals(response.city?.nameKk, city.nameKk)
+        //school
+        assertEquals(response.school?.id, school.id)
+        assertEquals(response.school?.nameEn, school.nameEn)
+        assertEquals(response.school?.nameRu, school.nameRu)
+        assertEquals(response.school?.nameKk, school.nameKk)
+
+        assertNull(response.another_cityVillage)
+        assertNull(response.customSchool)
+
+        assertEquals(response.ent_amount, educationInfo.entAmount.toLong())
+        assertEquals(response.ent_certificate_number, educationInfo.entCertificateNumber)
+        assertEquals(response.ikt, educationInfo.ikt)
+        assertEquals(response.school_finish, toDate(educationInfo.schoolFinish))
+
+        assertEquals(response.faculty?.id, faculty.id)
+        assertEquals(response.faculty?.nameEn, faculty.nameEn)
+        assertEquals(response.faculty?.nameRu, faculty.nameRu)
+        assertEquals(response.faculty?.nameKk, faculty.nameKk)
+
+        assertEquals(response.speciality?.id, specialty.id)
+        assertEquals(response.speciality?.nameEn, specialty.nameEn)
+        assertEquals(response.speciality?.nameRu, specialty.nameRu)
+        assertEquals(response.speciality?.nameKk, specialty.nameKk)
+
+        //docs
+        assertEquals(response.schoolDiploma, document.school_diploma)
+        assertEquals(response.entCertificate, document.ent_certificate)
     }
 
     @Test
     fun testSaveEducationInfoDocument() {
+        clearDb()
+
+        val fileName = "testimg.png"
+        val source = File("${System.getProperty("user.home")}/test/$fileName")
+
+        fileService.deleteFile(fileName)
+        val multipartFile = MockMultipartFile("testimg.png", "testimg.png", null, FileInputStream(source))
+
+
+        //
+        //
+        val response = studentRegisterImpl.saveEducationInfoDocument(id = user.id,file = multipartFile, documentType = DocumentType.IDENTITY_CARD_FRONT)
+        //
+        //
+
+        assertNotNull(response)
+        assertNotNull(response.name)
+
+        assertEquals(Files.readAllBytes(fileService.getFilePath(response.name)), Files.readAllBytes(source.toPath()))
     }
 
     @Test

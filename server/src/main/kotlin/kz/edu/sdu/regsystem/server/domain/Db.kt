@@ -173,3 +173,22 @@ data class EducationInfo(
     val status: ConclusionStatus = ConclusionStatus.WAITING_FOR_RESPONSE,
     val userId: Long
 )
+
+data class EducationInfoDocument(
+    var id: Long = -1,
+    val areaId: Long,
+    val cityId: Long,
+    val schoolId: Long,
+    val schoolFinish: Date,
+    val entAmount: Int,
+    val entCertificateNumber: String,
+    val ikt: String,
+    val facultyId: Long,
+    val specialtyId: Long,
+    val comment: String = "",
+    val status: ConclusionStatus = ConclusionStatus.WAITING_FOR_RESPONSE,
+    val userId: Long,
+
+    val school_diploma: String,
+    val ent_certificate: String
+)

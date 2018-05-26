@@ -6,11 +6,13 @@ import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
+import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
 import kz.edu.sdu.regsystem.server.repositoy.EducationInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
 import kz.edu.sdu.regsystem.server.services.FileService
+import kz.edu.sdu.regsystem.server.services.RedisService
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -23,7 +25,8 @@ class StudentRegisterImpl(
     val personalInfoRepository: PersonalInfoRepository,
     val fileService: FileService,
     val documentRepository: DocumentRepository,
-    val educationInfoRepository: EducationInfoRepository
+    val educationInfoRepository: EducationInfoRepository,
+    val redisService: RedisService
 ) : StudentRegister {
     override fun savePersonalInfo(personalInfo: SavePersonalInfoRequest, id: Long) {
         //save customBirthPlace is exist
@@ -41,8 +44,8 @@ class StudentRegisterImpl(
             personalInfo.birthPlace!!
         }
 
-        val personalInfoDb : PersonalInfo? = personalInfoRepository.fetchPersonalInfo(id)
-        if(Objects.isNull(personalInfoDb)) {
+        val personalInfoDb: PersonalInfo? = personalInfoRepository.fetchPersonalInfo(id)
+        if (Objects.isNull(personalInfoDb)) {
             personalInfoRepository.save(personalInfo, areaId, id)
         } else {
             personalInfoRepository.update(personalInfo, areaId, id, personalInfoDb!!.id)
@@ -52,7 +55,7 @@ class StudentRegisterImpl(
     override fun getPersonalInfo(id: Long): GetPersonalInfoResponse? {
         val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id)
 
-        if(personalInfo == null) {
+        if (personalInfo == null) {
             return GetPersonalInfoResponse()
         }
 
@@ -110,7 +113,7 @@ class StudentRegisterImpl(
 
         val documentDto = documentRepository.get(id)
 
-        if(documentDto == null) {
+        if (documentDto == null) {
             documentRepository.save(userId = id, fileName = savedFileName, documentType = documentType)
         } else {
             documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
@@ -162,7 +165,7 @@ class StudentRegisterImpl(
             specialtyId = educationInfo.speciality,
             userId = id
         )
-        if(educationInfoDto == null) {
+        if (educationInfoDto == null) {
             educationInfoRepository.save(save)
         } else {
             educationInfoRepository.update(save)
@@ -171,7 +174,72 @@ class StudentRegisterImpl(
     }
 
     override fun getEducationInfo(id: Long): GetEducationInfoResponseData {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val educationInfo = educationInfoRepository.fetchEducationInfoDocument(id) ?: return GetEducationInfoResponseData()
+
+        val area = infoRepository.fetchArea(educationInfo.areaId)
+            ?: throw BadRequestException("Cannot find area with id ${educationInfo.areaId}")
+
+        val city = infoRepository.fetchCity(educationInfo.cityId)
+            ?: throw BadRequestException("Cannot find city with id ${educationInfo.cityId}")
+
+        val school = infoRepository.fetchSchool(educationInfo.schoolId)
+            ?: throw BadRequestException("Cannot find school with id ${educationInfo.schoolId}")
+
+        val faculty = infoRepository.fetchFaculty(educationInfo.facultyId)
+            ?: throw BadRequestException("Cannot find faculty with id ${educationInfo.facultyId}")
+
+        val specialty = infoRepository.fetchSpecialty(educationInfo.specialtyId)
+            ?: throw BadRequestException("Cannot find specialty with id ${educationInfo.specialtyId}")
+
+        return GetEducationInfoResponseData(
+            id = educationInfo.id,
+            educationArea = AreaData(
+                id = area.id,
+                nameRu = area.nameRu,
+                nameKk = area.nameKk,
+                nameEn = area.nameEn
+            ),
+            city = if (city.type !== ExistType.CUSTOM)
+                CityData(
+                    id = city.id,
+                    nameEn = city.nameEn,
+                    nameRu = city.nameRu,
+                    nameKk = city.nameKk
+                )
+            else
+                null,
+            another_cityVillage = if (city.type == ExistType.CUSTOM) city.nameEn else null,
+            school = if (school.type != ExistType.CUSTOM)
+                SchoolData(
+                    id = school.id,
+                    nameEn = school.nameEn,
+                    nameKk = school.nameKk,
+                    nameRu = school.nameRu
+                )
+            else
+                null,
+            customSchool = if (school.type == ExistType.CUSTOM) school.nameEn else null,
+            ent_amount = educationInfo.entAmount.toLong(),
+            ent_certificate_number = educationInfo.entCertificateNumber,
+            ikt = educationInfo.ikt,
+            faculty = GetFacultiesResponseData(
+                id = faculty.id,
+                nameRu = faculty.nameRu,
+                nameKk = faculty.nameKk,
+                nameEn = faculty.nameEn
+            ),
+            speciality = GetSpecialtyResponseData(
+                id = specialty.id,
+                nameRu = specialty.nameRu,
+                nameEn = specialty.nameEn,
+                nameKk = specialty.nameKk
+            ),
+            school_finish = toDate(educationInfo.schoolFinish),
+            schoolDiploma = educationInfo.school_diploma,
+            entCertificate = educationInfo.ent_certificate,
+            comment = educationInfo.comment,
+            status = educationInfo.status.name
+        )
     }
 
     override fun saveEducationInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
