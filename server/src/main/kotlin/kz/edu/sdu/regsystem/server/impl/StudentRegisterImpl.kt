@@ -243,7 +243,17 @@ class StudentRegisterImpl(
     }
 
     override fun saveEducationInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val savedFileName = fileService.store(file)
+
+        val documentDto = documentRepository.get(id)
+
+        if (documentDto == null) {
+            documentRepository.save(userId = id, fileName = savedFileName, documentType = documentType)
+        } else {
+            documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
+        }
+
+        return Document(name = savedFileName)
     }
 
     override fun saveMedicalDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
