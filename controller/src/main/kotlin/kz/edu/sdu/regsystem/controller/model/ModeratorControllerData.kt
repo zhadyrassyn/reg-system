@@ -102,12 +102,13 @@ data class FetchEducationInfoResponse (
 )
 
 data class FetchMedicalInfoResponse (
+    val id: Long = -1,
     val comment: String? = "",
     val status: String? = "WATING_FOR_RESPONSE",
 
-    val form63: String? = null,
-    val form86: String? = null,
-    val flurography: String? = null
+    val form63: String? = "",
+    val form86: String? = "",
+    val flurography: String? = ""
 )
 
 

@@ -45,6 +45,9 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
     @Autowired
     lateinit var educationInfoRepository: EducationInfoRepository
 
+    @Autowired
+    lateinit var medicalInfoRepository: MedicalInfoRepository
+
     lateinit var user: User
     lateinit var area: Area
     lateinit var city: City
@@ -304,6 +307,27 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun testFetchMedicalInfo() {
+        clearDb()
+
+        val m = MedicalInfo(
+            comment = "123",
+            userId = user.id
+        )
+
+        m.id = medicalInfoRepository.save(m)
+
+        //
+        //
+        val response = moderatorRegisterImpl.fetchMedicalInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.comment, m.comment)
+        assertEquals(response.status, m.status.name)
+        assertEquals(response.form86, document.form86)
+        assertEquals(response.form63, document.form63)
+        assertEquals(response.flurography, document.flurography)
     }
 
     @Test

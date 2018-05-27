@@ -6,6 +6,7 @@ import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.repositoy.EducationInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
+import kz.edu.sdu.regsystem.server.repositoy.MedicalInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
@@ -15,6 +16,7 @@ import java.util.*
 class ModeratorRegisterImpl(
     val personalInfoRepository: PersonalInfoRepository,
     val educationInfoRepository: EducationInfoRepository,
+    val medicalInfoRepository: MedicalInfoRepository,
     val infoRepository: InfoRepository
 ) : ModeratorRegister{
     override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
@@ -133,7 +135,16 @@ class ModeratorRegisterImpl(
     }
 
     override fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val medicalInfo = medicalInfoRepository.fetchMedicalInfoDocument(id) ?: return FetchMedicalInfoResponse()
+
+        return FetchMedicalInfoResponse(
+            id = medicalInfo.id,
+            comment = medicalInfo.comment,
+            status = medicalInfo.status.name,
+            form63 = medicalInfo.form63,
+            form86 = medicalInfo.form86,
+            flurography = medicalInfo.flurography
+        )
     }
 
     override fun saveMedicalComment(id: Long, request: EditGeneralInfORequest) {

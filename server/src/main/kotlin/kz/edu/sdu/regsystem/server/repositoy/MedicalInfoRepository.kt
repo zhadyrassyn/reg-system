@@ -1,10 +1,12 @@
 package kz.edu.sdu.regsystem.server.repositoy
 
+import kz.edu.sdu.regsystem.server.domain.MedicalInfo
 import kz.edu.sdu.regsystem.server.domain.MedicalInfoDocument
 import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -27,5 +29,25 @@ class MedicalInfoRepository(val jdbcTemplate: JdbcTemplate) {
         } catch (e: EmptyResultDataAccessException) {
             return null
         }
+    }
+
+    fun save(medicalInfo: MedicalInfo) : Long {
+        val query = "INSERT INTO MedicalInfo(" +
+            "comment, status, user_id) VALUES " +
+            "(?, ?, ?)"
+
+        val keyHolder = GeneratedKeyHolder()
+
+        jdbcTemplate.update(
+            { connection ->
+                var counter = 1
+                val ps = connection.prepareStatement(query, arrayOf("id"))
+                ps.setString(counter++, medicalInfo.comment)
+                ps.setString(counter++, medicalInfo.status.name)
+                ps.setLong(counter, medicalInfo.userId)
+                ps
+            }, keyHolder)
+
+        return keyHolder.key!!.toLong()
     }
 }
