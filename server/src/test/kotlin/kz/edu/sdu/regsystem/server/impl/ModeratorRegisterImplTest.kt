@@ -1,17 +1,13 @@
 package kz.edu.sdu.regsystem.server.impl
 
+import kz.edu.sdu.regsystem.controller.model.SaveEducationInfoRequestData
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
-import kz.edu.sdu.regsystem.server.domain.Area
-import kz.edu.sdu.regsystem.server.domain.Document
-import kz.edu.sdu.regsystem.server.domain.User
+import kz.edu.sdu.regsystem.server.domain.*
 import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import kz.edu.sdu.regsystem.server.domain.enums.GenderType
 import kz.edu.sdu.regsystem.server.domain.enums.RoleType
 import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
-import kz.edu.sdu.regsystem.server.repositoy.DocumentRepository
-import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.UsersRepository
+import kz.edu.sdu.regsystem.server.repositoy.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
@@ -46,8 +42,15 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
     @Autowired
     lateinit var documentRepository: DocumentRepository
 
+    @Autowired
+    lateinit var educationInfoRepository: EducationInfoRepository
+
     lateinit var user: User
     lateinit var area: Area
+    lateinit var city: City
+    lateinit var school: School
+    lateinit var faculty: Faculty
+    lateinit var specialty: Specialty
     lateinit var document: Document
 
     private fun clearDb() {
@@ -80,6 +83,39 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
         )
 
         area.id = infoRepository.saveArea(area)
+
+        city = City(
+            nameRu = "Комсомольское",
+            nameEn = "Komsomolskoe",
+            nameKk = "Комсомольское",
+            areaId = area.id
+        )
+        city.id = infoRepository.saveCity(city)
+
+        school = School(
+            nameRu = "Шалкар НУ",
+            nameEn = "Shalkar NU",
+            nameKk = "Шалкар НУ",
+            cityId = city.id
+        )
+        school.id = infoRepository.saveSchool(school)
+
+        faculty = Faculty(
+            nameRu = "Бизнес школа СДУ",
+            nameEn = "SDU Business school",
+            nameKk = "СДУ Бизнес мектебі"
+        )
+
+        faculty.id = infoRepository.saveFaculty(faculty)
+
+        specialty = Specialty(
+            nameKk = "Есеп және аудит",
+            nameRu = "Учет и аудит",
+            nameEn = "Accounting and auditing",
+            faculty_id = faculty.id
+        )
+
+        specialty.id = infoRepository.saveSpecialty(specialty)
 
         document = Document(
             id = -1,
@@ -197,7 +233,69 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun testFetchEducationInfo() {
+        clearDb()
 
+        val s = SaveEducationInfoRequestData(
+            id = -1,
+            educationArea = area.id,
+            city = city.id,
+            another_cityVillage = null,
+            school = school.id,
+            customSchool = null,
+            ent_amount = 112,
+            ent_certificate_number = "123213",
+            ikt = "2221",
+            faculty = faculty.id,
+            speciality = specialty.id,
+            school_finish = fromStrToDate("2000-01-05")
+        )
+
+        studentRegisterImpl.saveEducationInfo(s, user.id)
+
+        //
+        //
+        val response = moderatorRegisterImpl.fetchEducationInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.educationArea!!.id, s.educationArea)
+        assertEquals(response.educationArea!!.nameKk, area.nameKk)
+        assertEquals(response.educationArea!!.nameRu, area.nameRu)
+        assertEquals(response.educationArea!!.nameEn, area.nameEn)
+
+        assertEquals(response.city!!.id, s.city!!)
+        assertEquals(response.city!!.nameKk, city.nameKk)
+        assertEquals(response.city!!.nameRu, city.nameRu)
+        assertEquals(response.city!!.nameEn, city.nameEn)
+
+        assertEquals(response.school!!.id, s.school!!)
+        assertEquals(response.school!!.nameKk, school.nameKk)
+        assertEquals(response.school!!.nameRu, school.nameRu)
+        assertEquals(response.school!!.nameEn, school.nameEn)
+
+        assertEquals(response.ent_amount, s.ent_amount.toString())
+        assertEquals(response.ent_certificate_number, s.ent_certificate_number)
+        assertEquals(response.ikt, s.ikt)
+
+        assertEquals(response.faculty!!.id, s.faculty)
+        assertEquals(response.faculty!!.nameKk, faculty.nameKk)
+        assertEquals(response.faculty!!.nameRu, faculty.nameRu)
+        assertEquals(response.faculty!!.nameEn, faculty.nameEn)
+
+
+        assertEquals(response.speciality!!.id, s.speciality)
+        assertEquals(response.speciality!!.nameEn, specialty.nameEn)
+        assertEquals(response.speciality!!.nameKk, specialty.nameKk)
+        assertEquals(response.speciality!!.nameRu, specialty.nameRu)
+
+        assertEquals(response.school_finish, toDate(s.school_finish))
+
+        assertEquals(response.comment, "")
+        assertEquals(response.status, ConclusionStatus.WAITING_FOR_RESPONSE.name)
+
+        assertEquals(response.schoolDiploma, document.school_diploma)
+        assertEquals(response.entCertificate, document.ent_certificate)
     }
 
     @Test

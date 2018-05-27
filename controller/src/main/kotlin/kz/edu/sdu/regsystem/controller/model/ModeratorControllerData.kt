@@ -82,6 +82,7 @@ data class FetchPersonalInfoResponse(
 )
 
 data class FetchEducationInfoResponse (
+    val id: Long = -1,
     val educationArea: AreaData? = null,
     val city: CityData? = null,
     val school: SchoolData? = null,
