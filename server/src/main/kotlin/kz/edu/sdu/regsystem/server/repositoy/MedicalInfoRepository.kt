@@ -50,4 +50,14 @@ class MedicalInfoRepository(val jdbcTemplate: JdbcTemplate) {
 
         return keyHolder.key!!.toLong()
     }
+
+    fun updateStatus(userId: Long, comment: String, status: ConclusionStatus) {
+        val query = "UPDATE MedicalInfo SET comment=?, status=? WHERE user_id=?"
+        jdbcTemplate.update(query,
+            { ps ->
+                ps.setString(1, comment)
+                ps.setString(2, status.name)
+                ps.setLong(3, userId)
+            })
+    }
 }

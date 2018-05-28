@@ -363,6 +363,27 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun testSaveMedicalComment() {
+        clearDb()
+
+        val m = MedicalInfo(
+            comment = "123",
+            userId = user.id
+        )
+
+        m.id = medicalInfoRepository.save(m)
+
+        val saveRequest = EditGeneralInfORequest(comment = "asdfghjkl", status = "INVALID")
+
+        //
+        //
+        moderatorRegisterImpl.saveMedicalComment(user.id, saveRequest)
+        //
+        //
+
+        val dto = medicalInfoRepository.fetchMedicalInfoDocument(user.id)
+        assertNotNull(dto)
+        assertEquals(dto?.comment, saveRequest.comment)
+        assertEquals(dto?.status?.name, saveRequest.status)
     }
 
     @Test
