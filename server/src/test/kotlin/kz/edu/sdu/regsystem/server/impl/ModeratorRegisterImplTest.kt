@@ -387,11 +387,59 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
     }
 
     @Test
-    fun testGetStudentInfo() {
+    fun testEditGeneralInfo() {
+        clearDb()
+
+        val a = SavePersonalInfoRequest(
+            firstName = "Daniyar",
+            middleName = null,
+            lastName = "Qazbek",
+            gender = GenderType.MALE.name,
+            birthDate = fromStrToDate("1997-06-15"),
+            givenDate = fromStrToDate("2000-01-05"),
+            givenPlace = "RK ||",
+            iin = "970211555589",
+            ud_number = "123123123",
+            mobilePhone = "87021112233",
+            telPhone = null,
+            nationality = "kazakh",
+
+            birthPlace = null,
+            birthPlaceCustom = "Pavlodar",
+
+            blood_group = "first+",
+            citizenship = "Kazakhstan",
+
+            factFlat = "12",
+            factFraction = "22",
+            factHouse = "20",
+            factStreet = "Tahibayeva",
+
+            regFlat = null,
+            regFraction = null,
+            regHouse = "50",
+            regStreet = "Abaya"
+        )
+
+        studentRegisterImpl.savePersonalInfo(a, user.id)
+
+        val saveRequest = EditGeneralInfORequest(comment = "asdfghjkl", status = "INVALID")
+
+        //
+        //
+        moderatorRegisterImpl.editGeneralInfo(user.id, saveRequest)
+        //
+        //
+
+        val dto = personalInfoRepository.fetchPersonalInfo(user.id)
+        assertNotNull(dto)
+        assertEquals(dto?.comment, saveRequest.comment)
+        assertEquals(dto?.status?.name, saveRequest.status)
+
     }
 
     @Test
-    fun testEditGeneralInfo() {
+    fun testGetStudentInfo() {
     }
 
     @Test

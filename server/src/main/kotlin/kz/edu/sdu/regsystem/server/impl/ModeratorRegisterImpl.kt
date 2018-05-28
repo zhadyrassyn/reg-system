@@ -157,11 +157,14 @@ class ModeratorRegisterImpl(
         medicalInfoRepository.updateStatus(userId = id, comment = comment, status = status)
     }
 
-    override fun getStudentInfo(id: Long): GetStudentInfoResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun editGeneralInfo(id: Long, request: EditGeneralInfORequest) {
+        val comment = request.comment ?: ""
+        val status = ConclusionStatus.valueOf(request.status)
+
+        personalInfoRepository.updateStatus(userId = id, comment = comment, status = status)
     }
 
-    override fun editGeneralInfo(id: Long, request: EditGeneralInfORequest) {
+    override fun getStudentInfo(id: Long): GetStudentInfoResponse {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
