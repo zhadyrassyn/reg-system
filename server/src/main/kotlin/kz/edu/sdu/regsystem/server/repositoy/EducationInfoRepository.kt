@@ -102,6 +102,16 @@ class EducationInfoRepository(
         return keyHolder.key!!.toLong()
     }
 
+    fun updateStatus(userId: Long, comment: String, status: ConclusionStatus) {
+        val query = "UPDATE EducationInfo SET comment=?, status=? WHERE user_id=?"
+        jdbcTemplate.update(query,
+            { ps ->
+                ps.setString(1, comment)
+                ps.setString(2, status.name)
+                ps.setLong(3, userId)
+            })
+    }
+
     fun update(educationInfo: EducationInfo) {
         val query = "UPDATE EducationInfo SET area_id=?, city_id=?, school_id=?, " +
             "school_finish=?, ent_amount=?, ent_certificate_number=?, ikt=?, " +

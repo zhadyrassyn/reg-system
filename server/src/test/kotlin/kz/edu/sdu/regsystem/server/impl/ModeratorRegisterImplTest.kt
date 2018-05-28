@@ -1,5 +1,6 @@
 package kz.edu.sdu.regsystem.server.impl
 
+import kz.edu.sdu.regsystem.controller.model.EditGeneralInfORequest
 import kz.edu.sdu.regsystem.controller.model.SaveEducationInfoRequestData
 import kz.edu.sdu.regsystem.controller.model.SavePersonalInfoRequest
 import kz.edu.sdu.regsystem.server.domain.*
@@ -302,10 +303,6 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
     }
 
     @Test
-    fun testSaveEducationComment() {
-    }
-
-    @Test
     fun testFetchMedicalInfo() {
         clearDb()
 
@@ -328,6 +325,40 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
         assertEquals(response.form86, document.form86)
         assertEquals(response.form63, document.form63)
         assertEquals(response.flurography, document.flurography)
+    }
+
+    @Test
+    fun testSaveEducationComment() {
+        clearDb()
+
+        val s = SaveEducationInfoRequestData(
+            id = -1,
+            educationArea = area.id,
+            city = city.id,
+            another_cityVillage = null,
+            school = school.id,
+            customSchool = null,
+            ent_amount = 112,
+            ent_certificate_number = "123213",
+            ikt = "2221",
+            faculty = faculty.id,
+            speciality = specialty.id,
+            school_finish = fromStrToDate("2000-01-05")
+        )
+
+        studentRegisterImpl.saveEducationInfo(s, user.id)
+        val saveRequest = EditGeneralInfORequest(comment = "asdfghjkl", status = "VALID")
+
+        //
+        //
+        moderatorRegisterImpl.saveEducationComment(user.id, saveRequest)
+        //
+        //
+
+        val dto = educationInfoRepository.get(user.id)
+        assertNotNull(dto)
+        assertEquals(dto?.comment, saveRequest.comment)
+        assertEquals(dto?.status?.name, saveRequest.status)
     }
 
     @Test

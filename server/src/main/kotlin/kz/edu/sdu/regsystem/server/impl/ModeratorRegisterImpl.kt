@@ -2,7 +2,7 @@ package kz.edu.sdu.regsystem.server.impl
 
 import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
-import kz.edu.sdu.regsystem.server.domain.enums.ExistType
+import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.repositoy.EducationInfoRepository
 import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
@@ -131,7 +131,10 @@ class ModeratorRegisterImpl(
     }
 
     override fun saveEducationComment(id: Long, request: EditGeneralInfORequest) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val comment = request.comment ?: ""
+        val status = ConclusionStatus.valueOf(request.status)
+
+        educationInfoRepository.updateStatus(userId = id, comment = comment, status = status)
     }
 
     override fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse {
