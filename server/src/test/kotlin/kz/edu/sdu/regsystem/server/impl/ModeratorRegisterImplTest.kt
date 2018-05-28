@@ -451,7 +451,84 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
     }
 
     @Test
-    fun testFetchTotalAmountOfStudents() {
+    fun testFetchTotalAmountOfStudentsActivAndFilled() {
+        clearDb()
+
+        val user2 = User(
+            email = "test@gmail.com",
+            password = "123123",
+            regDate = Date(),
+            status = UserStatus.ACTIVE,
+            role = RoleType.USER
+        )
+
+        user2.id = usersRepository.save(user2)
+
+        val a = SavePersonalInfoRequest(
+            firstName = "Daniyar",
+            middleName = null,
+            lastName = "Qazbek",
+            gender = GenderType.MALE.name,
+            birthDate = fromStrToDate("1997-06-15"),
+            givenDate = fromStrToDate("2000-01-05"),
+            givenPlace = "RK ||",
+            iin = "970211555589",
+            ud_number = "123123123",
+            mobilePhone = "87021112233",
+            telPhone = null,
+            nationality = "kazakh",
+
+            birthPlace = null,
+            birthPlaceCustom = "Pavlodar",
+
+            blood_group = "first+",
+            citizenship = "Kazakhstan",
+
+            factFlat = "12",
+            factFraction = "22",
+            factHouse = "20",
+            factStreet = "Tahibayeva",
+
+            regFlat = null,
+            regFraction = null,
+            regHouse = "50",
+            regStreet = "Abaya"
+        )
+
+        studentRegisterImpl.savePersonalInfo(a, user2.id)
+
+        val m = MedicalInfo(
+            comment = "123",
+            userId = user2.id
+        )
+
+        m.id = medicalInfoRepository.save(m)
+
+        val s = SaveEducationInfoRequestData(
+            id = -1,
+            educationArea = area.id,
+            city = city.id,
+            another_cityVillage = null,
+            school = school.id,
+            customSchool = null,
+            ent_amount = 112,
+            ent_certificate_number = "123213",
+            ikt = "2221",
+            faculty = faculty.id,
+            speciality = specialty.id,
+            school_finish = fromStrToDate("2000-01-05")
+        )
+
+        studentRegisterImpl.saveEducationInfo(s, user2.id)
+
+        //
+        //
+        val response = moderatorRegisterImpl.fetchTotalAmountOfStudents("")
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(1, response.total)
     }
 
     @Test

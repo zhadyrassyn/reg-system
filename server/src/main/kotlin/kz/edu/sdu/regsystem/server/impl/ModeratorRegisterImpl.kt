@@ -4,10 +4,7 @@ import kz.edu.sdu.regsystem.controller.model.*
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
-import kz.edu.sdu.regsystem.server.repositoy.EducationInfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.InfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.MedicalInfoRepository
-import kz.edu.sdu.regsystem.server.repositoy.PersonalInfoRepository
+import kz.edu.sdu.regsystem.server.repositoy.*
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,7 +14,8 @@ class ModeratorRegisterImpl(
     val personalInfoRepository: PersonalInfoRepository,
     val educationInfoRepository: EducationInfoRepository,
     val medicalInfoRepository: MedicalInfoRepository,
-    val infoRepository: InfoRepository
+    val infoRepository: InfoRepository,
+    val usersRepository: UsersRepository
 ) : ModeratorRegister{
     override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
         val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id) ?: return FetchPersonalInfoResponse()
@@ -177,11 +175,11 @@ class ModeratorRegisterImpl(
     }
 
     override fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val total = usersRepository.fetchTotal(text)
+        return FetchTotalAmountOfStudentsResponse(total = total)
     }
 
     override fun getStudents(text: String, currentPage: Int, perPage: Int): List<GetStudentsResponse> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

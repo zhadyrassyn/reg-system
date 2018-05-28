@@ -88,4 +88,17 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
             )
         }, id)
     }
+
+    fun fetchTotal(text: String): Int {
+        val query = "SELECT COUNT(*) AS total FROM USERS AS U" +
+            "  INNER JOIN PersonalInfo AS PI ON PI.user_id = U.id" +
+            "  INNER JOIN EducationInfo AS EI ON EI.user_id = U.id" +
+            "  INNER JOIN MedicalInfo AS MI ON MI.user_id = U.id WHERE U.status='ACTIVE'"
+
+        val amount = jdbcTemplate.queryForObject(query, RowMapper { rs, _ ->
+            rs.getString("total")
+        }) ?: throw SQLException("Cannot execute statement $query")
+
+        return amount.toInt()
+    }
 }
