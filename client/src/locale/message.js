@@ -393,5 +393,25 @@ export const message = {
     ru: "Необходимо заполнить",
     en: "Required",
     kk: "Необходимо заполнить"
+  },
+  fill_iin: {
+    ru: "Введите до конца ИИН",
+    en: "Fill IIN properly",
+    kk: "Введите до конца ИИН"
+  },
+  length_msisdn: {
+    ru: "Введите телефон до конца",
+    en: "Fill phone properly",
+    kk: "Введите телефон до конца"
+  },
+  length9: {
+    ru: 'Длина должна быть 9',
+    en: 'Length must be 9',
+    kk: 'Длина должна быть 9'
+  },
+  max3: {
+    ru: 'Длина не должна превышать 3',
+    en: 'Length must be no more than 3',
+    kk: 'Длина не должна превышать 3'
   }
 }

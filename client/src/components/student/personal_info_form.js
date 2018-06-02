@@ -29,6 +29,15 @@ import {message} from "../../locale/message"
 
 //validations
 const required = value => (value ? undefined : 'required')
+const Length = num => value =>
+  value && value.length !== num ? 'length9' : undefined
+const Length9 = Length(9)
+
+const Max = num => value =>
+  value && value.length > num ? 'max3' : undefined
+const Max3 = Max(3)
+
+
 
 class PersonalInfoForm extends Component {
   constructor(props) {
@@ -238,10 +247,10 @@ class PersonalInfoForm extends Component {
 
   onSubmit(values) {
     console.log('values ', values)
-    values.iin = values.iin.replace(/[()-/+ ]/g, "")
-    values.mobilePhone = values.mobilePhone.replace(/[()-/+ ]/g, "")
+    values.iin = values.iin.replace(/[()-/+_ ]/g, "")
+    values.mobilePhone = values.mobilePhone.replace(/[()-/+_ ]/g, "")
     if(values.telPhone) {
-      values.telPhone = values.telPhone.replace(/[()-/+ ]/g, "")
+      values.telPhone = values.telPhone.replace(/[()-/+_ ]/g, "")
     }
 
     const {saveStudentPersonalInfo, personalInfoDocuments, lang} = this.props
@@ -431,7 +440,7 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.ud_number[lang]}
               component={this.renderField}
-              validate={required}
+              validate={[required, Length9]}
               accessType={accessType}
               lang={lang}
             />
@@ -521,7 +530,7 @@ class PersonalInfoForm extends Component {
               id="regHouse"
               type="text"
               component={this.renderField}
-              validate={required}
+              validate={[required, Max3]}
               accessType={accessType}
               placeholder={message.house[lang]}
               lang={lang}
@@ -532,7 +541,7 @@ class PersonalInfoForm extends Component {
               id="regFraction"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={Max3}
               accessType={accessType}
               placeholder={message.fraction[lang]}
               lang={lang}
@@ -543,7 +552,7 @@ class PersonalInfoForm extends Component {
               id="regFlat"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={Max3}
               accessType={accessType}
               placeholder={message.flat[lang]}
               lang={lang}
@@ -568,7 +577,7 @@ class PersonalInfoForm extends Component {
               id="factHouse"
               type="text"
               component={this.renderField}
-              validate={required}
+              validate={[required, Max3]}
               accessType={accessType}
               placeholder={message.house[lang]}
               lang={lang}
@@ -579,7 +588,7 @@ class PersonalInfoForm extends Component {
               id="factFraction"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={Max3}
               accessType={accessType}
               placeholder={message.fraction[lang]}
               lang={lang}
@@ -590,7 +599,7 @@ class PersonalInfoForm extends Component {
               id="factFlat"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={Max3}
               accessType={accessType}
               placeholder={message.flat[lang]}
               lang={lang}
@@ -668,6 +677,18 @@ class PersonalInfoForm extends Component {
 
 const validate = (values) => {
   const errors = {}
+
+  if(values.iin && values.iin.replace(/[()-/+_ ]/g, "").length < 12) {
+    errors.iin = "fill_iin"
+  }
+
+  if(values.telPhone && values.telPhone.replace(/[()-/+_ ]/g, "").length < 11) {
+    errors.telPhone = "length_msisdn"
+  }
+
+  if(values.mobilePhone && values.mobilePhone.replace(/[()-/+_ ]/g, "").length < 11) {
+    errors.mobilePhone = "length_msisdn"
+  }
 
   if (!values.birthPlace && !values.birthPlaceCustom) {
     errors.birthPlace = "required"
