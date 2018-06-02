@@ -28,7 +28,7 @@ import {
 import {message} from "../../locale/message"
 
 //validations
-const required = value => (value ? undefined : 'Required')
+const required = value => (value ? undefined : 'required')
 
 class PersonalInfoForm extends Component {
   constructor(props) {
@@ -64,6 +64,7 @@ class PersonalInfoForm extends Component {
   renderField(field) {
     const {meta: {touched, error, warning}, useInputMask} = field;
     let disabled = field.accessType === ACCESS_TYPE_EDIT
+    const lang = field.lang
 
     return (
       <div className="col">
@@ -77,7 +78,7 @@ class PersonalInfoForm extends Component {
         <InputMask mask={field.inputMask} maskChar="_" className="form-control" name={field.name} disabled={disabled}
                    id={field.id} {...field.input}/>
         }
-        {touched && error && <span>{error}</span>}
+        {touched && error && <span className="text-danger">{message[error][lang]}</span>}
       </div>
     )
   }
@@ -85,6 +86,7 @@ class PersonalInfoForm extends Component {
   renderRadioButtons(field) {
     const {meta: {touched, error, warning}, options} = field
     let disabled = field.accessType === ACCESS_TYPE_EDIT
+    const lang = field.lang
 
     return (
       <div className="col">
@@ -97,7 +99,7 @@ class PersonalInfoForm extends Component {
           </div>
         ))}
 
-        {touched && error && <span className="d-block">{error}</span>}
+        {touched && error && <span className="d-block text-danger">{message[error][lang]}</span>}
       </div>
     )
   }
@@ -105,6 +107,7 @@ class PersonalInfoForm extends Component {
   renderSelect(field) {
     const {meta: {touched, error, warning}, options} = field
     let disabled = field.accessType === ACCESS_TYPE_EDIT
+    const lang = field.lang
 
     return (
       <div className="col">
@@ -115,7 +118,7 @@ class PersonalInfoForm extends Component {
             <option value={options[key].value} key={key}>{options[key].label}</option>
           ))}
         </select>
-        {touched && error && <span className="d-block">{error}</span>}
+        {touched && error && <span className="d-block text-danger">{message[error][lang]}</span>}
       </div>
     )
   }
@@ -234,6 +237,11 @@ class PersonalInfoForm extends Component {
   }
 
   onSubmit(values) {
+    console.log('values ', values)
+    values.iin = values.iin.replace(/[()-/+ ]/g, "")
+    values.mobilePhone = values.mobilePhone.replace(/[()-/+ ]/g, "")
+    values.telPhone = values.telPhone.replace(/[()-/+ ]/g, "")
+
     const {saveStudentPersonalInfo, personalInfoDocuments, lang} = this.props
 
     this.setState({showDocumentErrors: true}, () => {
@@ -297,8 +305,9 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.first_name[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.patronymic[lang]}
@@ -308,6 +317,7 @@ class PersonalInfoForm extends Component {
               placeholder={message.patronymic[lang]}
               component={this.renderField}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.last_name[lang]}
@@ -316,8 +326,9 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.last_name[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
           </div>
           <div className="form-row mt-3">
@@ -327,8 +338,9 @@ class PersonalInfoForm extends Component {
               id="birthDate"
               type="date"
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
 
             <Field
@@ -336,21 +348,22 @@ class PersonalInfoForm extends Component {
               name="gender"
               options={{
                 option1: {
-                  name: 'man',
+                  name: 'MALE',
                   label: message.gender_man[lang]
                 },
                 option2: {
-                  name: 'woman',
+                  name: 'FEMALE',
                   label: message.gender_woman[lang]
                 },
                 option3: {
-                  name: 'another',
+                  name: 'ANOTHER',
                   label: message.gender_another[lang]
                 }
               }}
               component={this.renderRadioButtons}
               accessType={accessType}
-              // validate={required}
+              validate={required}
+              lang={lang}
             />
 
             <Field
@@ -392,7 +405,7 @@ class PersonalInfoForm extends Component {
               }}
               component={this.renderSelect}
               accessType={accessType}
-              // validate={required}
+              lang={lang}
             />
           </div>
           <div className="form-row mt-3">
@@ -403,10 +416,11 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.iin[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
               inputMask="99 99 99 99 99 99"
               useInputMask="true"
+              lang={lang}
             />
             <Field
               label={message.ud_number[lang]}
@@ -415,8 +429,9 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.ud_number[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.nationality[lang]}
@@ -425,8 +440,9 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.nationality[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.citizenship[lang]}
@@ -435,8 +451,9 @@ class PersonalInfoForm extends Component {
               type="text"
               placeholder={message.citizenship[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
           </div>
           <div className="form-row mt-3">
@@ -445,9 +462,10 @@ class PersonalInfoForm extends Component {
               id="birthPlace"
               name="birthPlace"
               options={areas}
-              lang={lang}
               component={this.renderSelect}
               accessType={accessType}
+              //validate func
+              lang={lang}
             />
             <Field
               label={message.birthPlaceCustom[lang]}
@@ -457,6 +475,8 @@ class PersonalInfoForm extends Component {
               component={this.renderField}
               placeholder={message.birthPlaceCustom[lang]}
               accessType={accessType}
+              //validate func
+              lang={lang}
             />
             <Field
               label={message.givenPlace[lang]}
@@ -466,6 +486,8 @@ class PersonalInfoForm extends Component {
               component={this.renderField}
               placeholder={message.givenPlace[lang]}
               accessType={accessType}
+              validate={required}
+              lang={lang}
             />
             <Field
               label={message.givenDate[lang]}
@@ -473,8 +495,9 @@ class PersonalInfoForm extends Component {
               id="givenDate"
               type="date"
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
           </div>
           <div className="form-row mt-3">
@@ -485,9 +508,10 @@ class PersonalInfoForm extends Component {
               id="regStreet"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
               placeholder={message.street[lang]}
+              lang={lang}
             />
             <Field
               label={message.house[lang]}
@@ -495,9 +519,10 @@ class PersonalInfoForm extends Component {
               id="regHouse"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
               placeholder={message.house[lang]}
+              lang={lang}
             />
             <Field
               label={message.fraction[lang]}
@@ -508,6 +533,7 @@ class PersonalInfoForm extends Component {
               // validate={required}
               accessType={accessType}
               placeholder={message.fraction[lang]}
+              lang={lang}
             />
             <Field
               label={message.flat[lang]}
@@ -518,6 +544,7 @@ class PersonalInfoForm extends Component {
               // validate={required}
               accessType={accessType}
               placeholder={message.flat[lang]}
+              lang={lang}
             />
           </div>
           <div className="form-row mt-3">
@@ -528,9 +555,10 @@ class PersonalInfoForm extends Component {
               id="factStreet"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
               placeholder={message.street[lang]}
+              lang={lang}
             />
             <Field
               label={message.house[lang]}
@@ -538,9 +566,10 @@ class PersonalInfoForm extends Component {
               id="factHouse"
               type="text"
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
               placeholder={message.house[lang]}
+              lang={lang}
             />
             <Field
               label={message.fraction[lang]}
@@ -551,6 +580,7 @@ class PersonalInfoForm extends Component {
               // validate={required}
               accessType={accessType}
               placeholder={message.fraction[lang]}
+              lang={lang}
             />
             <Field
               label={message.flat[lang]}
@@ -561,6 +591,7 @@ class PersonalInfoForm extends Component {
               // validate={required}
               accessType={accessType}
               placeholder={message.flat[lang]}
+              lang={lang}
             />
           </div>
           <div className="form-row mt-3">
@@ -574,6 +605,7 @@ class PersonalInfoForm extends Component {
               accessType={accessType}
               useInputMask="true"
               inputMask="+7(999) 999 99 99"
+              lang={lang}
             />
             <Field
               label={message.mobile_phone[lang]}
@@ -584,6 +616,8 @@ class PersonalInfoForm extends Component {
               accessType={accessType}
               useInputMask="true"
               inputMask="+7(999) 999 99 99"
+              lang={lang}
+              validate={required}
             />
             <div className="col"/>
           </div>
@@ -630,9 +664,18 @@ class PersonalInfoForm extends Component {
   }
 }
 
+const validate = (values) => {
+  const errors = {}
+
+  if (!values.birthPlace && !values.birthPlaceCustom) {
+    errors.birthPlace = "required"
+  }
+  return errors
+}
+
 PersonalInfoForm = reduxForm({
   form: 'GeneralInfo',
-  // validate,
+  validate,
   enableReinitialize: true,
 })(PersonalInfoForm)
 

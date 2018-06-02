@@ -68,9 +68,9 @@ data class GetPersonalInfoResponse(
     val regHouse: String? = null,
     val regStreet: String? = null,
 
-    val ud_front: String? = "",
-    val ud_back: String? = "",
-    val photo3x4: String? = "",
+    var ud_front: String? = "",
+    var ud_back: String? = "",
+    var photo3x4: String? = "",
 
     val comment: String? = "",
     val status: String = ""

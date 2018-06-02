@@ -49,54 +49,65 @@ class StudentRegisterImpl(
     }
 
     override fun getPersonalInfo(id: Long): GetPersonalInfoResponse? {
-        val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id)
+        val document = documentRepository.get(id)
+        val personalInfo = personalInfoRepository.fetchPersonalInfo(id)
+//        val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id)
 
-        if (personalInfo == null) {
+        if (personalInfo == null && document == null) {
             return GetPersonalInfoResponse()
         }
 
-        val area = infoRepository.fetchArea(personalInfo.birthPlaceId)
+        if(personalInfo != null) {
+            val area = infoRepository.fetchArea(personalInfo.birthPlaceId)
 
-        // if birth place is custom value
-        val birthPlaceCustom: String? =
-            if (area!!.type == ExistType.CUSTOM)
-                area.nameEn
-            else
-                null
+            // if birth place is custom value
+            val birthPlaceCustom: String? =
+                if (area!!.type == ExistType.CUSTOM)
+                    area.nameEn
+                else
+                    null
 
-        return GetPersonalInfoResponse(
-            id = id,
-            firstName = personalInfo.firstName,
-            middleName = personalInfo.middleName,
-            lastName = personalInfo.lastName,
-            gender = personalInfo.gender,
-            birthDate = toDate(personalInfo.birthDate),
-            givenDate = toDate(personalInfo.givenDate),
-            givenPlace = personalInfo.givenPlace,
-            iin = personalInfo.iin,
-            ud_number = personalInfo.ud_number,
-            mobilePhone = personalInfo.mobilePhone,
-            telPhone = personalInfo.telPhone,
-            nationality = personalInfo.nationality,
-            birthPlace = area.id,
-            birthPlaceCustom = birthPlaceCustom,
-            blood_group = personalInfo.blood_group,
-            citizenship = personalInfo.citizenship,
-            factFlat = personalInfo.factFlat,
-            factFraction = personalInfo.factFraction,
-            factHouse = personalInfo.factHouse,
-            factStreet = personalInfo.factStreet,
-            regFlat = personalInfo.regFlat,
-            regFraction = personalInfo.regFraction,
-            regHouse = personalInfo.regHouse,
-            regStreet = personalInfo.regStreet,
-            ud_front = personalInfo.ud_front,
-            ud_back = personalInfo.ud_back,
-            photo3x4 = personalInfo.photo3x4,
+            return GetPersonalInfoResponse(
+                id = id,
+                firstName = personalInfo.firstName,
+                middleName = personalInfo.middleName,
+                lastName = personalInfo.lastName,
+                gender = personalInfo.gender,
+                birthDate = toDate(personalInfo.birthDate),
+                givenDate = toDate(personalInfo.givenDate),
+                givenPlace = personalInfo.givenPlace,
+                iin = personalInfo.iin,
+                ud_number = personalInfo.ud_number,
+                mobilePhone = personalInfo.mobilePhone,
+                telPhone = personalInfo.telPhone,
+                nationality = personalInfo.nationality,
+                birthPlace = area.id,
+                birthPlaceCustom = birthPlaceCustom,
+                blood_group = personalInfo.blood_group,
+                citizenship = personalInfo.citizenship,
+                factFlat = personalInfo.factFlat,
+                factFraction = personalInfo.factFraction,
+                factHouse = personalInfo.factHouse,
+                factStreet = personalInfo.factStreet,
+                regFlat = personalInfo.regFlat,
+                regFraction = personalInfo.regFraction,
+                regHouse = personalInfo.regHouse,
+                regStreet = personalInfo.regStreet,
+                ud_front = document?.ud_front,
+                ud_back = document?.ud_back,
+                photo3x4 = document?.photo3x4,
 
-            comment = personalInfo.comment,
-            status = personalInfo.status.name
-        )
+                comment = personalInfo.comment,
+                status = personalInfo.status.name
+            )
+        } else {
+            val response = GetPersonalInfoResponse()
+            response.ud_front = document?.ud_front
+            response.ud_back = document?.ud_back
+            response.photo3x4 = document?.photo3x4
+            return response
+        }
+
     }
 
     fun toDate(birthDate: Date): String {

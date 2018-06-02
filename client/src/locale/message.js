@@ -388,5 +388,10 @@ export const message = {
     ru: "Город/cело",
     en: "City/village",
     kk: "Город/село"
+  },
+  required: {
+    ru: "Необходимо заполнить",
+    en: "Required",
+    kk: "Необходимо заполнить"
   }
 }

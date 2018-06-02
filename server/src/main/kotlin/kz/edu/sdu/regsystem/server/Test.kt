@@ -1,5 +1,6 @@
 package kz.edu.sdu.regsystem.server
 
+import kz.edu.sdu.regsystem.server.utils.Utils
 import java.io.File
 import java.nio.file.Paths
 import java.security.MessageDigest
@@ -20,7 +21,6 @@ fun main(args: Array<String>) {
 //    }
 //    print(sb.toString())
 
-    val file = Paths.get("")
 
-    println("123")
+    println(Utils.encrypt("123123123"))
 }

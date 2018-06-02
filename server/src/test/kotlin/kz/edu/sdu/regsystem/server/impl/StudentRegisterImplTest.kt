@@ -313,7 +313,7 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     @Test
     fun testGetPersonalInfoNotExist() {
         clearDb()
-
+        jdbcTemplate.execute("DELETE FROM DOCUMENT")
         //
         //
         val response = studentRegisterImpl.getPersonalInfo(user.id)
@@ -324,6 +324,23 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         assertEquals(response?.ud_front, "")
         assertEquals(response?.ud_back, "")
         assertEquals(response?.photo3x4, "")
+    }
+
+    @Test
+    fun testDocumentExistButPersonalInfoDoesNotExist() {
+        clearDb()
+
+        //
+        //
+        val response = studentRegisterImpl.getPersonalInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response?.ud_front, document.ud_front)
+        assertEquals(response?.ud_back, document.ud_back)
+        assertEquals(response?.photo3x4, document.photo3x4)
+
     }
 
     @Test
