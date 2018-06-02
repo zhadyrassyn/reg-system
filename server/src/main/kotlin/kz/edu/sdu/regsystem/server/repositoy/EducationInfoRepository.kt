@@ -94,7 +94,7 @@ class EducationInfoRepository(
                 ps.setLong(counter++, educationInfo.facultyId)
                 ps.setLong(counter++, educationInfo.specialtyId)
                 ps.setString(counter++, educationInfo.comment)
-                ps.setString(counter++, educationInfo.status.name)
+                ps.setString(counter++, ConclusionStatus.WAITING_FOR_RESPONSE.name)
                 ps.setLong(counter, educationInfo.userId)
                 ps
             }, keyHolder)
@@ -109,6 +109,15 @@ class EducationInfoRepository(
                 ps.setString(1, comment)
                 ps.setString(2, status.name)
                 ps.setLong(3, userId)
+            })
+    }
+
+    fun updateStatus(userId: Long) {
+        val query = "UPDATE EducationInfo SET status=? WHERE user_id=?"
+        jdbcTemplate.update(query,
+            { ps ->
+                ps.setString(1, ConclusionStatus.WAITING_FOR_RESPONSE.name)
+                ps.setLong(2, userId)
             })
     }
 
@@ -131,7 +140,7 @@ class EducationInfoRepository(
                 ps.setLong(counter++, educationInfo.facultyId)
                 ps.setLong(counter++, educationInfo.specialtyId)
                 ps.setString(counter++, educationInfo.comment)
-                ps.setString(counter++, educationInfo.status.name)
+                ps.setString(counter++, ConclusionStatus.WAITING_FOR_RESPONSE.name)
                 ps.setLong(counter++, educationInfo.userId)
                 ps.setLong(counter, educationInfo.id)
             })

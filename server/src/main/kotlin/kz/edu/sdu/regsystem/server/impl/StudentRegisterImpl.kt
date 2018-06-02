@@ -127,6 +127,8 @@ class StudentRegisterImpl(
             documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
         }
 
+        personalInfoRepository.updateStatus(id)
+
         return Document(name = savedFileName)
     }
 
@@ -273,6 +275,8 @@ class StudentRegisterImpl(
             documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
         }
 
+        educationInfoRepository.updateStatus(id)
+
         return Document(name = savedFileName)
     }
 
@@ -289,6 +293,8 @@ class StudentRegisterImpl(
         } else {
             documentRepository.update(documentId = documentDto.id, fileName = savedFileName, documentType = documentType)
         }
+
+        medicalInfoRepository.updateStatus(id)
 
         return Document(name = savedFileName)
     }

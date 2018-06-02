@@ -211,4 +211,13 @@ class PersonalInfoRepository(val jdbcTemplate: JdbcTemplate) {
                 ps.setLong(3, userId)
             })
     }
+
+    fun updateStatus(userId: Long) {
+        val query = "UPDATE PersonalInfo SET status=? WHERE user_id=?"
+        jdbcTemplate.update(query,
+            { ps ->
+                ps.setString(1, ConclusionStatus.WAITING_FOR_RESPONSE.name)
+                ps.setLong(2, userId)
+            })
+    }
 }

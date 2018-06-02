@@ -43,7 +43,7 @@ class MedicalInfoRepository(val jdbcTemplate: JdbcTemplate) {
                 var counter = 1
                 val ps = connection.prepareStatement(query, arrayOf("id"))
                 ps.setString(counter++, medicalInfo.comment)
-                ps.setString(counter++, medicalInfo.status.name)
+                ps.setString(counter++, ConclusionStatus.WAITING_FOR_RESPONSE.name)
                 ps.setLong(counter, medicalInfo.userId)
                 ps
             }, keyHolder)
@@ -58,6 +58,15 @@ class MedicalInfoRepository(val jdbcTemplate: JdbcTemplate) {
                 ps.setString(1, comment)
                 ps.setString(2, status.name)
                 ps.setLong(3, userId)
+            })
+    }
+
+    fun updateStatus(userId: Long) {
+        val query = "UPDATE MedicalInfo SET status=? WHERE user_id=?"
+        jdbcTemplate.update(query,
+            { ps ->
+                ps.setString(1, ConclusionStatus.WAITING_FOR_RESPONSE.name)
+                ps.setLong(2, userId)
             })
     }
 }
