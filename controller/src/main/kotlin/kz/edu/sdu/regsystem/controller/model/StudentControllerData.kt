@@ -113,14 +113,14 @@ data class GetEducationInfoResponseData(
     val comment: String? = "",
     val status: String = "",
 
-    val schoolDiploma: String? = "",
-    val entCertificate: String? = ""
+    var schoolDiploma: String? = "",
+    var entCertificate: String? = ""
 )
 
 data class GetMedicalInfoResponseData(
     val comment: String? = "",
     val status: String = "",
-    val form63: String? = "",
-    val form86: String? = "",
-    val flurography: String? = ""
+    var form63: String? = "",
+    var form86: String? = "",
+    var flurography: String? = ""
 )

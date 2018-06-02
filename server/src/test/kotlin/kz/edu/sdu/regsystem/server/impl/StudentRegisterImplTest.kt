@@ -497,6 +497,21 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     }
 
     @Test
+    fun testGetEducationInfoDocumentsWithoutEducationInfo() {
+        clearDb()
+
+        //
+        //
+        val response = studentRegisterImpl.getEducationInfo(user.id)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(response.entCertificate, document.ent_certificate)
+        assertEquals(response.schoolDiploma, document.school_diploma)
+    }
+
+    @Test
     fun testUpdateEducationInfo() {
         clearDb()
 

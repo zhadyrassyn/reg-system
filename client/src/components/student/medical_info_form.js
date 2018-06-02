@@ -143,6 +143,7 @@ class MedicalInfoForm extends Component {
   render() {
     const {lang, medicalInfoDocuments} = this.props
     const {isForm86Saving, isForm63Saving, isFlurographySaving} = this.state
+    console.log('medicalInfoDocuments ', medicalInfoDocuments)
 
     const textAreaClassName="form-control disabled " + (medicalInfoDocuments.status === "VALID" ? " btn-outline-success" : medicalInfoDocuments.status === "INVALID" ?
       "btn-outline-danger" : "")

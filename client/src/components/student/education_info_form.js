@@ -28,6 +28,9 @@ import {
   saveEducationDocument
 } from "../../actions"
 
+//validations
+const required = value => (value ? undefined : 'required')
+
 class EducationInfoForm extends Component {
 
   constructor(props) {
@@ -70,6 +73,7 @@ class EducationInfoForm extends Component {
   renderField(field) {
     const {meta: {touched, error, warning}} = field;
     let disabled = field.accessType === ACCESS_TYPE_EDIT
+    const lang = field.lang
 
     return (
       <div className="col">
@@ -77,13 +81,14 @@ class EducationInfoForm extends Component {
         <input type={field.type} className="form-control" name={field.name} placeholder={field.placeholder}
                id={field.id} disabled={disabled} {...field.input}/>
 
-        {touched && error && <span>{error}</span>}
+        {touched && error && <span className="text-danger">{message[error][lang]}</span>}
       </div>
     )
   }
 
   renderSelect(field) {
     const {meta: {touched, error, warning}} = field;
+    const lang = field.lang
 
     const disabled = field.accessType === ACCESS_TYPE_EDIT
 
@@ -92,7 +97,7 @@ class EducationInfoForm extends Component {
         <label htmlFor={field.id}>{field.label}</label>
         <MySelectComponent options={field.options} placeholder={field.placeholder}
                            disabled={disabled} {...field.input}/>
-        {touched && error && <span>{error}</span>}
+        {touched && error && <span className="text-danger">{message[error][lang]}</span>}
       </div>
     )
   }
@@ -146,16 +151,20 @@ class EducationInfoForm extends Component {
 
     const saveData = {
       ...values,
-      city: values.city.id || null,
-      educationArea: values.educationArea.id || null,
-      school: values.school.id || null,
-      faculty: values.faculty.id || null,
-      speciality: values.speciality.id || null
+      city: (values.city && values.city.id) || null,
+      educationArea: (values.educationArea && values.educationArea.id) || null,
+      school: (values.school && values.school.id) || null,
+      faculty: (values.faculty && values.faculty.id) || null,
+      speciality: (values.speciality && values.speciality.id) || null
     }
 
+    console.log('savedData ', saveData)
+
     this.setState({showDocumentErrors: true}, () => {
-      if (educationInfoDocuments.schoolDiploma && educationInfoDocuments.entCertificate) {
+      if (educationInfoDocuments.schoolDiploma && educationInfoDocuments.schoolDiploma !== ""
+         && educationInfoDocuments.entCertificate && educationInfoDocuments.entCertificate !== "") {
         this.setState({isSaving: true}, () => {
+
           saveStudentEducationInfo(saveData,
             () => {
               this.setState({isSaving: false, accessType: ACCESS_TYPE_EDIT})
@@ -322,6 +331,9 @@ class EducationInfoForm extends Component {
       educationInfo.speciality = this.refactorDefaultOption(educationInfo.speciality, lang)
     }
 
+    console.log('educationInfo ', this.props.educationInfo)
+    console.log('educationInfo docs', this.props.educationInfoDocuments)
+
     const textAreaClassName="form-control disabled " + (educationInfo.status === "VALID" ? " btn-outline-success" : educationInfo.status === "INVALID" ?
       "btn-outline-danger" : "")
     return (
@@ -335,9 +347,10 @@ class EducationInfoForm extends Component {
               options={areas}
               component={this.renderSelect}
               onChange={this.handleAreaChange}
-              // validate={required}
+              validate={required}
               placeholder={message.area[lang]}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.city_village[lang]}
@@ -346,9 +359,10 @@ class EducationInfoForm extends Component {
               options={cities}
               component={this.renderSelect}
               onChange={this.handleCityChange}
-              // validate={required}
               placeholder={message.city_village[lang]}
               accessType={accessType}
+              //validate func
+              lang={lang}
             />
 
             <Field
@@ -358,8 +372,9 @@ class EducationInfoForm extends Component {
               type="text"
               placeholder={message.another_cityVillage[lang]}
               component={this.renderField}
-              // validate={required}
+              // validate func
               accessType={accessType}
+              lang={lang}
             />
           </div>
 
@@ -370,9 +385,10 @@ class EducationInfoForm extends Component {
               id="school"
               options={schools}
               component={this.renderSelect}
-              // validate={required}
+              // validate func
               placeholder={message.school[lang]}
               accessType={accessType}
+              lang={lang}
             />
 
             <Field
@@ -382,8 +398,9 @@ class EducationInfoForm extends Component {
               type="text"
               placeholder={message.customSchool[lang]}
               component={this.renderField}
-              // validate={required}
+              // validate func
               accessType={accessType}
+              lang={lang}
             />
 
             <Field
@@ -393,8 +410,9 @@ class EducationInfoForm extends Component {
               type="date"
               placeholder={message.school_finish[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
           </div>
 
@@ -406,8 +424,9 @@ class EducationInfoForm extends Component {
               type="text"
               placeholder={message.ent_certificate_number[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.ent_amount[lang]}
@@ -416,8 +435,9 @@ class EducationInfoForm extends Component {
               type="text"
               placeholder={message.ent_amount[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
             <Field
               label={message.ikt[lang]}
@@ -426,8 +446,9 @@ class EducationInfoForm extends Component {
               type="text"
               placeholder={message.ikt[lang]}
               component={this.renderField}
-              // validate={required}
+              validate={required}
               accessType={accessType}
+              lang={lang}
             />
           </div>
 
@@ -439,9 +460,10 @@ class EducationInfoForm extends Component {
               options={faculties}
               component={this.renderSelect}
               onChange={this.handleFacultyChange}
-              // validate={required}
+              validate={required}
               placeholder={message.choose_faculty[lang]}
               accessType={accessType}
+              lang={lang}
             />
 
             <Field
@@ -450,9 +472,10 @@ class EducationInfoForm extends Component {
               id="speciality"
               options={specialities}
               component={this.renderSelect}
-              // validate={required}
+              validate={required}
               placeholder={message.choose_speciality[lang]}
               accessType={accessType}
+              lang={lang}
             />
           </div>
 
@@ -501,9 +524,13 @@ class EducationInfoForm extends Component {
 const validate = (values) => {
   const errors = {}
 
-  // if (!values.school && !values.customSchool) {
-  //   errors.school = "Required"
-  // }
+  if (!values.city && !values.another_cityVillage) {
+    errors.city = "required"
+  }
+
+  if (!values.customSchool && !values.school) {
+    errors.school = "required"
+  }
   return errors
 }
 

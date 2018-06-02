@@ -240,7 +240,9 @@ class PersonalInfoForm extends Component {
     console.log('values ', values)
     values.iin = values.iin.replace(/[()-/+ ]/g, "")
     values.mobilePhone = values.mobilePhone.replace(/[()-/+ ]/g, "")
-    values.telPhone = values.telPhone.replace(/[()-/+ ]/g, "")
+    if(values.telPhone) {
+      values.telPhone = values.telPhone.replace(/[()-/+ ]/g, "")
+    }
 
     const {saveStudentPersonalInfo, personalInfoDocuments, lang} = this.props
 

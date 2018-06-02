@@ -181,72 +181,84 @@ class StudentRegisterImpl(
     }
 
     override fun getEducationInfo(id: Long): GetEducationInfoResponseData {
-        val educationInfo = educationInfoRepository.fetchEducationInfoDocument(id) ?: return GetEducationInfoResponseData()
+        val document = documentRepository.get(id)
+        val educationInfo = educationInfoRepository.get(id)
 
-        val area = infoRepository.fetchArea(educationInfo.areaId)
-            ?: throw BadRequestException("Cannot find area with id ${educationInfo.areaId}")
+        if (document == null && educationInfo == null) {
+            return GetEducationInfoResponseData()
+        } else if(educationInfo != null) {
+            val area = infoRepository.fetchArea(educationInfo.areaId)
+                ?: throw BadRequestException("Cannot find area with id ${educationInfo.areaId}")
 
-        val city = infoRepository.fetchCity(educationInfo.cityId)
-            ?: throw BadRequestException("Cannot find city with id ${educationInfo.cityId}")
+            val city = infoRepository.fetchCity(educationInfo.cityId)
+                ?: throw BadRequestException("Cannot find city with id ${educationInfo.cityId}")
 
-        val school = infoRepository.fetchSchool(educationInfo.schoolId)
-            ?: throw BadRequestException("Cannot find school with id ${educationInfo.schoolId}")
+            val school = infoRepository.fetchSchool(educationInfo.schoolId)
+                ?: throw BadRequestException("Cannot find school with id ${educationInfo.schoolId}")
 
-        val faculty = infoRepository.fetchFaculty(educationInfo.facultyId)
-            ?: throw BadRequestException("Cannot find faculty with id ${educationInfo.facultyId}")
+            val faculty = infoRepository.fetchFaculty(educationInfo.facultyId)
+                ?: throw BadRequestException("Cannot find faculty with id ${educationInfo.facultyId}")
 
-        val specialty = infoRepository.fetchSpecialty(educationInfo.specialtyId)
-            ?: throw BadRequestException("Cannot find specialty with id ${educationInfo.specialtyId}")
+            val specialty = infoRepository.fetchSpecialty(educationInfo.specialtyId)
+                ?: throw BadRequestException("Cannot find specialty with id ${educationInfo.specialtyId}")
 
-        return GetEducationInfoResponseData(
-            id = educationInfo.id,
-            educationArea = AreaData(
-                id = area.id,
-                nameRu = area.nameRu,
-                nameKk = area.nameKk,
-                nameEn = area.nameEn
-            ),
-            city = if (city.type !== ExistType.CUSTOM)
-                CityData(
-                    id = city.id,
-                    nameEn = city.nameEn,
-                    nameRu = city.nameRu,
-                    nameKk = city.nameKk
-                )
-            else
-                null,
-            another_cityVillage = if (city.type == ExistType.CUSTOM) city.nameEn else null,
-            school = if (school.type != ExistType.CUSTOM)
-                SchoolData(
-                    id = school.id,
-                    nameEn = school.nameEn,
-                    nameKk = school.nameKk,
-                    nameRu = school.nameRu
-                )
-            else
-                null,
-            customSchool = if (school.type == ExistType.CUSTOM) school.nameEn else null,
-            ent_amount = educationInfo.entAmount.toLong(),
-            ent_certificate_number = educationInfo.entCertificateNumber,
-            ikt = educationInfo.ikt,
-            faculty = GetFacultiesResponseData(
-                id = faculty.id,
-                nameRu = faculty.nameRu,
-                nameKk = faculty.nameKk,
-                nameEn = faculty.nameEn
-            ),
-            speciality = GetSpecialtyResponseData(
-                id = specialty.id,
-                nameRu = specialty.nameRu,
-                nameEn = specialty.nameEn,
-                nameKk = specialty.nameKk
-            ),
-            school_finish = toDate(educationInfo.schoolFinish),
-            schoolDiploma = educationInfo.school_diploma,
-            entCertificate = educationInfo.ent_certificate,
-            comment = educationInfo.comment,
-            status = educationInfo.status.name
-        )
+            return GetEducationInfoResponseData(
+                id = educationInfo.id,
+                educationArea = AreaData(
+                    id = area.id,
+                    nameRu = area.nameRu,
+                    nameKk = area.nameKk,
+                    nameEn = area.nameEn
+                ),
+                city = if (city.type !== ExistType.CUSTOM)
+                    CityData(
+                        id = city.id,
+                        nameEn = city.nameEn,
+                        nameRu = city.nameRu,
+                        nameKk = city.nameKk
+                    )
+                else
+                    null,
+                another_cityVillage = if (city.type == ExistType.CUSTOM) city.nameEn else null,
+                school = if (school.type != ExistType.CUSTOM)
+                    SchoolData(
+                        id = school.id,
+                        nameEn = school.nameEn,
+                        nameKk = school.nameKk,
+                        nameRu = school.nameRu
+                    )
+                else
+                    null,
+                customSchool = if (school.type == ExistType.CUSTOM) school.nameEn else null,
+                ent_amount = educationInfo.entAmount.toLong(),
+                ent_certificate_number = educationInfo.entCertificateNumber,
+                ikt = educationInfo.ikt,
+                faculty = GetFacultiesResponseData(
+                    id = faculty.id,
+                    nameRu = faculty.nameRu,
+                    nameKk = faculty.nameKk,
+                    nameEn = faculty.nameEn
+                ),
+                speciality = GetSpecialtyResponseData(
+                    id = specialty.id,
+                    nameRu = specialty.nameRu,
+                    nameEn = specialty.nameEn,
+                    nameKk = specialty.nameKk
+                ),
+                school_finish = toDate(educationInfo.schoolFinish),
+                schoolDiploma = document?.school_diploma,
+                entCertificate = document?.ent_certificate,
+                comment = educationInfo.comment,
+                status = educationInfo.status.name
+            )
+
+        } else {
+            val response = GetEducationInfoResponseData()
+            response.entCertificate = document?.ent_certificate
+            response.schoolDiploma = document?.school_diploma
+            return response
+        }
+
     }
 
     override fun saveEducationInfoDocument(id: Long, file: MultipartFile, documentType: DocumentType): Document {
@@ -278,15 +290,26 @@ class StudentRegisterImpl(
     }
 
     override fun getMedicalInfo(id: Long): GetMedicalInfoResponseData {
-        val medicalInfo = medicalInfoRepository.fetchMedicalInfoDocument(id) ?: return GetMedicalInfoResponseData()
+        val document = documentRepository.get(id)
 
-        return GetMedicalInfoResponseData(
-            comment = medicalInfo.comment,
-            status = medicalInfo.status.name,
-            form63 = medicalInfo.form63,
-            form86 = medicalInfo.form86,
-            flurography = medicalInfo.flurography
-        )
+        val medicalInfo = medicalInfoRepository.fetchMedicalInfoDocument(id)
+        if(medicalInfo == null && document == null) {
+            return GetMedicalInfoResponseData()
+        } else if(medicalInfo != null) {
+            return GetMedicalInfoResponseData(
+                comment = medicalInfo.comment,
+                status = medicalInfo.status.name,
+                form63 = medicalInfo.form63,
+                form86 = medicalInfo.form86,
+                flurography = medicalInfo.flurography
+            )
+        } else {
+            val response = GetMedicalInfoResponseData()
+            response.form86 = document?.form86
+            response.form63 = document?.form63
+            response.flurography = document?.flurography
+            return response
+        }
     }
 
 }
