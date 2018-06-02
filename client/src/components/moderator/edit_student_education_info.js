@@ -95,7 +95,7 @@ class EditStudentEducationInfo extends Component {
           {!entCertificate && <p className="text-danger">{message.ent_certificate[lang]} {message.not_send[lang]}</p>}
           {entCertificate && <img src={`http://localhost:8081/api/upload/${entCertificate}`} className="img-fluid" alt="Responsive image"/>}
         </div>
-        <div className="col-md-12">
+        <div className="col-md-12 mt-3">
           <textarea onChange={this.onTextAreaChange} className="form-control" value={commentState}></textarea>
           <div className="mt-3">
             <button className={acceptBtnClass} onClick={this.saveComment.bind(this, "VALID")}>SAVE AS VALID</button>

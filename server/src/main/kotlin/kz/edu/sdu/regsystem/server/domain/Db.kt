@@ -104,9 +104,9 @@ data class Document(
     val photo3x4: String?,
     val school_diploma: String?,
     val ent_certificate: String?,
-    val form86: String?,
-    val form63: String?,
-    val flurography: String?,
+    var form86: String?,
+    var form63: String?,
+    var flurography: String?,
     val userId: Long
 )
 
@@ -196,9 +196,9 @@ data class MedicalInfoDocument(
     val status: ConclusionStatus = ConclusionStatus.WAITING_FOR_RESPONSE,
     val userId: Long,
 
-    val form86: String,
-    val form63: String,
-    val flurography: String
+    val form86: String?,
+    val form63: String?,
+    val flurography: String?
 )
 
 data class MedicalInfo(

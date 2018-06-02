@@ -1,7 +1,11 @@
 import React, { Component } from "react"
 
+import {message} from "../../locale/message"
+
 class TableHeader extends Component {
   render() {
+    const {lang} = this.props
+
     return (
       <section className="table-header py-4 mb-4">
         <div className="container">
@@ -10,22 +14,22 @@ class TableHeader extends Component {
               <p>#</p>
             </div>
             <div className="col-lg-2 mb-1 mb-lg-0">
-              <p>First name</p>
+              <p className="text-center">{message.first_name[lang]}</p>
             </div>
             <div className="col-lg-2 mb-1 mb-lg-0">
-              <p>Middle name</p>
+              <p className="text-center">{message.patronymic[lang]}</p>
             </div>
             <div className="col-lg-2 mb-1 mb-lg-0">
-              <p>Last name</p>
+              <p className="text-center">{message.last_name[lang]}</p>
+            </div>
+            <div className="col-lg-2 mb-1 mb-lg-0">
+              <p className="text-center">{message.iin[lang]}</p>
             </div>
             <div className="col-lg-1 mb-1 mb-lg-0">
-              <p>Date of birth</p>
+              <p className="text-center">{message.gender[lang]}</p>
             </div>
             <div className="col-lg-2 mb-1 mb-lg-0">
-              <p>City</p>
-            </div>
-            <div className="col-lg-2 mb-1 mb-lg-0">
-              <p>School</p>
+              <p className="text-center">{message.status[lang]}</p>
             </div>
           </div>
         </div>

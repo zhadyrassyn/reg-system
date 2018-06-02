@@ -62,25 +62,25 @@ class EditStudentMedicalInfo extends Component {
           {form63 &&
             <div>
               <p>{message.medical_form_63[lang]}</p>
-              <img src={`http://localhost:8081/api/upload/${form63}`} className="img-fluid" alt="Responsive image"/>
+              <a href={`http://localhost:8081/api/upload/${form63}`} target="_blank" className="d-block"><img src={`http://localhost:8081/api/upload/${form63}`} className="img-fluid" alt="Responsive image"/></a>
             </div>
           }
           {!form86 && <p className="text-danger">{message.medical_form_86[lang]} {message.not_send[lang]}</p>}
           {form86 &&
             <div className="mt-5">
               <p>{message.medical_form_86[lang]}</p>
-              <img src={`http://localhost:8081/api/upload/${form86}`} className="img-fluid" alt="Responsive image"/>
+              <a href={`http://localhost:8081/api/upload/${form86}`} target="_blank" className="d-block"><img src={`http://localhost:8081/api/upload/${form86}`} className="img-fluid" alt="Responsive image"/></a>
             </div>
           }
           {!flurography && <p className="text-danger">{message.flurography[lang]} {message.not_send[lang]}</p>}
           {flurography &&
             <div className="mt-5">
               <p>{message.flurography[lang]}</p>
-              <img src={`http://localhost:8081/api/upload/${flurography}`} className="img-fluid" alt="Responsive image"/>
+              <a href={`http://localhost:8081/api/upload/${flurography}`} target="_blank" className="d-block"><img src={`http://localhost:8081/api/upload/${flurography}`} className="img-fluid" alt="Responsive image"/></a>
             </div>
           }
         </div>
-        <div className="col-md-12">
+        <div className="col-md-12 mt-3">
           <textarea onChange={this.onTextAreaChange} className="form-control" value={commentState}></textarea>
           <div className="mt-3">
             <button className={acceptBtnClass} onClick={this.saveComment.bind(this, "VALID")}>SAVE AS VALID</button>

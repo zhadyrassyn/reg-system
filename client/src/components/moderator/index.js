@@ -63,6 +63,15 @@ class ModeratorApp extends Component {
   closeModal() {
     this.setState({modalIsOpen: false});
     document.body.style.overflow = "auto";
+
+    const {currentPage, perPage, search} = this.state
+    this.props.fetchTotalAmountOfStudents(search,
+      () => {
+        this.props.fetchStudents(search, currentPage, perPage)
+      },
+      () => {
+        console.log('error on fetching students')
+      })
   }
 
 
@@ -149,8 +158,8 @@ class ModeratorApp extends Component {
     return (
       <div className="wrapper">
         <SearchBar onSearch={this.handleSearch}/>
-        <TableHeader/>
-        <TableBody students={students} startCounter={startCounter} openModal={this.openModal.bind(this)}/>
+        <TableHeader lang={lang}/>
+        <TableBody students={students} startCounter={startCounter} openModal={this.openModal.bind(this)} lang={lang}/>
         <Pagination currentPage={currentPage} perPage={perPage} total={total}
                     handlePageChangeClick={this.handlePageChangeClick}/>
         <Modal

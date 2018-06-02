@@ -46,6 +46,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
     lateinit var educationInfoRepository: EducationInfoRepository
 
     @Autowired
+    lateinit var medicalInfoRepository: MedicalInfoRepository
+
+    @Autowired
     lateinit var fileService: FileService
 
     @Autowired
@@ -173,9 +176,9 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
             photo3x4 = "photo3x4",
             school_diploma = "school_diploma",
             ent_certificate = "ent_certificate",
-            form86 = "form86",
-            form63 = "form63",
-            flurography = "flurography",
+            form86 = null,
+            form63 = null,
+            flurography = null,
             userId = user.id
         )
         document.id = documentRepository.save(document)
@@ -760,7 +763,7 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
 
         //
         //
-        val response = studentRegisterImpl.saveEducationInfoDocument(id = user.id,file = multipartFile, documentType = DocumentType.IDENTITY_CARD_FRONT)
+        val response = studentRegisterImpl.saveMedicalDocument(id = user.id,file = multipartFile, documentType = DocumentType.FLUOROGRAPHY)
         //
         //
 
@@ -768,6 +771,11 @@ class StudentRegisterImplTest : AbstractTestNGSpringContextTests(){
         assertNotNull(response.name)
 
         assertEquals(Files.readAllBytes(fileService.getFilePath(response.name)), Files.readAllBytes(source.toPath()))
+
+        val medicalInfo = medicalInfoRepository.fetchMedicalInfoDocument(user.id)
+        assertNotNull(medicalInfo)
+        assertEquals(medicalInfo?.comment, "")
+        assertEquals(medicalInfo?.status?.name, ConclusionStatus.WAITING_FOR_RESPONSE.name)
     }
 
     @Test

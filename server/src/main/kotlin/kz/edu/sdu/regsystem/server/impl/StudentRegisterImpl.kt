@@ -5,6 +5,7 @@ import kz.edu.sdu.regsystem.controller.model.Document
 import kz.edu.sdu.regsystem.controller.model.enums.DocumentType
 import kz.edu.sdu.regsystem.controller.register.StudentRegister
 import kz.edu.sdu.regsystem.server.domain.*
+import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.repositoy.*
@@ -279,6 +280,9 @@ class StudentRegisterImpl(
         val savedFileName = fileService.store(file)
 
         val documentDto = documentRepository.get(id)
+        if(documentDto?.form63 == null && documentDto?.form86 == null && documentDto?.flurography == null) {
+            medicalInfoRepository.save(MedicalInfo(comment = "", status = ConclusionStatus.WAITING_FOR_RESPONSE, userId = id))
+        }
 
         if (documentDto == null) {
             documentRepository.save(userId = id, fileName = savedFileName, documentType = documentType)
@@ -305,9 +309,9 @@ class StudentRegisterImpl(
             )
         } else {
             val response = GetMedicalInfoResponseData()
-            response.form86 = document?.form86
-            response.form63 = document?.form63
-            response.flurography = document?.flurography
+            response.form86 = document?.form86 ?: ""
+            response.form63 = document?.form63 ?: ""
+            response.flurography = document?.flurography ?: ""
             return response
         }
     }

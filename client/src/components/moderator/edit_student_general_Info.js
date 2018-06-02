@@ -107,14 +107,21 @@ class EditStudentGeneralInfo extends Component {
           <p>{message.flat[lang]} : {factFlat}</p>
         </div>
         <div className="col-md-6">
-          {!photo3x4 && <p className="text-danger">Photo 3x4 is not uploaded</p>}
-          {photo3x4 && <img src={`http://localhost:8081/api/upload/${photo3x4}`} className="img-fluid" alt="Responsive image"/>}
-          {!ud_front && <p className="text-danger">Front side of Identity Card is not uploaded</p>}
-          {ud_front && <img src={`http://localhost:8081/api/upload/${ud_front}`} className="img-fluid" alt="Responsive image"/>}
-          {!ud_back && <p className="text-danger">Back side of Identity Card is not uploaded</p>}
-          {ud_back && <img src={`http://localhost:8081/api/upload/${ud_back}`} className="img-fluid" alt="Responsive image"/>}
+          <div className="mt-5 pb-3 border-bottom-black">
+            {!photo3x4 && <p className="text-danger">Photo 3x4 is not uploaded</p>}
+            {photo3x4 && <a href={`http://localhost:8081/api/upload/${photo3x4}`} target="_blank" className="d-block"><img src={`http://localhost:8081/api/upload/${photo3x4}`} className="img-fluid" alt="Responsive image"/></a>}
+          </div>
+          <div className="mt-5 pb-3 border-bottom-black">
+            {!ud_front && <p className="text-danger">Front side of Identity Card is not uploaded</p>}
+            {ud_front && <a href={`http://localhost:8081/api/upload/${ud_front}`} target="_blank" className="d-block"><img src={`http://localhost:8081/api/upload/${ud_front}`} className="img-fluid" alt="Responsive image"/></a>}
+          </div>
+          <div className="mt-5 pb-3 border-bottom-black">
+            {!ud_back && <p className="text-danger">Back side of Identity Card is not uploaded</p>}
+            {ud_back && <a href={`http://localhost:8081/api/upload/${ud_back}`} target="_blank" className="d-block"><img src={`http://localhost:8081/api/upload/${ud_back}`} className="img-fluid" alt="Responsive image"/></a>}
+          </div>
+
         </div>
-        <div className="col-md-12">
+        <div className="col-md-12 mt-3">
           <textarea onChange={this.onTextAreaChange} className="form-control" value={commentState}></textarea>
           <div className="mt-3">
             <button className={acceptBtnClass} onClick={this.onGeneralInfoEdit.bind(this, "VALID")}>SAVE AS VALID</button>

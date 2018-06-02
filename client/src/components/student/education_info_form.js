@@ -30,6 +30,9 @@ import {
 
 //validations
 const required = value => (value ? undefined : 'required')
+const Max = num => value =>
+  value && value.length > num ? 'max3' : undefined
+const Max3 = Max(3)
 
 class EducationInfoForm extends Component {
 
@@ -435,7 +438,7 @@ class EducationInfoForm extends Component {
               type="text"
               placeholder={message.ent_amount[lang]}
               component={this.renderField}
-              validate={required}
+              validate={[required, Max3]}
               accessType={accessType}
               lang={lang}
             />

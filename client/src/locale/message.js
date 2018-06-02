@@ -149,6 +149,36 @@ export const message = {
     en: 'Prefer not to say',
     kk: 'Предпочитаю не говоить'
   },
+  male: {
+    ru: 'Мужской',
+    en: 'Man',
+    kk: 'Женский'
+  },
+  female: {
+    ru: 'Женский',
+    en: 'Woman',
+    kk: 'Женский'
+  },
+  another: {
+    ru: 'Предпочитаю не говоить',
+    en: 'Prefer not to say',
+    kk: 'Предпочитаю не говоить'
+  },
+  valid: {
+    ru: 'ПРИНЯТО',
+    en: 'VALID',
+    kk: 'ПРИНЯТО'
+  },
+  invalid: {
+    ru: 'Не правильно',
+    en: 'INVALID',
+    kk: 'Не правильно'
+  },
+  waiting_for_response: {
+    ru: 'В ожидании ответа',
+    en: 'Waiting for response',
+    kk: 'В ожидании ответа'
+  },
   iin: {
     ru: 'ИИН',
     en: 'IIN',
@@ -413,5 +443,10 @@ export const message = {
     ru: 'Длина не должна превышать 3',
     en: 'Length must be no more than 3',
     kk: 'Длина не должна превышать 3'
+  },
+  status: {
+    ru: 'Статус',
+    en: 'Status',
+    kk: 'Статус'
   }
 }
