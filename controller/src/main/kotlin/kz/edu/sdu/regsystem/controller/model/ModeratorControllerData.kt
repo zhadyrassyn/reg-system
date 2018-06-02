@@ -6,10 +6,9 @@ data class GetStudentsResponse(
     val middleName: String? = "",
     val lastName: String = "",
     val email: String = "",
-    val city: String = "",
-    val school: String = "",
-    val birthDate: String = "",
-    val userStatus: String = "ACTIVE"
+    val iin: String = "",
+    val gender: String = "",
+    val generalStatus : String = ""
 )
 
 data class GetStudentInfoResponse(

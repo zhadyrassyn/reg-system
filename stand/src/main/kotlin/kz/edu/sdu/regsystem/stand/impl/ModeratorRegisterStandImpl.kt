@@ -111,6 +111,7 @@ class ModeratorRegisterStandImpl(
         } ?: throw UserDoesNotExistsException("User with id $id does not exist")
 
         val personalInfo = user.personalInfo!!
+
         return FetchPersonalInfoResponse(
             id = id,
             firstName = personalInfo.firstName,
@@ -124,7 +125,12 @@ class ModeratorRegisterStandImpl(
             mobilePhone = personalInfo.mobilePhone,
             telPhone = personalInfo.telPhone,
             nationality = personalInfo.nationality,
-            birthPlace = personalInfo.birthPlace.nameEn,
+            birthPlace = AreaData(
+                id = personalInfo.birthPlace.id,
+                nameEn = personalInfo.birthPlace.nameEn,
+                nameKk = personalInfo.birthPlace.nameKk,
+                nameRu = personalInfo.birthPlace.nameRu
+                ),
             blood_group = personalInfo.blood_group,
             citizenship = personalInfo.citizenship,
             factStreet = personalInfo.factStreet,

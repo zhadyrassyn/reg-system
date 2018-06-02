@@ -1,6 +1,9 @@
 package kz.edu.sdu.regsystem.server.repositoy
 
 import kz.edu.sdu.regsystem.server.domain.User
+import kz.edu.sdu.regsystem.server.domain.UserRow
+import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
+import kz.edu.sdu.regsystem.server.domain.enums.GenderType
 import kz.edu.sdu.regsystem.server.domain.enums.RoleType
 import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
 import org.springframework.dao.EmptyResultDataAccessException
@@ -93,12 +96,50 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
         val query = "SELECT COUNT(*) AS total FROM USERS AS U" +
             "  INNER JOIN PersonalInfo AS PI ON PI.user_id = U.id" +
             "  INNER JOIN EducationInfo AS EI ON EI.user_id = U.id" +
-            "  INNER JOIN MedicalInfo AS MI ON MI.user_id = U.id WHERE U.status='ACTIVE'"
+            "  INNER JOIN MedicalInfo AS MI ON MI.user_id = U.id WHERE U.status='ACTIVE'" +
+            "  AND (LOWER(PI.first_name) LIKE '%$text%'" +
+            "  OR LOWER(PI.middle_name) LIKE '%$text%'" +
+            "  OR LOWER(PI.last_name) LIKE '%$text%'" +
+            "  OR LOWER(PI.iin) LIKE '%$text%'" +
+            "  OR LOWER(U.email) LIKE '%$text%'" +
+            "  OR LOWER(PI.gender) LIKE '%$text%')"
 
         val amount = jdbcTemplate.queryForObject(query, RowMapper { rs, _ ->
             rs.getString("total")
         }) ?: throw SQLException("Cannot execute statement $query")
 
         return amount.toInt()
+    }
+
+    fun fetchUsers(text: String, offset: Int, perPage: Int) : List<UserRow> {
+        val query = "" +
+            "SELECT U.id, PI.first_name, PI.middle_name, PI.last_name, PI.iin, U.email, PI.gender," +
+            "PI.status AS pi_status, EI.status AS ei_status, MI.status AS mi_status FROM USERS AS U" +
+            "  INNER JOIN PersonalInfo AS PI ON PI.user_id = U.id" +
+            "  INNER JOIN EducationInfo AS EI ON EI.user_id = U.id" +
+            "  INNER JOIN MedicalInfo AS MI ON MI.user_id = U.id" +
+            "  WHERE U.status='ACTIVE'" +
+            "  AND LOWER(PI.first_name) LIKE '%$text%'" +
+            "  AND (LOWER(PI.middle_name) LIKE '%$text%'" +
+            "  OR LOWER(PI.last_name) LIKE '%$text%'" +
+            "  OR LOWER(PI.iin) LIKE '%$text%'" +
+            "  OR LOWER(U.email) LIKE '%$text%'" +
+            "  OR LOWER(PI.gender) LIKE '%$text%')" +
+            "  LIMIT $perPage OFFSET $offset"
+
+        return jdbcTemplate.query(query, { rs, _ ->
+            UserRow(
+                id = rs.getLong("id"),
+                firstName = rs.getString("first_name"),
+                middleName = rs.getString("middle_name"),
+                lastName = rs.getString("last_name"),
+                iin = rs.getString("iin"),
+                email = rs.getString("email"),
+                gender = GenderType.valueOf(rs.getString("gender")),
+                pi_status = ConclusionStatus.valueOf(rs.getString("pi_status")),
+                ei_status = ConclusionStatus.valueOf(rs.getString("ei_status")),
+                mi_status = ConclusionStatus.valueOf(rs.getString("mi_status"))
+            )
+        })
     }
 }

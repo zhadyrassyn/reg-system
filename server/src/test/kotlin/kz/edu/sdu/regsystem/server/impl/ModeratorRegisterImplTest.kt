@@ -18,6 +18,7 @@ import org.testng.annotations.Test
 import org.testng.Assert.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 @SpringBootTest
 class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
@@ -533,6 +534,106 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
 
     @Test
     fun testGetStudents() {
+        clearDb()
+
+        val list = ArrayList<User>()
+        val personalInfos = ArrayList<SavePersonalInfoRequest>()
+        val medicalInfos = ArrayList<MedicalInfo>()
+        val educationInfos = ArrayList<SaveEducationInfoRequestData>()
+        for (i in 0..4) {
+            val newUser = User(
+                email = "test$i@mail.com",
+                password = "123123",
+                regDate = Date(),
+                status = UserStatus.ACTIVE,
+                role = RoleType.USER
+            )
+            list.add(newUser)
+
+            newUser.id = usersRepository.save(newUser)
+
+            val a = SavePersonalInfoRequest(
+                firstName = "Daniyar",
+                middleName = null,
+                lastName = "Qazbek",
+                gender = GenderType.MALE.name,
+                birthDate = fromStrToDate("1997-06-15"),
+                givenDate = fromStrToDate("2000-01-05"),
+                givenPlace = "RK ||",
+                iin = "970211555589",
+                ud_number = "123123123",
+                mobilePhone = "87021112233",
+                telPhone = null,
+                nationality = "kazakh",
+
+                birthPlace = null,
+                birthPlaceCustom = "Pavlodar",
+
+                blood_group = "first+",
+                citizenship = "Kazakhstan",
+
+                factFlat = "12",
+                factFraction = "22",
+                factHouse = "20",
+                factStreet = "Tahibayeva",
+
+                regFlat = null,
+                regFraction = null,
+                regHouse = "50",
+                regStreet = "Abaya"
+            )
+
+            studentRegisterImpl.savePersonalInfo(a, newUser.id)
+            personalInfos.add(a)
+
+            val m = MedicalInfo(
+                comment = "123",
+                userId = newUser.id
+            )
+
+            m.id = medicalInfoRepository.save(m)
+            medicalInfos.add(m)
+
+            val s = SaveEducationInfoRequestData(
+                id = -1,
+                educationArea = area.id,
+                city = city.id,
+                another_cityVillage = null,
+                school = school.id,
+                customSchool = null,
+                ent_amount = 112,
+                ent_certificate_number = "123213",
+                ikt = "2221",
+                faculty = faculty.id,
+                speciality = specialty.id,
+                school_finish = fromStrToDate("2000-01-05")
+            )
+
+            studentRegisterImpl.saveEducationInfo(s, newUser.id)
+            educationInfos.add(s)
+        }
+
+        //
+        //
+        val response = moderatorRegisterImpl.getStudents(text = "", currentPage = 1, perPage = 10)
+        //
+        //
+
+        assertNotNull(response)
+        assertEquals(5, response.size)
+
+        for (i in 0..response.size-1) {
+            assertEquals(list[i].id, response[i].id)
+            assertEquals(list[i].email, response[i].email)
+            assertEquals(personalInfos[i].firstName, response[i].firstName)
+            assertEquals(personalInfos[i].middleName ?: "", response[i].middleName)
+            assertEquals(personalInfos[i].lastName, response[i].lastName)
+            assertEquals(personalInfos[i].iin, response[i].iin)
+            assertEquals(list[i].email, response[i].email)
+            assertEquals(personalInfos[i].gender, response[i].gender)
+            assertEquals(ConclusionStatus.WAITING_FOR_RESPONSE.name, response[i].generalStatus)
+        }
+
     }
 
     fun fromStrToDate(date: String) : Date {

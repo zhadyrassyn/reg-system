@@ -1,9 +1,6 @@
 package kz.edu.sdu.regsystem.server.domain
 
-import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
-import kz.edu.sdu.regsystem.server.domain.enums.ExistType
-import kz.edu.sdu.regsystem.server.domain.enums.RoleType
-import kz.edu.sdu.regsystem.server.domain.enums.UserStatus
+import kz.edu.sdu.regsystem.server.domain.enums.*
 import java.util.*
 
 data class Area(
@@ -209,4 +206,17 @@ data class MedicalInfo(
     val comment: String = "",
     val status: ConclusionStatus = ConclusionStatus.WAITING_FOR_RESPONSE,
     val userId: Long
+)
+
+data class UserRow(
+    var id: Long = -1,
+    val firstName: String,
+    val middleName: String?,
+    val lastName: String,
+    val iin: String,
+    val email: String,
+    val gender: GenderType,
+    val pi_status: ConclusionStatus,
+    val ei_status: ConclusionStatus,
+    val mi_status: ConclusionStatus
 )

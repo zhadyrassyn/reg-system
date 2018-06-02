@@ -16,11 +16,12 @@ class ModeratorRegisterImpl(
     val medicalInfoRepository: MedicalInfoRepository,
     val infoRepository: InfoRepository,
     val usersRepository: UsersRepository
-) : ModeratorRegister{
+) : ModeratorRegister {
     override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
         val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id) ?: return FetchPersonalInfoResponse()
 
-        val area = infoRepository.fetchArea(personalInfo.birthPlaceId) ?: throw BadRequestException("Cannot find area with id ${personalInfo.birthPlaceId}")
+        val area = infoRepository.fetchArea(personalInfo.birthPlaceId)
+            ?: throw BadRequestException("Cannot find area with id ${personalInfo.birthPlaceId}")
 
         return FetchPersonalInfoResponse(
             id = id,
@@ -69,7 +70,8 @@ class ModeratorRegisterImpl(
     }
 
     override fun fetchEducationInfo(id: Long): FetchEducationInfoResponse {
-        val educationInfo = educationInfoRepository.fetchEducationInfoDocument(id) ?: return FetchEducationInfoResponse()
+        val educationInfo = educationInfoRepository.fetchEducationInfoDocument(id)
+            ?: return FetchEducationInfoResponse()
 
         val area = infoRepository.fetchArea(educationInfo.areaId)
             ?: throw BadRequestException("Cannot find area with id ${educationInfo.areaId}")
@@ -95,16 +97,16 @@ class ModeratorRegisterImpl(
                 nameEn = area.nameEn
             ),
             city = CityData(
-                    id = city.id,
-                    nameEn = city.nameEn,
-                    nameRu = city.nameRu,
-                    nameKk = city.nameKk),
+                id = city.id,
+                nameEn = city.nameEn,
+                nameRu = city.nameRu,
+                nameKk = city.nameKk),
             school = SchoolData(
-                    id = school.id,
-                    nameEn = school.nameEn,
-                    nameKk = school.nameKk,
-                    nameRu = school.nameRu
-                ),
+                id = school.id,
+                nameEn = school.nameEn,
+                nameKk = school.nameKk,
+                nameRu = school.nameRu
+            ),
             ent_amount = educationInfo.entAmount.toString(),
             ent_certificate_number = educationInfo.entCertificateNumber,
             ikt = educationInfo.ikt,
@@ -175,11 +177,33 @@ class ModeratorRegisterImpl(
     }
 
     override fun fetchTotalAmountOfStudents(text: String): FetchTotalAmountOfStudentsResponse {
-        val total = usersRepository.fetchTotal(text)
+        val total = usersRepository.fetchTotal(text.toLowerCase())
         return FetchTotalAmountOfStudentsResponse(total = total)
     }
 
     override fun getStudents(text: String, currentPage: Int, perPage: Int): List<GetStudentsResponse> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val offset = (currentPage - 1) * perPage
+        return usersRepository.fetchUsers(text = text.toLowerCase(), offset = offset, perPage = perPage)
+            .map {
+                GetStudentsResponse(
+                    id = it.id,
+                    firstName = it.firstName,
+                    middleName = it.middleName ?: "",
+                    lastName = it.lastName,
+                    iin = it.iin,
+                    email = it.email,
+                    gender = it.gender.name,
+                    generalStatus =
+                    if (it.pi_status == ConclusionStatus.VALID &&
+                        it.ei_status == ConclusionStatus.VALID &&
+                        it.mi_status == ConclusionStatus.VALID) ConclusionStatus.VALID.name
+                    else
+                        if (it.pi_status == ConclusionStatus.INVALID || it.ei_status == ConclusionStatus.INVALID ||
+                            it.mi_status == ConclusionStatus.INVALID) ConclusionStatus.INVALID.name
+                        else
+                            ConclusionStatus.WAITING_FOR_RESPONSE.name
+                )
+            }
+
     }
 }

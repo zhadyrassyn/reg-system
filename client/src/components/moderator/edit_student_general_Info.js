@@ -66,7 +66,13 @@ class EditStudentGeneralInfo extends Component {
     const acceptBtnClass = "btn " + (status === "VALID" && comment === commentState ? "btn-success" : "btn-outline-success")
     const rejectBtnClass = "btn ml-2 " + (status === "INVALID" && comment === commentState ? "btn-danger" : "btn-outline-danger")
 
-
+    if(birthPlace) {
+      console.log('birthPlace ', birthPlace)
+    }
+    let birthPlaceLabel = ""
+    if(birthPlace) {
+      birthPlaceLabel = birthPlace.nameEn
+    }
     return (
       <div className="row mt-5">
         <div className="col-md-6">
@@ -76,7 +82,7 @@ class EditStudentGeneralInfo extends Component {
           <p>{message.birthDate[lang]} : {birthDate}</p>
           <p>{message.iin[lang]} : {iin}</p>
 
-          <p>{message.birthPlace[lang]} : {birthPlace}</p>
+          <p>{message.birthPlace[lang]} : {birthPlaceLabel}</p>
           <p>{message.nationality[lang]} : {nationality}</p>
           <p>{message.givenPlace[lang]} : {givenPlace}</p>
           <p>{message.givenDate[lang]} : {givenDate}</p>
