@@ -99,14 +99,14 @@ data class PersonalInfo(
 
 data class Document(
     var id: Long = -1,
-    val ud_back: String,
-    val ud_front: String,
-    val photo3x4: String,
-    val school_diploma: String,
-    val ent_certificate: String,
-    val form86: String,
-    val form63: String,
-    val flurography: String,
+    val ud_back: String?,
+    val ud_front: String?,
+    val photo3x4: String?,
+    val school_diploma: String?,
+    val ent_certificate: String?,
+    val form86: String?,
+    val form63: String?,
+    val flurography: String?,
     val userId: Long
 )
 

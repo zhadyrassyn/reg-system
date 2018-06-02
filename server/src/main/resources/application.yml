@@ -30,8 +30,8 @@ spring:
 #    host: localhost:6379
 frontend:
   url: http://localhost:8080
-emailPassword: 123
-jwtKey: 123
+#emailPassword: 123
+#jwtKey: 123
 
 ---
 spring:

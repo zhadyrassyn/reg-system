@@ -9,7 +9,6 @@ import kz.edu.sdu.regsystem.server.domain.enums.ExistType
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.repositoy.*
 import kz.edu.sdu.regsystem.server.services.FileService
-import kz.edu.sdu.regsystem.server.services.RedisService
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile

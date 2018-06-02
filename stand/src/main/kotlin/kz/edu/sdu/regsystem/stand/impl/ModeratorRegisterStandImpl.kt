@@ -252,15 +252,15 @@ class ModeratorRegisterStandImpl(
                 .filter {
                     db.userRoles[it.id] == RoleType.USER
                         && it.userStatus == UserStatus.ACTIVE
-//                        && (
-//                        it.id.toString().contains(text, ignoreCase = true)
-//                            || it.firstName.contains(text, ignoreCase = true)
-//                            || it.middleName.contains(text, ignoreCase = true)
-//                            || it.lastName.contains(text, ignoreCase = true)
-//                            || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
-//                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.nameRu.contains(text, ignoreCase = true)
-//                            || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
-//                        )
+                        && (
+                        it.id.toString().contains(text, ignoreCase = true)
+                            || it.firstName.contains(text, ignoreCase = true)
+                            || it.middleName.contains(text, ignoreCase = true)
+                            || it.lastName.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.name.contains(text, ignoreCase = true)
+                            || db.cities[it.cityId]!!.schools.firstOrNull { school -> school.id == it.schoolId }!!.nameRu.contains(text, ignoreCase = true)
+                            || dateToStringForm(it.birthDate).contains(text, ignoreCase = true)
+                        )
 
                 }
         }
@@ -294,10 +294,9 @@ class ModeratorRegisterStandImpl(
                         firstName = personalInfo!!.firstName,
                         middleName = personalInfo.middleName,
                         lastName = personalInfo.lastName,
-                        city = city,
-                        school = school,
-                        userStatus = it.userStatus.toString(),
-                        birthDate = dateToStringForm(personalInfo.birthDate)
+                        iin = personalInfo.iin,
+                        gender = personalInfo.gender,
+                        generalStatus = "WAITING_FOR_RESPONSE"
                     )
                 }
 
