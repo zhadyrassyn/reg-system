@@ -2,3 +2,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile("junit:junit")
 }
+
+bootJar { enabled = false }
+jar {enabled = true}

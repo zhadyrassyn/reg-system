@@ -20,6 +20,7 @@ allprojects {
     apply plugin: 'kotlin-spring'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+    apply plugin: 'maven'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 

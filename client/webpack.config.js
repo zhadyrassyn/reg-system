@@ -1,14 +1,30 @@
 //plugins
 const HtmlPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const path = require("path")
 const webpack = require('webpack')
+
+const cleanPlugin = new CleanWebpackPlugin(
+  ['./build/client'], {
+    root: __dirname,
+    verbose: true,
+    dry: false
+  })
+
 
 const htmlPlugin = new HtmlPlugin({
   title: 'Online registration system',
   template: './index.html',
   filename: 'index.html',
-  hash: true
+  hash: true,
+  excludeChunks: ['base'],
+  minify: {
+    collapseWhitespace: true,
+    collapseInlineTagWhitespace: true,
+    removeComments: true,
+    removeRedundantAttributes: true
+  }
 })
 
 const extractTextPlugin = new ExtractTextPlugin({
@@ -26,7 +42,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'app.bundle.js',
+    filename: '[name].[chunkhash].js',
     publicPath: "/"
   },
   module: {
@@ -63,11 +79,38 @@ module.exports = {
     ]
   },
   plugins: [
+    cleanPlugin,
     htmlPlugin,
     extractTextPlugin,
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    })
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'client',
+      filename: 'client.[chunkhash].js',
+      minChunks (module) {
+        return module.context &&
+          module.context.indexOf('node_modules') >= 0;
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        conditionals: true,
+        unused: true,
+        comparisons: true,
+        sequences: true,
+        dead_code: true,
+        evaluate: true,
+        if_return: true,
+        join_vars: true
+      },
+      output: {
+        comments: false
+      }
+    }),
+    new webpack.HashedModuleIdsPlugin()
   ],
   devServer: {
     historyApiFallback: true,
