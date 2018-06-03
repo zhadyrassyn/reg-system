@@ -123,7 +123,7 @@ class ModeratorApp extends Component {
     })
 
     this.setState({currentPage: 1}, () => {
-      filter(filtered)  
+      filter(filtered)
     })
 
 

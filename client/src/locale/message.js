@@ -453,5 +453,10 @@ export const message = {
     ru: 'Выгрузка EXCEL',
     en: 'Export EXCEL',
     kk: 'Выгрузка EXCEL'
+  },
+  search: {
+    ru: 'Поиск',
+    en: 'Search',
+    kk: 'Поиск'
   }
 }

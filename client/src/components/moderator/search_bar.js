@@ -32,7 +32,7 @@ class SearchBar extends Component {
         <div className="container">
           <form className="form-inline" id="search-form" onSubmit={this.handleSubmit}>
             <input type="text" className="form-control" placeholder="Search..." onChange={this.onSearchTextChange.bind(this)}/>
-            <button type="submit" className="btn btn-primary ml-2">Search</button>
+            <button type="submit" className="btn btn-primary ml-2">{message.search[lang]}</button>
           </form>
           <div>
             <a href="#" onClick={this.exportXls.bind(this)}>{message.exportXls[lang]}</a>

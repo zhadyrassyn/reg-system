@@ -74,10 +74,10 @@ class SignIn extends Component {
             {isLoading && <span className="spinner"><i className="fa fa-spinner fa-spin fa-2x" /></span>}
           </div>
 
-          <div className="text-center my-2">
-            <p className="btn btn-link mb-0">Forgot password?</p>
-            <div><small className="text-muted">Not registered? Sign up</small></div>
-          </div>
+          {/*<div className="text-center my-2">*/}
+            {/*<p className="btn btn-link mb-0">Forgot password?</p>*/}
+            {/*<div><small className="text-muted">Not registered? Sign up</small></div>*/}
+          {/*</div>*/}
 
         </form>
       </div>
