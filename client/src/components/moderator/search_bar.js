@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import {message} from "../../locale/message"
 
 class SearchBar extends Component {
   constructor(props) {
@@ -18,7 +19,14 @@ class SearchBar extends Component {
     this.props.onSearch(this.state.search)
   }
 
+  exportXls = (event) => {
+    event.preventDefault()
+    this.props.onExportXls()
+  }
+
   render() {
+    const {lang, exportXlsLoading} = this.props
+
     return (
       <nav className="navbar justify-content-between py-4">
         <div className="container">
@@ -27,7 +35,8 @@ class SearchBar extends Component {
             <button type="submit" className="btn btn-primary ml-2">Search</button>
           </form>
           <div>
-            <a href="#">Export xls</a>
+            <a href="#" onClick={this.exportXls.bind(this)}>{message.exportXls[lang]}</a>
+            {exportXlsLoading && <span className="spinner ml-2"><i className="fa fa-spinner fa-spin fa-1x" /></span>}
           </div>
         </div>
       </nav>

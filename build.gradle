@@ -3,6 +3,7 @@ buildscript {
         kotlinVersion = '1.2.31'
         springBootVersion = '2.0.0.RELEASE'
         ext.jackson_module_version = '2.9.0'
+        ext.apache_poi_version = '3.14'
     }
 
     repositories {

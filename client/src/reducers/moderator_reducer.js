@@ -25,7 +25,9 @@ import {
   SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR,
   FETCH_STUDENTS_ACTIVE_FAILURE,
   FETCH_STUDENTS_ACTIVE_SUCCESS,
-  FILTER_STUDENTS
+  FILTER_STUDENTS,
+  EXPORT_XLS_SUCCESS,
+  EXPORT_XLS_FAILURE
 } from "../actions/types"
 
 const initialState = {
@@ -41,6 +43,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case EXPORT_XLS_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
     case FILTER_STUDENTS:
       return {
         ...state,

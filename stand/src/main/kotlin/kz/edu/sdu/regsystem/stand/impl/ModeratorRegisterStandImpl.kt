@@ -11,7 +11,12 @@ import kz.edu.sdu.regsystem.stand.model.enums.RoleType
 import kz.edu.sdu.regsystem.stand.model.enums.UserStatus
 import kz.edu.sdu.regsystem.stand.model.exceptions.BadRequestException
 import kz.edu.sdu.regsystem.stand.model.exceptions.UserDoesNotExistsException
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.ss.usermodel.*
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,6 +25,7 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+
     override fun getStudentsActive(): List<GetStudentsResponse> {
         return db.users.values.filter { it.userStatus == UserStatus.ACTIVE && db.userRoles[it.id] == RoleType.USER }
             .map {
@@ -325,6 +331,82 @@ class ModeratorRegisterStandImpl(
 
 
             }
+    }
+
+    override fun fetchStudentsXls(): ResponseEntity<ByteArray>? {
+        val headers = HttpHeaders()
+        headers.add("content-disposition", "attachment; filename=\"students.xls")
+        return ResponseEntity.ok().headers(headers).body(getStudentsXls())
+    }
+
+    private fun getStudentsXls(): ByteArray{
+        val students = getStudentsActive()
+
+        try {
+            HSSFWorkbook().use { book ->
+                val baos = ByteArrayOutputStream()
+                val sheet = book.createSheet("Студенты")
+
+                var rowNumber = 0
+
+                createHeaderCells(
+                    sheet.createRow(rowNumber),
+                    createHeaderStyle(book),
+                    "Фамилия",
+                    "Имя",
+                    "Отчество"
+                )
+
+                for (student in students) {
+                    rowNumber++
+                    createCell(
+                        sheet.createRow(rowNumber),
+                        student.lastName,
+                        student.firstName,
+                        student.middleName ?: ""
+                    )
+                }
+
+                for (i in 0..11) {
+                    try {
+                        sheet.autoSizeColumn(i)
+                    } catch (ignored: NullPointerException) {
+                    }
+
+                }
+
+                book.write(baos)
+                book.close()
+                return baos.toByteArray()
+            }
+        } catch (e: Exception) {
+            throw Exception(e)
+        }
+    }
+
+    private fun createCell(row: Row, vararg names: String) {
+        for (i in names.indices) {
+            row.createCell(i, Cell.CELL_TYPE_STRING).setCellValue(names[i])
+        }
+    }
+
+    private fun createHeaderStyle(book: Workbook): CellStyle {
+        val style = book.createCellStyle()
+        val font = book.createFont()
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD)
+        style.setFont(font)
+        style.fillForegroundColor = IndexedColors.SKY_BLUE.getIndex()
+        style.setFillPattern(CellStyle.SOLID_FOREGROUND)
+        style.setAlignment(CellStyle.ALIGN_CENTER)
+        return style
+    }
+
+    private fun createHeaderCells(row: Row, headerStyle: CellStyle, vararg names: String) {
+        for (i in names.indices) {
+            val header = row.createCell(i, Cell.CELL_TYPE_STRING)
+            header.setCellValue(names[i])
+            header.cellStyle = headerStyle
+        }
     }
 
     private fun dateToStringForm(birthDate: Date): String {

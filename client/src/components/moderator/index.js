@@ -31,7 +31,8 @@ import {
   fetchTotalAmountOfStudents,
   selectStudent,
   fetchStudentsActive,
-  filter
+  filter,
+  exportXls
 } from "../../actions"
 import {message} from "../../locale/message";
 
@@ -44,7 +45,8 @@ class ModeratorApp extends Component {
       search: "",
       currentPage: 1,
       perPage: 10,
-      modalIsOpen: false
+      modalIsOpen: false,
+      exportXlsLoading: false
     }
 
     this.openModal = this.openModal.bind(this);
@@ -86,6 +88,19 @@ class ModeratorApp extends Component {
 
   handlePageChangeClick = (pageNum) => {
     this.setState({currentPage: pageNum})
+  }
+
+  handleExportXls = () => {
+    this.setState({exportXlsLoading: true}, () => {
+      this.props.exportXls(
+        () => {
+          this.setState({exportXlsLoading: false})
+        },
+        () => {
+          this.setState({exportXlsLoading: false})
+        }
+      )
+    })
   }
 
   handleSearch = (search) => {
@@ -157,7 +172,7 @@ class ModeratorApp extends Component {
 
   render() {
     const {students, selectedStudent, lang, displayData} = this.props
-    const {currentPage, perPage} = this.state
+    const {currentPage, perPage, exportXlsLoading} = this.state
     const total = Object.keys(displayData).length
     const startCounter = (currentPage - 1) * perPage
 
@@ -167,7 +182,7 @@ class ModeratorApp extends Component {
 
     return (
       <div className="wrapper">
-        <SearchBar onSearch={this.handleSearch}/>
+        <SearchBar onSearch={this.handleSearch} lang={lang} onExportXls={this.handleExportXls} exportXlsLoading={exportXlsLoading}/>
         <TableHeader lang={lang}/>
         <TableBody students={paginatedData} startCounter={startCounter} openModal={this.openModal.bind(this)} lang={lang}/>
         <Pagination currentPage={currentPage} perPage={perPage} total={total}
@@ -210,6 +225,7 @@ export default connect(
     changeDocumentStatus: bindActionCreators(changeDocumentStatus, dispatch),
     fetchTotalAmountOfStudents: bindActionCreators(fetchTotalAmountOfStudents, dispatch),
     selectStudent: bindActionCreators(selectStudent, dispatch),
-    filter: bindActionCreators(filter, dispatch)
+    filter: bindActionCreators(filter, dispatch),
+    exportXls: bindActionCreators(exportXls, dispatch)
   })
 )(ModeratorApp)

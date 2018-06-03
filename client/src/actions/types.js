@@ -101,3 +101,6 @@ export const SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR = 'save_medical_comment_mode
 export const FETCH_STUDENTS_ACTIVE_SUCCESS = 'fetch_students_active_success'
 export const FETCH_STUDENTS_ACTIVE_FAILURE = 'fetch_students_active_failure'
 export const FILTER_STUDENTS = 'filter_students'
+
+export const EXPORT_XLS_SUCCESS = 'export_xls_success'
+export const EXPORT_XLS_FAILURE = 'export_xls_failure'
