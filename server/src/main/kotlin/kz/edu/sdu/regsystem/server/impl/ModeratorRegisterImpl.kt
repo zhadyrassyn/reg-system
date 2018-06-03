@@ -17,6 +17,11 @@ class ModeratorRegisterImpl(
     val infoRepository: InfoRepository,
     val usersRepository: UsersRepository
 ) : ModeratorRegister {
+    override fun getStudentsActive(): List<GetStudentsResponse> {
+
+
+    }
+
     override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
         val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id) ?: return FetchPersonalInfoResponse()
 

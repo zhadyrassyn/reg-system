@@ -17,6 +17,9 @@ class ModeratorController(
                     @RequestParam("currentPage") currentPage: Int,
                     @RequestParam("perPage") perPage: Int) = moderatorRegister.getStudents(text, currentPage, perPage)
 
+    @GetMapping("/students/active")
+    fun getStudentsActive() = moderatorRegister.getStudentsActive()
+
     @GetMapping("/students/{id}")
     fun getStudentInfo(@PathVariable("id") id: Long) = moderatorRegister.getStudentInfo(id)
 

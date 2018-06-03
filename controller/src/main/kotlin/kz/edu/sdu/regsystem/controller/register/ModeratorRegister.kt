@@ -6,6 +6,8 @@ interface ModeratorRegister {
 
     fun getStudents(text: String, currentPage: Int, perPage: Int) : List<GetStudentsResponse>
 
+    fun getStudentsActive() : List<GetStudentsResponse>
+
     fun getStudentInfo(id: Long): GetStudentInfoResponse
 
     fun editGeneralInfo(id: Long, request: EditGeneralInfORequest)

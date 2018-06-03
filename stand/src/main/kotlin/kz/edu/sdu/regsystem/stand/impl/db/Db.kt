@@ -360,9 +360,64 @@ class Db {
         verificationTokens.put(u2.id, "678")
 
         userRoles.put(u1.id, RoleType.USER)
-        userRoles.put(u2.id, RoleType.USER)
+        userRoles.put(u2.id, RoleType.MODERATOR)
         userRoles.put(u3.id, RoleType.MODERATOR)
-        userRoles.put(u4.id, RoleType.USER)
+        userRoles.put(u4.id, RoleType.MODERATOR)
+
+        for (i in 0..30) {
+            val userId = longCounter.incrementAndGet()
+            val newUser = User(
+                id = userId,
+                email = "$i@test.com",
+                userStatus = UserStatus.ACTIVE,
+                firstName = "$i First",
+                middleName = "$i Middle",
+                lastName = "$i Last",
+                birthDate = Date(),
+                password = "123"
+                )
+            newUser.personalInfo = PersonalInfo(
+                firstName = "$i Daniyar",
+                middleName = "$i Temirbekovich",
+                lastName = "$i Zhadyrassyn",
+                gender="male",
+                birthDate = Date(),
+                givenPlace = "Qyzylorda",
+                iin = "$i 121212323232",
+                ud_number = "22112321",
+                mobilePhone = "7028715536",
+                telPhone = "7242236366",
+                nationality = "kazakh",
+                birthPlace = a1,
+                blood_group = "1+",
+                citizenship = "kz",
+                factStreet = "Abaya",
+                factHouse = "20",
+                factFraction = "1/1",
+                factFlat = "20",
+                regStreet = "Valikhanova",
+                regHouse = "20",
+                regFraction = "1/1",
+                regFlat = "40",
+                givenDate = Date()
+            )
+
+            newUser.educationInfo = EducationInfo(
+                id = longCounter.incrementAndGet(),
+                area = a2,
+                city = a2c1,
+                school = a2c1s1,
+                ent_amount = 80,
+                ent_certificate_number = "certificatenumber",
+                ikt = "22123",
+                faculty = f1,
+                speciality = f1s1,
+                school_finish = Date()
+            )
+
+            userRoles.put(userId, RoleType.USER)
+            users.put(userId, newUser)
+        }
     }
 
     private fun toDate(birthDate: String): Date {

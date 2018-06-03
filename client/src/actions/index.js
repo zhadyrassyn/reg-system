@@ -63,7 +63,10 @@ import {
   FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
   FETCH_MEDICAL_INFO_FAILURE_MODERATOR,
   SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR,
-  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR
+  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR,
+  FETCH_STUDENTS_ACTIVE_SUCCESS,
+  FETCH_STUDENTS_ACTIVE_FAILURE,
+  FILTER_STUDENTS
 } from "./types"
 
 import axios from "axios"
@@ -980,3 +983,40 @@ export const fetchStudentMedicalInfoByModerator = (id, onSuccess, onError) => (d
 }
 
 export const selectStudent = id => ({type: SELECT_STUDENT, id})
+
+export const fetchStudentsActive = (onSuccess, onError) => (dispatch) => {
+
+  const request = `${config.url}/moderator/students/active`
+  console.log('request ' , request)
+
+  const token = localStorage.getItem('token')
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({data}) => {
+    dispatch({
+      type: FETCH_STUDENTS_ACTIVE_SUCCESS,
+      data
+    })
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_STUDENTS_ACTIVE_FAILURE,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const filter = (filteredData) => (dispatch) => {
+  dispatch({
+    type: FILTER_STUDENTS,
+    data: filteredData
+  })
+}

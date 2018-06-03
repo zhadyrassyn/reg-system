@@ -20,6 +20,29 @@ import java.util.*
 class ModeratorRegisterStandImpl(
     val db: Db
 ) : ModeratorRegister {
+    override fun getStudentsActive(): List<GetStudentsResponse> {
+        return db.users.values.filter { it.userStatus == UserStatus.ACTIVE && db.userRoles[it.id] == RoleType.USER }
+            .map {
+                if(it.personalInfo == null || it.educationInfo == null) {
+                    GetStudentsResponse(id = it.id)
+                } else {
+
+                    val personalInfo = it.personalInfo
+                    GetStudentsResponse(
+                        id = it.id,
+                        firstName = personalInfo!!.firstName,
+                        middleName = personalInfo.middleName,
+                        lastName = personalInfo.lastName,
+                        iin = personalInfo.iin,
+                        gender = "male",
+                        generalStatus = "WAITING_FOR_RESPONSE"
+                    )
+                }
+
+
+            }
+    }
+
     override fun saveMedicalComment(id: Long, request: EditGeneralInfORequest) {
         val user = db.users.values.firstOrNull {
             it.id == id
