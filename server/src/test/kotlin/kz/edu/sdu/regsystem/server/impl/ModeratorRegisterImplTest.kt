@@ -615,7 +615,7 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
 
         //
         //
-        val response = moderatorRegisterImpl.getStudents(text = "", currentPage = 1, perPage = 10)
+        val response = moderatorRegisterImpl.getStudents(text = "da", currentPage = 1, perPage = 10)
         //
         //
 

@@ -120,7 +120,7 @@ class UsersRepository(val jdbcTemplate: JdbcTemplate) {
             "  INNER JOIN MedicalInfo AS MI ON MI.user_id = U.id" +
             "  WHERE U.status='ACTIVE'" +
             "  AND LOWER(PI.first_name) LIKE '%$text%'" +
-            "  AND (LOWER(PI.middle_name) LIKE '%$text%'" +
+            "  OR (LOWER(PI.middle_name) LIKE '%$text%'" +
             "  OR LOWER(PI.last_name) LIKE '%$text%'" +
             "  OR LOWER(PI.iin) LIKE '%$text%'" +
             "  OR LOWER(U.email) LIKE '%$text%'" +
