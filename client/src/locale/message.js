@@ -448,5 +448,10 @@ export const message = {
     ru: 'Статус',
     en: 'Status',
     kk: 'Статус'
+  },
+  exportXls: {
+    ru: 'Выгрузка EXCEL',
+    en: 'Export EXCEL',
+    kk: 'Выгрузка EXCEL'
   }
 }

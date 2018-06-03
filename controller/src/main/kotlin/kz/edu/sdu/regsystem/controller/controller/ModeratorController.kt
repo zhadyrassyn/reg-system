@@ -4,6 +4,7 @@ import kz.edu.sdu.regsystem.controller.model.EditGeneralInfORequest
 import kz.edu.sdu.regsystem.controller.model.SaveCommentForDocumentsRequest
 import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,6 +17,9 @@ class ModeratorController(
     fun getStudents(@RequestParam("text") text: String,
                     @RequestParam("currentPage") currentPage: Int,
                     @RequestParam("perPage") perPage: Int) = moderatorRegister.getStudents(text, currentPage, perPage)
+
+    @GetMapping("/students/active")
+    fun getStudentsActive() = moderatorRegister.getStudentsActive()
 
     @GetMapping("/students/{id}")
     fun getStudentInfo(@PathVariable("id") id: Long) = moderatorRegister.getStudentInfo(id)
@@ -57,4 +61,8 @@ class ModeratorController(
     @ResponseStatus(HttpStatus.OK)
     fun saveMedicalComment(@PathVariable("id") id: Long,
                            @RequestBody request: EditGeneralInfORequest) = moderatorRegister.saveMedicalComment(id, request)
+
+    @GetMapping(value = ["/students/xls"],
+        consumes = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    fun fetchEmployeesXls() = moderatorRegister.fetchStudentsXls()
 }

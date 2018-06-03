@@ -97,3 +97,10 @@ export const FETCH_MEDICAL_INFO_FAILURE_MODERATOR = 'fetch_medial_info_moderator
 
 export const SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR = 'save_medical_comment_moderator_success'
 export const SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR = 'save_medical_comment_moderator_failure'
+
+export const FETCH_STUDENTS_ACTIVE_SUCCESS = 'fetch_students_active_success'
+export const FETCH_STUDENTS_ACTIVE_FAILURE = 'fetch_students_active_failure'
+export const FILTER_STUDENTS = 'filter_students'
+
+export const EXPORT_XLS_SUCCESS = 'export_xls_success'
+export const EXPORT_XLS_FAILURE = 'export_xls_failure'

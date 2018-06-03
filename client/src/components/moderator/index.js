@@ -29,8 +29,12 @@ import {
   saveDocumentsComment,
   changeDocumentStatus,
   fetchTotalAmountOfStudents,
-  selectStudent
+  selectStudent,
+  fetchStudentsActive,
+  filter,
+  exportXls
 } from "../../actions"
+import {message} from "../../locale/message";
 
 class ModeratorApp extends Component {
 
@@ -41,7 +45,8 @@ class ModeratorApp extends Component {
       search: "",
       currentPage: 1,
       perPage: 10,
-      modalIsOpen: false
+      modalIsOpen: false,
+      exportXlsLoading: false
     }
 
     this.openModal = this.openModal.bind(this);
@@ -64,14 +69,7 @@ class ModeratorApp extends Component {
     this.setState({modalIsOpen: false});
     document.body.style.overflow = "auto";
 
-    const {currentPage, perPage, search} = this.state
-    this.props.fetchTotalAmountOfStudents(search,
-      () => {
-        this.props.fetchStudents(search, currentPage, perPage)
-      },
-      () => {
-        console.log('error on fetching students')
-      })
+    this.props.fetchStudentsActive()
   }
 
 
@@ -84,37 +82,61 @@ class ModeratorApp extends Component {
   }
 
   componentDidMount() {
-    const {currentPage, perPage, search} = this.state
-    this.props.fetchTotalAmountOfStudents(search,
-      () => {
-        this.props.fetchStudents(search, currentPage, perPage)
-      },
-      () => {
-        console.log('error on fetching students')
-      })
+    this.props.fetchStudentsActive()
 
   }
 
   handlePageChangeClick = (pageNum) => {
-    const {search} = this.state
-    this.props.fetchStudents(search, pageNum, this.state.perPage,
-      () => {
-        this.setState({currentPage: pageNum})
-      })
+    this.setState({currentPage: pageNum})
+  }
+
+  handleExportXls = () => {
+    this.setState({exportXlsLoading: true}, () => {
+      this.props.exportXls(
+        () => {
+          this.setState({exportXlsLoading: false})
+        },
+        () => {
+          this.setState({exportXlsLoading: false})
+        }
+      )
+    })
   }
 
   handleSearch = (search) => {
-    this.props.fetchTotalAmountOfStudents(search,
-      () => {
-        this.props.fetchStudents(search, 1, this.state.perPage,
-          () => {
-            console.log('success')
-            this.setState({currentPage: 1, search})
-          })
-      },
-      () => {
-        console.log('error on fetching students')
-      })
+    search = search.toLowerCase()
+    const {students, lang, filter} = this.props
+
+    let filtered = {}
+    const copy = {...students}
+
+    console.log("daniuar".indexOf(""))
+    Object.keys(copy).filter(key => {
+      return (copy[key].id + "").indexOf(search) >= 0 ||
+        copy[key].firstName.toLowerCase().indexOf(search) >= 0 ||
+        copy[key].middleName.toLowerCase().indexOf(search) >= 0 ||
+        copy[key].lastName.toLowerCase().indexOf(search) >= 0 ||
+        copy[key].iin.toLowerCase().indexOf(search) >= 0 ||
+        message[copy[key].gender.toLowerCase()][lang].toLowerCase().indexOf(search) >= 0 ||
+        message[copy[key].generalStatus.toLowerCase()][lang].toLowerCase().indexOf(search) >= 0
+    }).map(id => {
+      filtered[id] = students[id]
+    })
+
+    console.log('filtered ', filtered)
+    filter(filtered)
+
+    // this.props.fetchTotalAmountOfStudents(search,
+    //   () => {
+    //     this.props.fetchStudents(search, 1, this.state.perPage,
+    //       () => {
+    //         console.log('success')
+    //         this.setState({currentPage: 1, search})
+    //       })
+    //   },
+    //   () => {
+    //     console.log('error on fetching students')
+    //   })
 
   }
 
@@ -149,17 +171,20 @@ class ModeratorApp extends Component {
   }
 
   render() {
-    const {students, selectedStudent, total, lang} = this.props
-    const {currentPage, perPage} = this.state
+    const {students, selectedStudent, lang, displayData} = this.props
+    const {currentPage, perPage, exportXlsLoading} = this.state
+    const total = Object.keys(displayData).length
     const startCounter = (currentPage - 1) * perPage
-    console.log(students)
-    console.log(total)
+
+    //display 10 items
+    const displayFrom = (currentPage - 1) * perPage
+    const paginatedData = _.mapKeys(Object.values(displayData).slice(displayFrom, displayFrom + this.state.perPage), "id")
 
     return (
       <div className="wrapper">
-        <SearchBar onSearch={this.handleSearch}/>
+        <SearchBar onSearch={this.handleSearch} lang={lang} onExportXls={this.handleExportXls} exportXlsLoading={exportXlsLoading}/>
         <TableHeader lang={lang}/>
-        <TableBody students={students} startCounter={startCounter} openModal={this.openModal.bind(this)} lang={lang}/>
+        <TableBody students={paginatedData} startCounter={startCounter} openModal={this.openModal.bind(this)} lang={lang}/>
         <Pagination currentPage={currentPage} perPage={perPage} total={total}
                     handlePageChangeClick={this.handlePageChangeClick}/>
         <Modal
@@ -186,17 +211,21 @@ export default connect(
   state => ({
     lang: state.lang,
     students: state.moderator.students,
+    displayData: state.moderator.displayData,
     selectedStudent: state.moderator.selectedStudent,
     total: state.moderator.total,
     currentStudentId: state.moderator.currentStudentId
   }),
   dispatch => ({
     fetchStudents: bindActionCreators(fetchStudents, dispatch),
+    fetchStudentsActive: bindActionCreators(fetchStudentsActive, dispatch),
     fetchStudentFullInfo: bindActionCreators(fetchStudentFullInfo, dispatch),
     editGeneralInfo: bindActionCreators(editGeneralInfo, dispatch),
     saveDocumentsComment: bindActionCreators(saveDocumentsComment, dispatch),
     changeDocumentStatus: bindActionCreators(changeDocumentStatus, dispatch),
     fetchTotalAmountOfStudents: bindActionCreators(fetchTotalAmountOfStudents, dispatch),
-    selectStudent: bindActionCreators(selectStudent, dispatch)
+    selectStudent: bindActionCreators(selectStudent, dispatch),
+    filter: bindActionCreators(filter, dispatch),
+    exportXls: bindActionCreators(exportXls, dispatch)
   })
 )(ModeratorApp)

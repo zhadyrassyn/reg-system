@@ -63,13 +63,19 @@ import {
   FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
   FETCH_MEDICAL_INFO_FAILURE_MODERATOR,
   SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR,
-  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR
+  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR,
+  FETCH_STUDENTS_ACTIVE_SUCCESS,
+  FETCH_STUDENTS_ACTIVE_FAILURE,
+  FILTER_STUDENTS,
+  EXPORT_XLS_SUCCESS,
+  EXPORT_XLS_FAILURE
 } from "./types"
 
 import axios from "axios"
 import config from "../config"
 import {browserHistory} from "react-router"
 import {fetchIdFromToken} from "../utils"
+import FileDownload from 'react-file-download'
 
 export const changeLang = lang => ({type: CHANGE_LANG, lang})
 
@@ -980,3 +986,66 @@ export const fetchStudentMedicalInfoByModerator = (id, onSuccess, onError) => (d
 }
 
 export const selectStudent = id => ({type: SELECT_STUDENT, id})
+
+export const fetchStudentsActive = (onSuccess, onError) => (dispatch) => {
+
+  const request = `${config.url}/moderator/students/active`
+
+  const token = localStorage.getItem('token')
+
+  axios.get(request, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({data}) => {
+    dispatch({
+      type: FETCH_STUDENTS_ACTIVE_SUCCESS,
+      data
+    })
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: FETCH_STUDENTS_ACTIVE_FAILURE,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}
+
+export const filter = (filteredData) => (dispatch) => {
+  dispatch({
+    type: FILTER_STUDENTS,
+    data: filteredData
+  })
+}
+
+export const exportXls = (onSuccess, onError) => (dispatch) => {
+  const request = `${config.url}/moderator/students/xls`
+
+  const token = localStorage.getItem('token')
+
+  axios.get(request, {
+    responseType: 'arraybuffer',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    }
+  }).then(({data}) => {
+    FileDownload(data, 'students.xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+    if (onSuccess) {
+      onSuccess()
+    }
+  }).catch(error => {
+    dispatch({
+      type: EXPORT_XLS_FAILURE,
+      error: error.response && error.response.message
+    })
+    if (onError) {
+      onError()
+    }
+  })
+}

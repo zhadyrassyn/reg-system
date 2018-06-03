@@ -22,7 +22,12 @@ import {
   FETCH_MEDICAL_INFO_SUCCESS_MODERATOR,
   FETCH_MEDICAL_INFO_FAILURE_MODERATOR,
   SAVE_MEDICAL_COMMENT_SUCCESS_MODERATOR,
-  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR
+  SAVE_MEDICAL_COMMENT_FAILURE_MODERATOR,
+  FETCH_STUDENTS_ACTIVE_FAILURE,
+  FETCH_STUDENTS_ACTIVE_SUCCESS,
+  FILTER_STUDENTS,
+  EXPORT_XLS_SUCCESS,
+  EXPORT_XLS_FAILURE
 } from "../actions/types"
 
 const initialState = {
@@ -32,11 +37,33 @@ const initialState = {
   currentStudentId: 0,
   personalInfo: {},
   educationInfo: {},
-  medicalInfo: {}
+  medicalInfo: {},
+  displayData: {}
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case EXPORT_XLS_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
+    case FILTER_STUDENTS:
+      return {
+        ...state,
+        displayData: action.data
+      }
+    case FETCH_STUDENTS_ACTIVE_SUCCESS:
+      return {
+        ...state,
+        students: _.mapKeys(action.data, "id"),
+        displayData: _.mapKeys(action.data, "id"),
+      }
+    case FETCH_STUDENTS_ACTIVE_FAILURE:
+      return {
+        ...state,
+        error: action.error
+      }
     case FETCH_STUDENTS_SUCCESS:
       return {
         ...state,

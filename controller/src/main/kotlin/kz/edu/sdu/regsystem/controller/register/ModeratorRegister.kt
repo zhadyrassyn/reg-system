@@ -1,10 +1,13 @@
 package kz.edu.sdu.regsystem.controller.register
 
 import kz.edu.sdu.regsystem.controller.model.*
+import org.springframework.http.ResponseEntity
 
 interface ModeratorRegister {
 
     fun getStudents(text: String, currentPage: Int, perPage: Int) : List<GetStudentsResponse>
+
+    fun getStudentsActive() : List<GetStudentsResponse>
 
     fun getStudentInfo(id: Long): GetStudentInfoResponse
 
@@ -25,5 +28,7 @@ interface ModeratorRegister {
     fun fetchMedicalInfo(id: Long): FetchMedicalInfoResponse
 
     fun saveMedicalComment(id: Long, request: EditGeneralInfORequest)
+
+    fun fetchStudentsXls(): ResponseEntity<ByteArray>?
 
 }
