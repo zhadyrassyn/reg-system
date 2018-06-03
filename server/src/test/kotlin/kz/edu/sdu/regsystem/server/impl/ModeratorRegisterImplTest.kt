@@ -540,7 +540,7 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
         val personalInfos = ArrayList<SavePersonalInfoRequest>()
         val medicalInfos = ArrayList<MedicalInfo>()
         val educationInfos = ArrayList<SaveEducationInfoRequestData>()
-        for (i in 0..4) {
+        for (i in 0..20) {
             val newUser = User(
                 email = "test$i@mail.com",
                 password = "123123",
@@ -553,9 +553,9 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
             newUser.id = usersRepository.save(newUser)
 
             val a = SavePersonalInfoRequest(
-                firstName = "Daniyar",
+                firstName = "$i Daniyar",
                 middleName = null,
-                lastName = "Qazbek",
+                lastName = "$i Qazbek",
                 gender = GenderType.MALE.name,
                 birthDate = fromStrToDate("1997-06-15"),
                 givenDate = fromStrToDate("2000-01-05"),
@@ -620,7 +620,7 @@ class ModeratorRegisterImplTest : AbstractTestNGSpringContextTests() {
         //
 
         assertNotNull(response)
-        assertEquals(5, response.size)
+        assertEquals(10, response.size)
 
         for (i in 0..response.size-1) {
             assertEquals(list[i].id, response[i].id)

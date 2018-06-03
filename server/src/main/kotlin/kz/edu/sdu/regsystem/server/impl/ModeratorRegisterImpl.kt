@@ -5,7 +5,12 @@ import kz.edu.sdu.regsystem.controller.register.ModeratorRegister
 import kz.edu.sdu.regsystem.server.domain.enums.ConclusionStatus
 import kz.edu.sdu.regsystem.server.exception.BadRequestException
 import kz.edu.sdu.regsystem.server.repositoy.*
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.ss.usermodel.*
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -17,10 +22,6 @@ class ModeratorRegisterImpl(
     val infoRepository: InfoRepository,
     val usersRepository: UsersRepository
 ) : ModeratorRegister {
-    override fun getStudentsActive(): List<GetStudentsResponse> {
-
-
-    }
 
     override fun fetchPersonalInfo(id: Long): FetchPersonalInfoResponse {
         val personalInfo = personalInfoRepository.fetchPersonalInfoDocument(id) ?: return FetchPersonalInfoResponse()
@@ -210,5 +211,174 @@ class ModeratorRegisterImpl(
                 )
             }
 
+    }
+
+    override fun getStudentsActive(): List<GetStudentsResponse> {
+        return usersRepository.fetchStudents()
+            .map {
+                GetStudentsResponse(
+                    id = it.id,
+                    firstName = it.firstName,
+                    middleName = it.middleName ?: "",
+                    lastName = it.lastName,
+                    iin = it.iin,
+                    email = it.email,
+                    gender = it.gender.name,
+                    generalStatus =
+                    if (it.pi_status == ConclusionStatus.VALID &&
+                        it.ei_status == ConclusionStatus.VALID &&
+                        it.mi_status == ConclusionStatus.VALID) ConclusionStatus.VALID.name
+                    else
+                        if (it.pi_status == ConclusionStatus.INVALID || it.ei_status == ConclusionStatus.INVALID ||
+                            it.mi_status == ConclusionStatus.INVALID) ConclusionStatus.INVALID.name
+                        else
+                            ConclusionStatus.WAITING_FOR_RESPONSE.name
+                )
+            }
+    }
+
+    override fun fetchStudentsXls(): ResponseEntity<ByteArray>? {
+        val headers = HttpHeaders()
+        headers.add("content-disposition", "attachment; filename=\"students.xls")
+        return ResponseEntity.ok().headers(headers).body(getStudentsXls())
+    }
+
+    private fun getStudentsXls(): ByteArray{
+        val students = getStudentsActive()
+
+        try {
+            HSSFWorkbook().use { book ->
+                val baos = ByteArrayOutputStream()
+                val sheet = book.createSheet("Студенты")
+
+                var rowNumber = 0
+
+                createHeaderCells(
+                    sheet.createRow(rowNumber),
+                    createHeaderStyle(book),
+                    "Фамилия",
+                    "Имя",
+                    "Отчество",
+                    "E-mail",
+                    "Пол",
+                    "Дата рождения",
+                    "Дата выдачи УД",
+                    "Место выдачи УД",
+                    "ИИН",
+                    "Номер УД",
+                    "Сотовый телефон",
+                    "Домашний телефон",
+                    "Национальность",
+                    "Место родения",
+                    "Группа крови",
+                    "Граждантсво",
+                    "Фактческий улица",
+                    "Фактческий дом",
+                    "Фактческий дробь",
+                    "Фактческий квартира",
+                    "Регистрационная улица",
+                    "Регистрационная дом",
+                    "Регистрационная дробь",
+                    "Регистрационная квартира",
+                    "Область обучения",
+                    "Город",
+                    "Школа",
+                    "ЕНТ баллы(без профиля)",
+                    "Номер сертификата ЕНТ",
+                    "ИКТ",
+                    "Дата окончания школы",
+                    "Желаемый фалультет",
+                    "Желаемая специализация",
+                    "Статус"
+
+                )
+
+                for (student in students) {
+                    val personalInfo = fetchPersonalInfo(student.id)
+                    val educationInfo = fetchEducationInfo(student.id)
+
+                    rowNumber++
+                    createCell(
+                        sheet.createRow(rowNumber),
+                        student.lastName,
+                        student.firstName,
+                        student.middleName ?: "",
+                        student.email,
+                        student.gender,
+                        personalInfo.birthDate ?: "",
+                        personalInfo.givenDate ?: "",
+                        personalInfo.givenPlace ?: "",
+                        personalInfo.iin ?: "",
+                        personalInfo.ud_number ?: "",
+                        personalInfo.mobilePhone ?: "",
+                        personalInfo.telPhone ?: "",
+                        personalInfo.nationality ?: "",
+                        personalInfo.birthPlace?.nameRu ?: "",
+                        personalInfo.blood_group ?: "",
+                        personalInfo.citizenship ?: "",
+                        personalInfo.factStreet ?: "",
+                        personalInfo.factHouse ?: "",
+                        personalInfo.factFraction ?: "",
+                        personalInfo.factFlat ?: "",
+                        personalInfo.regStreet ?: "",
+                        personalInfo.regHouse ?: "",
+                        personalInfo.regFraction ?: "",
+                        personalInfo.regFlact ?: "",
+
+                        educationInfo.educationArea?.nameRu ?: "",
+                        educationInfo.city?.nameRu ?: "",
+                        educationInfo.school?.nameRu ?: "",
+                        educationInfo.ent_amount ?: "",
+                        educationInfo.ent_certificate_number ?: "",
+                        educationInfo.ikt ?: "",
+                        educationInfo.school_finish ?: "",
+                        educationInfo.faculty?.nameRu ?: "",
+                        educationInfo.speciality?.nameRu ?: "",
+
+                        student.generalStatus
+
+                    )
+                }
+
+                for (i in 0..40) {
+                    try {
+                        sheet.autoSizeColumn(i)
+                    } catch (ignored: NullPointerException) {
+                    }
+
+                }
+
+                book.write(baos)
+                book.close()
+                return baos.toByteArray()
+            }
+        } catch (e: Exception) {
+            throw Exception(e)
+        }
+    }
+
+    private fun createCell(row: Row, vararg names: String) {
+        for (i in names.indices) {
+            row.createCell(i, Cell.CELL_TYPE_STRING).setCellValue(names[i])
+        }
+    }
+
+    private fun createHeaderStyle(book: Workbook): CellStyle {
+        val style = book.createCellStyle()
+        val font = book.createFont()
+        font.setBoldweight(Font.BOLDWEIGHT_BOLD)
+        style.setFont(font)
+        style.fillForegroundColor = IndexedColors.SKY_BLUE.getIndex()
+        style.setFillPattern(CellStyle.SOLID_FOREGROUND)
+        style.setAlignment(CellStyle.ALIGN_CENTER)
+        return style
+    }
+
+    private fun createHeaderCells(row: Row, headerStyle: CellStyle, vararg names: String) {
+        for (i in names.indices) {
+            val header = row.createCell(i, Cell.CELL_TYPE_STRING)
+            header.setCellValue(names[i])
+            header.cellStyle = headerStyle
+        }
     }
 }

@@ -110,7 +110,6 @@ class ModeratorApp extends Component {
     let filtered = {}
     const copy = {...students}
 
-    console.log("daniuar".indexOf(""))
     Object.keys(copy).filter(key => {
       return (copy[key].id + "").indexOf(search) >= 0 ||
         copy[key].firstName.toLowerCase().indexOf(search) >= 0 ||
@@ -123,8 +122,10 @@ class ModeratorApp extends Component {
       filtered[id] = students[id]
     })
 
-    console.log('filtered ', filtered)
-    filter(filtered)
+    this.setState({currentPage: 1}, () => {
+      filter(filtered)  
+    })
+
 
     // this.props.fetchTotalAmountOfStudents(search,
     //   () => {
