@@ -1,4 +1,5 @@
 let config = null
+console.log('env ', process.env.NODE_ENV)
 
 switch (process.env.NODE_ENV) {
   case 'production':
